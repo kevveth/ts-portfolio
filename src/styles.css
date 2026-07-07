@@ -1,0 +1,214 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Self-hosted fonts (public/fonts/, copied from @fontsource latin subsets).
+ * Family names are literal strings (not vars) so the fontaine vite plugin can
+ * generate metric-matched "<Family> fallback" faces and kill layout shift.
+ */
+@font-face {
+	font-family: 'IBM Plex Sans';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('/fonts/ibm-plex-sans-400.woff2') format('woff2');
+}
+@font-face {
+	font-family: 'IBM Plex Sans';
+	font-style: normal;
+	font-weight: 500;
+	font-display: swap;
+	src: url('/fonts/ibm-plex-sans-500.woff2') format('woff2');
+}
+@font-face {
+	font-family: 'IBM Plex Sans';
+	font-style: normal;
+	font-weight: 600;
+	font-display: swap;
+	src: url('/fonts/ibm-plex-sans-600.woff2') format('woff2');
+}
+@font-face {
+	font-family: 'IBM Plex Sans';
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+	src: url('/fonts/ibm-plex-sans-700.woff2') format('woff2');
+}
+@font-face {
+	font-family: 'IBM Plex Mono';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('/fonts/ibm-plex-mono-400.woff2') format('woff2');
+}
+@font-face {
+	font-family: 'IBM Plex Mono';
+	font-style: normal;
+	font-weight: 500;
+	font-display: swap;
+	src: url('/fonts/ibm-plex-mono-500.woff2') format('woff2');
+}
+
+:root {
+	/*
+	 * Accent. The single point of brand color — swap these two --brand lines
+	 * (here and in .dark) to re-skin the site.
+	 */
+	--brand: oklch(0.55 0.19 258);
+
+	--background: oklch(0.98 0.001 286);
+	--foreground: oklch(0.155 0.005 285.8);
+	--card: oklch(1 0 0);
+	--card-foreground: oklch(0.155 0.005 285.8);
+	--popover: oklch(1 0 0);
+	--popover-foreground: oklch(0.155 0.005 285.8);
+	--primary: var(--brand);
+	--primary-foreground: oklch(0.985 0 0);
+	--secondary: oklch(0.955 0.001 286.4);
+	--secondary-foreground: oklch(0.21 0.006 285.9);
+	--muted: oklch(0.955 0.001 286.4);
+	--muted-foreground: oklch(0.5 0.014 285.9);
+	--accent: oklch(0.955 0.001 286.4);
+	--accent-foreground: oklch(0.21 0.006 285.9);
+	--destructive: oklch(0.577 0.245 27.3);
+	--destructive-foreground: oklch(0.985 0 0);
+	--border: oklch(0.911 0.004 286.3);
+	--input: oklch(0.911 0.004 286.3);
+	--ring: var(--brand);
+	--radius: 0.5rem;
+}
+
+.dark {
+	--brand: oklch(0.72 0.15 256);
+
+	--background: oklch(0.148 0.004 285.8);
+	--foreground: oklch(0.96 0.002 286);
+	--card: oklch(0.185 0.005 285.9);
+	--card-foreground: oklch(0.96 0.002 286);
+	--popover: oklch(0.185 0.005 285.9);
+	--popover-foreground: oklch(0.96 0.002 286);
+	--primary: var(--brand);
+	--primary-foreground: oklch(0.145 0.03 256);
+	--secondary: oklch(0.245 0.006 286);
+	--secondary-foreground: oklch(0.96 0.002 286);
+	--muted: oklch(0.245 0.006 286);
+	--muted-foreground: oklch(0.712 0.013 286.1);
+	--accent: oklch(0.245 0.006 286);
+	--accent-foreground: oklch(0.96 0.002 286);
+	--destructive: oklch(0.637 0.237 25.3);
+	--destructive-foreground: oklch(0.985 0 0);
+	--border: oklch(0.27 0.006 286);
+	--input: oklch(0.27 0.006 286);
+	--ring: var(--brand);
+}
+
+@theme inline {
+	--font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+	--font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+	--color-brand: var(--brand);
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--color-card: var(--card);
+	--color-card-foreground: var(--card-foreground);
+	--color-popover: var(--popover);
+	--color-popover-foreground: var(--popover-foreground);
+	--color-primary: var(--primary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-secondary: var(--secondary);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-muted: var(--muted);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-accent: var(--accent);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-destructive: var(--destructive);
+	--color-destructive-foreground: var(--destructive-foreground);
+	--color-border: var(--border);
+	--color-input: var(--input);
+	--color-ring: var(--ring);
+	--radius-sm: calc(var(--radius) - 4px);
+	--radius-md: calc(var(--radius) - 2px);
+	--radius-lg: var(--radius);
+	--radius-xl: calc(var(--radius) + 4px);
+}
+
+html,
+body {
+	min-height: 100%;
+}
+
+@layer base {
+	* {
+		@apply border-border outline-ring/50;
+	}
+	body {
+		margin: 0;
+		background-color: var(--background);
+		color: var(--foreground);
+		font-family: var(--font-sans);
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+	:focus-visible {
+		outline: 2px solid var(--ring);
+		outline-offset: 2px;
+	}
+	::selection {
+		background: color-mix(in oklab, var(--brand) 24%, transparent);
+	}
+}
+
+/* Mono section label: the "engineer" typographic signature. */
+.kicker {
+	font-family: var(--font-mono);
+	font-size: 0.72rem;
+	font-weight: 500;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--muted-foreground);
+}
+
+/* Faint blueprint grid, used behind the hero. Theme-aware via --border. */
+.bg-grid {
+	background-image:
+		linear-gradient(color-mix(in oklab, var(--border) 55%, transparent) 1px, transparent 1px),
+		linear-gradient(90deg, color-mix(in oklab, var(--border) 55%, transparent) 1px, transparent 1px);
+	background-size: 32px 32px;
+	mask-image: radial-gradient(ellipse 90% 80% at 50% 0%, black 30%, transparent 75%);
+}
+
+/*
+ * Scroll reveal. Content is visible by default; the hidden initial state only
+ * applies once the pre-paint init script has stamped `js` on <html>, so
+ * no-JS visitors (and crawlers) always see everything.
+ */
+html.js .reveal {
+	opacity: 0;
+	transform: translateY(14px);
+	transition:
+		opacity 600ms cubic-bezier(0.16, 1, 0.3, 1),
+		transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+html.js .reveal.is-visible {
+	opacity: 1;
+	transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html.js .reveal {
+		opacity: 1;
+		transform: none;
+		transition: none;
+	}
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}
