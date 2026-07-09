@@ -1,6 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ContactCta } from "#/components/contact-cta";
-import { ContributionGraph, ContributionGraphError } from "#/components/contribution-graph";
+import {
+	ContributionGraph,
+	ContributionGraphError,
+} from "#/components/contribution-graph";
 import { FeaturedProject } from "#/components/featured-project";
 import { Hero } from "#/components/hero";
 import { StackStrip } from "#/components/stack-strip";

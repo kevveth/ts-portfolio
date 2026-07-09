@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { mapContributions, quantizeLevel, type GitHubContribution } from "./github";
+import {
+	type GitHubContribution,
+	mapContributions,
+	quantizeLevel,
+} from "./github";
 
 describe("quantizeLevel", () => {
 	it("returns 0 for zero contributions", () => {

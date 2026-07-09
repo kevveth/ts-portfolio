@@ -73,9 +73,7 @@ export function quantizeLevel(count: number): 0 | 1 | 2 | 3 | 4 {
  * `react-activity-calendar`. Each day gets its `date`, `count`, and a
  * quantized `level` in 0–4.
  */
-export function mapContributions(
-	days: GitHubContribution[],
-): Activity[] {
+export function mapContributions(days: GitHubContribution[]): Activity[] {
 	return days.map((day) => ({
 		date: day.date,
 		count: day.contributionCount,
@@ -123,7 +121,11 @@ export async function fetchContributions(): Promise<ContributionResult> {
 
 	const now = new Date();
 	const to = now.toISOString();
-	const from = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()).toISOString();
+	const from = new Date(
+		now.getFullYear() - 1,
+		now.getMonth(),
+		now.getDate(),
+	).toISOString();
 
 	try {
 		const response = await fetch(GITHUB_GQL_ENDPOINT, {
@@ -156,9 +158,10 @@ export async function fetchContributions(): Promise<ContributionResult> {
 			return { ok: false, error: `User "${SITE.githubUsername}" not found` };
 		}
 
-		const days = parsed.data.data.user.contributionsCollection.contributionCalendar.weeks.flatMap(
-			(week) => week.contributionDays,
-		);
+		const days =
+			parsed.data.data.user.contributionsCollection.contributionCalendar.weeks.flatMap(
+				(week) => week.contributionDays,
+			);
 
 		return { ok: true, data: mapContributions(days) };
 	} catch (err) {
