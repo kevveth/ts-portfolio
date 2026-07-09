@@ -47,17 +47,14 @@ Portfolio visitors (potential employers, collaborators) get an at-a-glance credi
 
 ## 8. Design Tokens
 
-Contribution level colors (zinc-scale, light mode):
+Contribution level colors are derived from the site's `--border`/`--brand` tokens (`src/styles.css`), not hand-picked hex values. `react-activity-calendar` is given a `[level-0, level-4]` pair per mode and interpolates the 3 middle levels in oklab space:
 
-| Level | Color | Tailwind |
-|-------|-------|----------|
-| 0 | `#f4f4f5` | `zinc-100` |
-| 1 | `#d4d4d8` | `zinc-300` |
-| 2 | `#a1a1aa` | `zinc-400` |
-| 3 | `#71717a` | `zinc-500` |
-| 4 | `#3f3f46` | `zinc-700` |
+| Mode | Level 0 (`--border`) | Level 4 (`--brand`) |
+|------|-----------------------|----------------------|
+| Light | `#e1e1e4` | `#156cdd` |
+| Dark | `#262629` | `#f14d4c` |
 
-Dark mode: invert — lightest = highest activity.
+Ties the graph to the same brand token the rest of the site (including the glass buttons) uses, and keeps it in sync automatically if `--brand` is ever re-skinned.
 
 ## 9. Constraints
 

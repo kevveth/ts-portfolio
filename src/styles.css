@@ -453,3 +453,19 @@ html.js .reveal.is-visible {
 		scroll-behavior: auto !important;
 	}
 }
+
+/*
+ * react-activity-calendar renders a fixed-pixel-width SVG (one column per
+ * week) inside its own overflow-x:auto container, which defaults to
+ * scrollLeft 0 — hiding the most recent activity on the right until the
+ * user scrolls. The SVG has a matching viewBox, so scaling it to the
+ * container width via CSS keeps it fully visible (and legible) at any
+ * viewport width without ever triggering that inner scroll.
+ */
+.react-activity-calendar {
+	width: 100%;
+}
+.react-activity-calendar__calendar {
+	width: 100%;
+	height: auto;
+}
