@@ -1,23 +1,12 @@
 /**
- * Inline SVG filter definition for Liquid Glass buttons. Injected once in
- * __root.tsx so every `.btn-glass` on the page shares the same filter graph.
+ * Inline SVG filter for the liquid glass rim distortion.
  *
- * The filter is fully procedural — no external raster assets. It works at any
- * element size because it operates on SourceGraphic / SourceAlpha relative to
- * the filter region, not on fixed-dimension feImage maps.
+ * Applied to .btn-glass::before via `filter: url(#liquid-glass)`.
+ * The pseudo-element paints a bright specular rim gradient; this filter
+ * distorts the rim edges with fractal noise for an organic "liquid" feel.
  *
- * Pipeline:
- *   1. SourceGraphic → slight blur (softens input)
- *   2. SourceAlpha → dilate + erode → edge mask (only the perimeter)
- *   3. feTurbulence → organic noise, masked by edge mask
- *   4. feDisplacementMap → warp blurred source by edge noise (refraction)
- *   5. feColorMatrix → saturate the displaced result (vibrant glass)
- *   6. edge mask → blur → feComposite(in) with saturated → specular rim
- *   7. feBlend(specular, displaced) → final output
- *
- * Fallback browsers that don't support url() in backdrop-filter see only the
- * CSS blur fallback in styles.css. The filter ID is a stable contract — see
- * src/lib/glass-filter.test.ts.
+ * Pipeline is minimal by design — the CSS handles blur, brightness, and
+ * layering. This filter only adds edge warping to the specular rim.
  */
 export function LiquidGlassFilter() {
 	return (
@@ -27,83 +16,31 @@ export function LiquidGlassFilter() {
 		>
 			<filter
 				id="liquid-glass"
-				x="-20%"
-				y="-20%"
-				width="140%"
-				height="140%"
+				x="-30%"
+				y="-30%"
+				width="160%"
+				height="160%"
 				colorInterpolationFilters="sRGB"
 			>
-				{/* 1. Soften the source graphic */}
-				<feGaussianBlur
-					in="SourceGraphic"
-					stdDeviation="0.8"
-					result="blurred-source"
-				/>
-
-				{/* 2. Edge mask from alpha channel */}
-				<feMorphology
-					in="SourceAlpha"
-					operator="dilate"
-					radius="4"
-					result="dilated"
-				/>
-				<feMorphology
-					in="dilated"
-					operator="erode"
-					radius="3"
-					result="edge-mask"
-				/>
-
-				{/* 3. Turbulence constrained to edges */}
+				{/* Multi-scale turbulence for organic edge noise */}
 				<feTurbulence
 					type="fractalNoise"
-					baseFrequency="0.04"
-					numOctaves="3"
-					seed="2"
+					baseFrequency="0.05 0.08"
+					numOctaves="4"
+					seed="3"
 					result="noise"
 				/>
-				<feComposite
-					in="noise"
-					in2="edge-mask"
-					operator="in"
-					result="edge-noise"
-				/>
 
-				{/* 4. Refraction: displace the blurred background by edge noise */}
+				{/* Displace the rim gradient by noise.
+				    R channel = horizontal, G channel = vertical.
+				    Scale 35 = moderate wobble at edges. */}
 				<feDisplacementMap
-					in="blurred-source"
-					in2="edge-noise"
-					scale="45"
+					in="SourceGraphic"
+					in2="noise"
+					scale="35"
 					xChannelSelector="R"
 					yChannelSelector="G"
-					result="displaced"
 				/>
-
-				{/* 5. Saturate the displaced result */}
-				<feColorMatrix
-					in="displaced"
-					type="saturate"
-					values="1.4"
-					result="displaced-saturated"
-				/>
-
-				{/* 6. Specular rim: soften edge mask and use as highlight mask */}
-				<feGaussianBlur in="edge-mask" stdDeviation="2" result="rim-soft" />
-				<feColorMatrix
-					in="rim-soft"
-					type="matrix"
-					values="1.8 0 0 0 0  0 1.8 0 0 0  0 0 1.8 0 0  0 0 0 1 0"
-					result="rim-bright"
-				/>
-				<feComposite
-					in="displaced-saturated"
-					in2="rim-bright"
-					operator="in"
-					result="specular"
-				/>
-
-				{/* 7. Blend specular rim over displaced base */}
-				<feBlend in="specular" in2="displaced" mode="screen" result="final" />
 			</filter>
 		</svg>
 	);

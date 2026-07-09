@@ -198,12 +198,18 @@ html.js .reveal.is-visible {
 }
 
 /*
- * Liquid Glass buttons — procedural SVG filter (no external assets).
- * Cascade order: solid fallback → frosted glass (Safari/FF) → full liquid (Chromium).
- * Each tier overrides via increasing specificity of @supports.
+ * Liquid Glass buttons — layered glass effect inspired by iOS 26.
+ *
+ * Layers (back to front):
+ *   1. Button body:    backdrop-blur + tinted translucent bg + shadow
+ *   2. ::after:         inner radial glow (glass "thickness" illusion)
+ *   3. ::before:        specular rim — bright white edge at top (SVG-distorted)
+ *   4. Content (text):  high-contrast white with text-shadow for legibility
+ *
+ * Cascade: solid fallback → frosted glass (all browsers) → + rim distortion (Chromium)
  */
 
-/* Tier 1: No backdrop-filter at all — solid brand color (identical to old default) */
+/* Tier 1: No backdrop-filter — solid brand color (identical to old default) */
 .btn-glass {
 	position: relative;
 	overflow: hidden;
@@ -217,33 +223,91 @@ html.js .reveal.is-visible {
 	box-shadow: 0 2px 6px rgb(0 0 0 / 12%);
 }
 
-/* Tier 2: Blur-capable browsers (Safari, Firefox, older Chrome) */
+.btn-glass::before,
+.btn-glass::after {
+	content: none;
+}
+
+/* Tier 2: Blur-capable — frosted glass + rim + inner glow (all browsers) */
 @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
 	.btn-glass {
-		backdrop-filter: blur(10px);
-		-webkit-backdrop-filter: blur(10px);
-		background: color-mix(in oklab, var(--brand) 28%, transparent);
-		border-color: color-mix(in oklab, var(--brand) 18%, rgb(255 255 255 / 10%));
+		backdrop-filter: blur(14px) brightness(1.15) saturate(1.1);
+		-webkit-backdrop-filter: blur(14px) brightness(1.15) saturate(1.1);
+		/* Glass body: brand-tinted translucent — visible but lets bg through */
+		background: color-mix(in oklab, var(--brand) 45%, transparent);
+		/* Glass edge: subtle border that catches light */
+		border: 1px solid color-mix(in oklab, var(--brand) 25%, rgb(255 255 255 / 15%));
+		/* Multi-layer shadow for depth */
 		box-shadow:
-			inset 0 1px 0 rgb(255 255 255 / 10%),
-			0 1px 3px rgb(0 0 0 / 8%);
-		text-shadow: 0 1px 2px rgb(0 0 0 / 25%);
+			inset 0 1px 0 rgb(255 255 255 / 22%),
+			inset 0 -1px 2px rgb(0 0 0 / 8%),
+			0 2px 8px rgb(0 0 0 / 10%),
+			0 1px 2px rgb(0 0 0 / 6%);
+		/* Text: high-contrast white with depth */
+		text-shadow:
+			0 1px 2px rgb(0 0 0 / 30%),
+			0 0 8px rgb(0 0 0 / 10%);
 	}
 
 	.btn-glass:hover {
-		background: color-mix(in oklab, var(--brand) 38%, transparent);
-		border-color: color-mix(in oklab, var(--brand) 28%, rgb(255 255 255 / 15%));
+		backdrop-filter: blur(16px) brightness(1.25) saturate(1.15);
+		-webkit-backdrop-filter: blur(16px) brightness(1.25) saturate(1.15);
+		background: color-mix(in oklab, var(--brand) 55%, transparent);
+		border-color: color-mix(in oklab, var(--brand) 32%, rgb(255 255 255 / 20%));
 		box-shadow:
-			inset 0 1px 0 rgb(255 255 255 / 15%),
-			0 2px 6px rgb(0 0 0 / 12%);
+			inset 0 1px 0 rgb(255 255 255 / 30%),
+			inset 0 -1px 3px rgb(0 0 0 / 12%),
+			0 4px 14px rgb(0 0 0 / 14%),
+			0 2px 4px rgb(0 0 0 / 8%);
+		transform: translateY(-1px);
+	}
+
+	/*
+	 * Inner glow — radial gradient from top-center simulating light
+	 * passing through curved glass. Behind text, above body.
+	 */
+	.btn-glass::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		z-index: 0;
+		border-radius: inherit;
+		background: radial-gradient(
+			ellipse 140% 120% at 50% 0%,
+			rgb(255 255 255 / 18%) 0%,
+			rgb(255 255 255 / 4%) 40%,
+			transparent 70%
+		);
+	}
+
+	/*
+	 * Specular rim — the signature glass edge highlight.
+	 * Bright white at the very top, fading rapidly. This is what
+	 * makes the element read as "glass" rather than just "frosted."
+	 * Chromium also gets SVG filter distortion on this layer.
+	 */
+	.btn-glass::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		z-index: 1;
+		border-radius: inherit;
+		background: linear-gradient(
+			to bottom,
+			rgb(255 255 255 / 50%) 0%,
+			rgb(255 255 255 / 20%) 15%,
+			rgb(255 255 255 / 5%) 35%,
+			transparent 55%
+		);
 	}
 }
 
-/* Tier 3: SVG backdrop-filter (Chromium) — full liquid glass with edge refraction */
-@supports (backdrop-filter: url(#liquid-glass)) {
-	.btn-glass {
-		backdrop-filter: url(#liquid-glass) brightness(1.6);
-		-webkit-backdrop-filter: url(#liquid-glass) brightness(1.6);
+/* Tier 3: Chromium — add feDisplacementMap distortion to the rim for organic "liquid" edges */
+@supports (filter: url(#liquid-glass)) {
+	.btn-glass::before {
+		filter: url(#liquid-glass);
 	}
 }
 
@@ -257,6 +321,12 @@ html.js .reveal.is-visible {
 		border: 1px solid color-mix(in oklab, var(--primary) 80%, transparent) !important;
 		box-shadow: 0 1px 3px rgb(0 0 0 / 8%) !important;
 		text-shadow: none !important;
+		transform: none !important;
+	}
+
+	.btn-glass::before,
+	.btn-glass::after {
+		content: none !important;
 	}
 
 	html.js .reveal {
