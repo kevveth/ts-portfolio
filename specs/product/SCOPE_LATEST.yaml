@@ -1,0 +1,95 @@
+# SCOPE_LATEST — GitHub Contribution Graph
+
+core_value: "Showcase real development activity to portfolio visitors through a live GitHub contribution graph, reinforcing credibility without manual upkeep."
+
+summary: |
+  Add a GitHub contribution graph to the portfolio site. The graph visualizes
+  the user's public GitHub commit activity over the past year — the same data
+  visible on a GitHub profile page — rendered as a grid of color-coded cells.
+
+  This serves a single purpose: give visitors (potential employers,
+  collaborators) an at-a-glance signal that the developer is active,
+  consistent, and ships code. It's a credibility marker, not a data dashboard.
+
+  The feature is a self-contained section on the home page. Data comes from
+  GitHub's public API, fetched at build time so the pre-rendered site stays
+  fast and doesn't hit runtime rate limits on every visit.
+
+in_scope:
+  - fetch-latest-calendar: "Pull contribution counts for the past 12 months from GitHub's public API for a configured username."
+  - render-graph: "Display the data as a GitHub-style contribution grid (color-coded cells by commit count) as a self-contained section on the home page."
+  - username-config: "The GitHub username is derived from SITE data or a new config field — no hardcoded value in the component."
+  - empty-activity: "When the contribution data consists entirely of zeros (no activity), display the grid in the 'empty' color rather than blank or error."
+  - handle-errors: "Surfacing a GitHub API failure — via a server function, loader, or build-time fetch — must show a degraded state (e.g., 'Activity data unavailable right now') rather than a broken page or blank section."
+  - accessibility: "The grid must be navigable/understandable via screen reader — aria-labels or a table structure with proper role assignments."
+  - test-content: "Cover the data-fetch and error paths with Vitest tests."
+
+out_of_scope:
+  - claude-activity: "Claude does not expose a public activity API for personal accounts (Enterprise Compliance API only). Deferred until a personal API exists."
+  - pinned-repos: "Out of scope for this deliverable — a separate feature (stats cards, repo list, timeline) can be scoped later."
+  - repo-stats: "No star count, fork count, or language breakdown."
+  - commit-timeline: "No list of recent commits or PRs — the graph alone is the deliverable."
+  - live-runtime-fetch: "Data is fetched at build time (SSR/pre-render), not on every client visit. Runtime polling or WebSocket updates are out of scope."
+  - contribution-streak: "No streak-counter or 'longest streak' metric; only the 52-week color grid."
+  - org-contributions: "Only the user's personal contribution graph; organization-specific activity requires additional API surface and auth."
+
+constraints:
+  - tech: "TanStack Start SSR with pre-rendering — fetch must work in a server context (server function, loader, or build-time). Client-only fetch violates the architecture."
+  - tech: "GitHub GraphQL API requires a fine-grained PAT with read:user scope — stored as a Vercel env var (GITHUB_TOKEN), read at build time only, never shipped to the client bundle."
+  - tech: "Local dev needs GITHUB_TOKEN in a .env file or shell env. Must document this in the project README or CONVENTIONS.md."
+  - time: "Single-story deliverable (one epic, one or two tasks)."
+  - visual: "Must fit the site's visual identity — Tailwind v4, zinc/new-york shadcn theme, IBM Plex fonts."
+
+success_criteria:
+  - "A visitor opening the home page sees a GitHub-style contribution grid for the configured username."
+  - "The grid renders correctly at mobile, tablet, and desktop widths."
+  - "When GitHub's API is unreachable, the section shows a graceful fallback message instead of a blank area or 500."
+  - "A screen reader can navigate the grid and understand which weeks had activity and at what intensity."
+  - "Vitest tests pass for: valid data renders expected grid, empty data renders zero-color grid, fetch failure renders fallback."
+  - "The site builds and typechecks with no errors."
+
+references:
+  - tech_stack: specs/tech-architecture/tech-stack.md
+  - conventions: CLAUDE.md
+  - epic: e24 (GitHub activity)
+  - related_out_of_scope: "Claude activity (researched 2026-07-08 — no personal API exists)"
+
+prior_art:
+  - candidate: "react-activity-calendar (grubersjoe)"
+    source: "https://github.com/grubersjoe/react-activity-calendar"
+    verdict: adopt
+    notes: |
+      SSR-compatible React component. v3, well-maintained, Storybook docs,
+      Playwright visual tests. Accepts data prop: Activity[] where
+      Activity = { date: string, count: number, level: number }.
+      Supports theme customization (light/dark color arrays), localization,
+      tooltips, event handlers. Underlying component of react-github-calendar —
+      using this directly avoids the client-only fetch wrapper. Framework
+      examples exist for Astro, Next.js, Remix, Vite.
+  - candidate: "GitHub GraphQL API (contributionsCollection)"
+    source: "https://docs.github.com/en/graphql/reference/users"
+    verdict: compose
+    notes: |
+      Official, stable, structured data. Query `user.contributionsCollection`
+      for contribution calendar data (weeks → contributionDays → date,
+      contributionCount). Requires a fine-grained PAT with `read:user` scope —
+      stored as a Vercel env var (GITHUB_TOKEN) and read at build time only.
+      Never exposed to the client bundle. Chosen over the scraping API for
+      reliability and because a build-time token is trivial secret management
+      for a one-person portfolio.
+  - candidate: "github-contributions-api (grubersjoe)"
+    source: "https://github.com/grubersjoe/github-contributions-api"
+    verdict: build (rejected)
+    notes: |
+      Public hosted scraper — no auth, but fragile to GitHub markup changes
+      and depends on a third-party service being up. Rejected in favor of the
+      official GraphQL API (stable, private-contribution support, no external
+      dependency beyond GitHub itself).
+  - candidate: "react-github-calendar"
+    source: "https://github.com/grubersjoe/react-github-calendar"
+    verdict: build (rejected)
+    notes: |
+      Wraps react-activity-calendar + client-side fetch. Does not support SSR —
+      fetches data client-side only. Violates the build-time fetch constraint.
+      Using the underlying react-activity-calendar directly with our own server-side
+      data fetch gives the same visual result with SSR compatibility.

@@ -1,0 +1,41 @@
+story_id: e24s01
+title: "Contribution Graph Section"
+status: passing
+bcps: 5
+risk: P1
+tasks:
+  - id: 1
+    description: "Install react-activity-calendar dependency [OK]"
+    verify: "node -e \"require('react-activity-calendar')\" && grep react-activity-calendar package.json"
+    risk: P3
+    status: passing
+  - id: 2
+    description: "Add githubUsername field to SITE config in src/content/site.ts"
+    verify: "npm run typecheck"
+    risk: P2
+    status: passing
+  - id: 3
+    description: "Create src/lib/github.ts — server function: fetch contributions from GitHub GraphQL, validate response with zod, map to Activity[]"
+    verify: "npm test -- --reporter=verbose src/lib/github.test.ts"
+    risk: P1
+    status: passing
+  - id: 4
+    description: "Create src/lib/github.test.ts — test data mapping (valid, empty, error) and discriminated union shape"
+    verify: "npx vitest run src/lib/github.test.ts"
+    risk: P1
+    status: passing
+  - id: 5
+    description: "Create src/components/contribution-graph.tsx — wraps ActivityCalendar with zinc theme, error/empty states"
+    verify: "npm run typecheck"
+    risk: P1
+    status: passing
+  - id: 6
+    description: "Add ContributionGraph section to home page (src/routes/index.tsx) after StackStrip"
+    verify: "npm run build 2>&1 | tail -5"
+    risk: P2
+    status: passing
+  - id: 7
+    description: "Verify SSR compatibility — build output includes pre-rendered contribution graph HTML"
+    verify: "npm run build && grep -r 'contribution' dist/ | head -3"
+    risk: P2
+    status: passing

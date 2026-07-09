@@ -1,0 +1,25 @@
+context_capsule: null
+  # pre-scope prerequisites surfaced:
+  # - map-codebase (tech-stack.md missing)
+  # - seed-conventions (CONVENTIONS.md missing)
+  # - e24s03 epic not in release-plan.yaml
+workflows:
+  survey-context:
+    required: true
+    status: done
+  scope-work:
+    required: true
+    status: done
+  research-first:
+    required: false
+    status: done
+    note: "Prior Art appended to SCOPE_LATEST.yaml — adopt react-activity-calendar, compose with github-contributions-api"
+  elaborate-spec:
+    required: false
+    status: optional
+  plan-release:
+    required: true
+    status: done
+  slice-tasks:
+    required: true
+    status: done

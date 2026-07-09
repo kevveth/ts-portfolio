@@ -29,6 +29,7 @@ type Site = {
 	metaDescription: string;
 	email: string;
 	github: string;
+	githubUsername: string;
 	linkedin: string;
 	/** Compact skills strip on Home. */
 	skills: string[];
@@ -44,6 +45,7 @@ export const SITE = {
 		"Full-stack developer building production web apps end to end — most recently a custom Square-backed booking platform for a working barber shop.",
 	email: "dev.kenrathbun@gmail.com",
 	github: "https://github.com/kevveth",
+	githubUsername: "kevveth",
 	linkedin: "https://www.linkedin.com/in/kenneth-rathbun",
 	skills: [
 		"TypeScript",

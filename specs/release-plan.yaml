@@ -1,0 +1,20 @@
+release:
+  version: "1.0.0"
+  codename: "GitHub Activity"
+  status: planning
+  semantic_release: true
+  bump_hint: minor
+
+epics:
+  - id: e01
+    title: "Portfolio Site Initial Build"
+    wsjf: 5.0
+    capsule_dir: epics/e01-initial-build
+    status: shipped
+    note: "Initial TanStack Start scaffold — shipped before versioned release tracking."
+  - id: e24
+    title: "GitHub Contribution Graph"
+    wsjf: 3.0
+    capsule_dir: epics/e24-github-contributions
+    status: todo
+    note: "Add a GitHub-style contribution heatmap to the home page. Build-time GraphQL fetch + react-activity-calendar."

@@ -116,16 +116,14 @@ query($username: String!, $from: DateTime!, $to: DateTime!) {
  * `process.env` and never shipped to the client bundle.
  */
 export async function fetchContributions(): Promise<ContributionResult> {
-	const token = process.env.GITHUB_TOKEN;
+	const token = import.meta.env.GITHUB_TOKEN;
 	if (!token) {
 		return { ok: false, error: "GITHUB_TOKEN is not set" };
 	}
 
 	const now = new Date();
-	const to = now.toISOString().split("T")[0];
-	const from = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate())
-		.toISOString()
-		.split("T")[0];
+	const to = now.toISOString();
+	const from = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()).toISOString();
 
 	try {
 		const response = await fetch(GITHUB_GQL_ENDPOINT, {
@@ -151,7 +149,7 @@ export async function fetchContributions(): Promise<ContributionResult> {
 		const parsed = graphqlDataSchema.safeParse(json);
 
 		if (!parsed.success) {
-			return { ok: false, error: `Unexpected API response shape` };
+			return { ok: false, error: "Activity data unavailable right now" };
 		}
 
 		if (parsed.data.data.user === null) {

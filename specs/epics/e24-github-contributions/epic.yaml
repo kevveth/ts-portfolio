@@ -1,0 +1,13 @@
+id: e24
+title: "GitHub Contribution Graph"
+wsjf: 3.0
+total_bcps: 5
+status: todo
+stories:
+  - id: e24s01
+    title: "Contribution Graph Section"
+    bcps: 5
+    status: passing
+    delta: ADDED
+    spec: e24s01-contribution-graph.md
+    tasks: e24s01-tasks.yaml
