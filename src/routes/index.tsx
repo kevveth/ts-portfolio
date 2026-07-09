@@ -1,9 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ContactCta } from "#/components/contact-cta";
+import { ContributionGraph, ContributionGraphError } from "#/components/contribution-graph";
 import { FeaturedProject } from "#/components/featured-project";
 import { Hero } from "#/components/hero";
 import { StackStrip } from "#/components/stack-strip";
 import { SITE, SITE_URL } from "#/content/site";
+import { fetchContributions } from "#/lib/github";
 
 export const Route = createFileRoute("/")({
 	head: () => ({
@@ -16,14 +18,25 @@ export const Route = createFileRoute("/")({
 		],
 		links: [{ rel: "canonical", href: `${SITE_URL}/` }],
 	}),
+	loader: async () => {
+		const result = await fetchContributions();
+		return result;
+	},
 	component: Home,
 });
 
 function Home() {
+	const result = Route.useLoaderData();
+
 	return (
 		<>
 			<Hero />
 			<FeaturedProject />
+			{result.ok ? (
+				<ContributionGraph data={result.data} />
+			) : (
+				<ContributionGraphError message={result.error} />
+			)}
 			<StackStrip />
 			<ContactCta />
 		</>
