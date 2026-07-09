@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Mail } from "lucide-react";
+import { HeroBlobs } from "#/components/hero-blobs";
 import { Reveal } from "#/components/reveal";
 import { Section } from "#/components/section";
 import { Button } from "#/components/ui/button";
@@ -11,6 +12,7 @@ export function Hero() {
 
 	return (
 		<div className="relative">
+			<HeroBlobs />
 			<div aria-hidden className="bg-grid absolute inset-0 -z-10" />
 			<Section className="py-20 sm:py-28">
 				<Reveal>

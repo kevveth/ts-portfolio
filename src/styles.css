@@ -80,6 +80,23 @@
 	--input: oklch(0.911 0.004 286.3);
 	--ring: var(--brand);
 	--radius: 0.5rem;
+
+	/*
+	 * Hero lava-lamp blobs — ambient texture derived from --brand, mixed
+	 * toward --muted-foreground to desaturate (reads as soft texture, not a
+	 * brand wash) and toward transparent for the low alpha the metaball
+	 * canvas composites at. Percentages are tuned to clear WCAG AA on the
+	 * hero text and both button variants (verified with the verify-contrast
+	 * skill, not eyeballed) — don't raise them without re-checking, same
+	 * discipline as the .btn-glass tint below.
+	 */
+	--hero-blob-1: color-mix(in oklab, var(--brand) 9%, transparent);
+	--hero-blob-2: color-mix(
+		in oklab,
+		color-mix(in oklab, var(--brand) 55%, var(--muted-foreground)) 7%,
+		transparent
+	);
+	--hero-blob-3: color-mix(in oklab, var(--brand) 5%, transparent);
 }
 
 .dark {
@@ -104,6 +121,14 @@
 	--border: oklch(0.27 0.006 286);
 	--input: oklch(0.27 0.006 286);
 	--ring: var(--brand);
+
+	--hero-blob-1: color-mix(in oklab, var(--brand) 9%, transparent);
+	--hero-blob-2: color-mix(
+		in oklab,
+		color-mix(in oklab, var(--brand) 55%, var(--muted-foreground)) 7%,
+		transparent
+	);
+	--hero-blob-3: color-mix(in oklab, var(--brand) 5%, transparent);
 }
 
 @theme inline {
@@ -178,6 +203,58 @@ body {
 		linear-gradient(90deg, color-mix(in oklab, var(--border) 55%, transparent) 1px, transparent 1px);
 	background-size: 32px 32px;
 	mask-image: radial-gradient(ellipse 90% 80% at 50% 0%, black 30%, transparent 75%);
+}
+
+/*
+ * Hero "lava lamp" background — a metaball field canvas (see hero-blobs.tsx)
+ * drawn at low resolution and upscaled here; `image-rendering: pixelated`
+ * is what turns that upscale into chunky/retro blocks instead of a smooth
+ * blur. Sits behind .bg-grid (-z-20 vs -z-10) so the blueprint grid stays
+ * crisp on top of the soft ambient color.
+ *
+ * The mask fades the effect to near-nothing across the heading/body text
+ * rows (top of the hero) and concentrates it toward the button row at the
+ * bottom — the whole point is making .btn-glass more noticeable without
+ * competing with the copy for attention or eating into text contrast.
+ */
+.hero-blobs {
+	/*
+	 * Canvas is a replaced element — `absolute inset-0` alone positions it
+	 * but doesn't stretch it, so without an explicit size it falls back to
+	 * its low-res backing-store dimensions (the `width`/`height` attributes
+	 * set in hero-blobs.tsx). Forcing 100%/100% here is what makes the tiny
+	 * buffer fill the hero and get upscaled — image-rendering below is what
+	 * makes that upscale chunky instead of smoothed.
+	 */
+	width: 100%;
+	height: 100%;
+	image-rendering: pixelated;
+	mask-image: radial-gradient(ellipse 130% 90% at 50% 100%, black 35%, transparent 80%);
+}
+
+/*
+ * Reduced-transparency fallback for the hero blobs — hidden by default,
+ * swapped in by the media query below. Flat and fully opaque (no alpha
+ * compositing at all), mirroring how .btn-glass drops its material
+ * entirely rather than just dimming it under this preference.
+ */
+.hero-blobs-fallback {
+	display: none;
+	background: radial-gradient(
+		ellipse 130% 90% at 50% 100%,
+		color-mix(in oklab, var(--brand) 14%, var(--background)) 0%,
+		var(--background) 78%
+	);
+	mask-image: radial-gradient(ellipse 130% 90% at 50% 100%, black 35%, transparent 80%);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+	.hero-blobs {
+		display: none;
+	}
+	.hero-blobs-fallback {
+		display: block;
+	}
 }
 
 /*
