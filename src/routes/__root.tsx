@@ -6,6 +6,7 @@ import {
 } from "@tanstack/react-router";
 import { Analytics } from "@vercel/analytics/react";
 import type { ReactNode } from "react";
+import { LiquidGlassFilter } from "#/components/liquid-glass-filter";
 
 import { SiteFooter } from "#/components/site-footer";
 import { SiteHeader } from "#/components/site-header";
@@ -63,6 +64,7 @@ function RootDocument({ children }: { children: ReactNode }) {
 				<HeadContent />
 			</head>
 			<body className="flex min-h-svh flex-col">
+				<LiquidGlassFilter />
 				<SiteHeader />
 				<main className="flex-1">{children}</main>
 				<SiteFooter />
