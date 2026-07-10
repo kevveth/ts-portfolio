@@ -82,21 +82,27 @@
 	--radius: 0.5rem;
 
 	/*
-	 * Hero lava-lamp blobs — ambient texture derived from --brand, mixed
-	 * toward --muted-foreground to desaturate (reads as soft texture, not a
-	 * brand wash) and toward transparent for the low alpha the metaball
-	 * canvas composites at. Percentages are tuned to clear WCAG AA on the
-	 * hero text and both button variants (verified with the verify-contrast
+	 * Hero lava-lamp blobs — five tones derived from --brand, mixed toward
+	 * warm/cool oklch targets and --muted-foreground for tonal variety.
+	 * Weighted blending in the canvas composites these into smooth gradients
+	 * at blob overlap zones. Percentages are tuned to clear WCAG AA on hero
+	 * text and both button variants (verified with the verify-contrast
 	 * skill, not eyeballed) — don't raise them without re-checking, same
 	 * discipline as the .btn-glass tint below.
 	 */
-	--hero-blob-1: color-mix(in oklab, var(--brand) 9%, transparent);
+	--hero-blob-1: color-mix(in oklab, color-mix(in oklab, var(--brand) 80%, oklch(0.7 0.18 45)) 45%, transparent);
 	--hero-blob-2: color-mix(
 		in oklab,
-		color-mix(in oklab, var(--brand) 55%, var(--muted-foreground)) 7%,
+		color-mix(in oklab, var(--brand) 50%, var(--muted-foreground)) 35%,
 		transparent
 	);
-	--hero-blob-3: color-mix(in oklab, var(--brand) 5%, transparent);
+	--hero-blob-3: color-mix(in oklab, color-mix(in oklab, var(--brand) 85%, oklch(0.7 0.1 260)) 42%, transparent);
+	--hero-blob-4: color-mix(
+		in oklab,
+		color-mix(in oklab, var(--brand) 40%, var(--muted-foreground)) 30%,
+		transparent
+	);
+	--hero-blob-5: color-mix(in oklab, var(--brand) 32%, transparent);
 }
 
 .dark {
@@ -122,13 +128,19 @@
 	--input: oklch(0.27 0.006 286);
 	--ring: var(--brand);
 
-	--hero-blob-1: color-mix(in oklab, var(--brand) 9%, transparent);
+	--hero-blob-1: color-mix(in oklab, color-mix(in oklab, var(--brand) 80%, oklch(0.7 0.18 45)) 45%, transparent);
 	--hero-blob-2: color-mix(
 		in oklab,
-		color-mix(in oklab, var(--brand) 55%, var(--muted-foreground)) 7%,
+		color-mix(in oklab, var(--brand) 50%, var(--muted-foreground)) 35%,
 		transparent
 	);
-	--hero-blob-3: color-mix(in oklab, var(--brand) 5%, transparent);
+	--hero-blob-3: color-mix(in oklab, color-mix(in oklab, var(--brand) 85%, oklch(0.7 0.1 260)) 42%, transparent);
+	--hero-blob-4: color-mix(
+		in oklab,
+		color-mix(in oklab, var(--brand) 40%, var(--muted-foreground)) 30%,
+		transparent
+	);
+	--hero-blob-5: color-mix(in oklab, var(--brand) 32%, transparent);
 }
 
 @theme inline {

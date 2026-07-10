@@ -1,27 +1,26 @@
 import { useEffect, useRef } from "react";
 import {
-	dominantColorIndex,
+	blendColors,
+	COLOR_COUNT,
 	getBlobCenters,
 	POSTERIZE_BANDS,
 	posterizeField,
 	sampleField,
 } from "#/lib/hero-blobs";
 
-const BUFFER_WIDTH = 96;
-const MIN_BUFFER_HEIGHT = 24;
-const MAX_BUFFER_HEIGHT = 200;
-const FIELD_THRESHOLD = 6;
-const COLOR_COUNT = 3;
-/** ~12fps — cheap, and the stepped cadence reinforces the retro/chunky motion rather than fighting it. */
-const FRAME_INTERVAL_MS = 80;
+const BUFFER_WIDTH = 160;
+const MIN_BUFFER_HEIGHT = 40;
+const MAX_BUFFER_HEIGHT = 320;
+const FIELD_THRESHOLD = 1.0;
+/** ~20fps — smoother than the old 12.5fps, still cheap at 160px buffer width. */
+const FRAME_INTERVAL_MS = 50;
 
 type ResolvedColor = [r: number, g: number, b: number, a: number];
 
 /**
  * Resolves a CSS color (including color-mix()/oklab, which canvas fillStyle
  * can't be string-compared against) to concrete sRGB bytes via a 1x1 canvas
- * round-trip — the same technique the verify-contrast skill uses to read
- * real composited pixels instead of parsing CSS strings.
+ * round-trip.
  */
 function resolveCssColor(colorString: string): ResolvedColor {
 	const probe = document.createElement("canvas");
@@ -52,8 +51,10 @@ function drawFrame(
 	width: number,
 	height: number,
 	timeSeconds: number,
-	colors: readonly ResolvedColor[],
 ) {
+	// Re-read colors every frame — trivially cheap (5×1px canvas probes at
+	// 20fps) and ensures HMR CSS updates are picked up without a full reload.
+	const colors = readBlobColors();
 	const centers = getBlobCenters(timeSeconds, width, height);
 	const image = ctx.createImageData(width, height);
 	const data = image.data;
@@ -63,8 +64,26 @@ function drawFrame(
 			const idx = (y * width + x) * 4;
 			const field = posterizeField(sampleField(x, y, centers), FIELD_THRESHOLD);
 			if (field < 0) continue;
-			const colorIndex = dominantColorIndex(x, y, centers) % colors.length;
-			const [r, g, b, a] = colors[colorIndex];
+
+			const weights = blendColors(x, y, centers, colors.length);
+
+			// Weighted blend: each color contributes proportionally to its
+			// blob's influence at this pixel. Overlap zones get smooth
+			// warm-to-cool transitions instead of hard Voronoi edges.
+			let r = 0;
+			let g = 0;
+			let b = 0;
+			let a = 0;
+			for (let ci = 0; ci < colors.length; ci++) {
+				const w = weights[ci];
+				if (w < 0.001) continue;
+				const [cr, cg, cb, ca] = colors[ci];
+				r += cr * w;
+				g += cg * w;
+				b += cb * w;
+				a += ca * w;
+			}
+
 			const bandIntensity = (field + 1) / POSTERIZE_BANDS;
 			data[idx] = r;
 			data[idx + 1] = g;
@@ -79,9 +98,9 @@ function drawFrame(
 /**
  * Ambient "lava lamp" background for the hero — a metaball field rendered at
  * low resolution and upscaled with `image-rendering: pixelated` for a
- * chunky/retro look rather than a smooth gradient mesh. Client-only: the
- * canvas is empty markup on the server, all drawing happens in an effect
- * after mount so this never affects SSR/hydration.
+ * chunky/retro look. Six blobs with weighted color blending and noise-based
+ * jitter produce organic lava-like motion. Client-only: the canvas is empty
+ * markup on the server.
  */
 export function HeroBlobs() {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -89,16 +108,11 @@ export function HeroBlobs() {
 	useEffect(() => {
 		const canvas = canvasRef.current;
 		if (!canvas) return;
-		// Reduced transparency drops straight to the flat CSS fallback (see
-		// .hero-blobs-fallback in styles.css) — don't even mount the canvas
-		// drawing, matching how .btn-glass fully removes its material rather
-		// than just dimming it under this preference.
 		if (window.matchMedia("(prefers-reduced-transparency: reduce)").matches)
 			return;
 		const ctx = canvas.getContext("2d");
 		if (!ctx) return;
 
-		let colors = readBlobColors();
 		const prefersReducedMotion = window.matchMedia(
 			"(prefers-reduced-motion: reduce)",
 		).matches;
@@ -123,21 +137,11 @@ export function HeroBlobs() {
 		const render = (now: number) => {
 			if (now - lastDrawTime >= FRAME_INTERVAL_MS) {
 				lastDrawTime = now;
-				drawFrame(
-					ctx,
-					canvas.width,
-					canvas.height,
-					(now - startTime) / 1000,
-					colors,
-				);
+				drawFrame(ctx, canvas.width, canvas.height, (now - startTime) / 1000);
 			}
 			rafId = requestAnimationFrame(render);
 		};
 
-		// Two independent gates — the loop only runs while both are true.
-		// Reduced-motion never joins this dance at all: it draws one frame
-		// below and stays there permanently (Apple/WCAG 2.3.1 precedent
-		// already established for .btn-glass — see styles.css:434-455).
 		let isIntersecting = false;
 		let isPageVisible = !document.hidden;
 
@@ -154,7 +158,7 @@ export function HeroBlobs() {
 		};
 
 		sizeBuffer();
-		drawFrame(ctx, canvas.width, canvas.height, 0, colors);
+		drawFrame(ctx, canvas.width, canvas.height, 0);
 
 		const resizeObserver = new ResizeObserver(() => {
 			sizeBuffer();
@@ -164,21 +168,21 @@ export function HeroBlobs() {
 					canvas.width,
 					canvas.height,
 					(performance.now() - startTime) / 1000,
-					colors,
 				);
 			}
 		});
 		resizeObserver.observe(canvas);
 
+		// Theme observer: dark/light class toggle on <html> triggers repaint.
+		// Colors are re-read in drawFrame each frame anyway, so HMR updates
+		// to CSS custom properties are picked up without extra observers.
 		const themeObserver = new MutationObserver(() => {
-			colors = readBlobColors();
 			if (rafId === null) {
 				drawFrame(
 					ctx,
 					canvas.width,
 					canvas.height,
 					(performance.now() - startTime) / 1000,
-					colors,
 				);
 			}
 		});
@@ -220,7 +224,6 @@ export function HeroBlobs() {
 				ref={canvasRef}
 				className="hero-blobs absolute inset-0 -z-20"
 			/>
-			{/* Shown only under prefers-reduced-transparency: reduce — see styles.css */}
 			<div aria-hidden className="hero-blobs-fallback absolute inset-0 -z-20" />
 		</>
 	);
