@@ -33,7 +33,7 @@ export const STATUS_META: Record<
 		label: "Live",
 		dotClass: "bg-green-500",
 		badgeClass:
-			"border-green-600/40 bg-green-500/10 text-green-700 dark:border-green-400/40 dark:text-green-400",
+			"border-green-600/40 bg-green-500/10 text-green-800 dark:border-green-400/40 dark:text-green-400",
 		live: true,
 	},
 	prototype: {

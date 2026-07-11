@@ -1,7 +1,7 @@
+import { Button } from "ui-library";
 import { CONTACT_CHANNELS } from "#/components/contact-links";
 import { Reveal } from "#/components/reveal";
 import { Section, SectionHeading } from "#/components/section";
-import { Button } from "#/components/ui/button";
 import { SITE } from "#/content/site";
 
 export function ContactCta() {
@@ -22,7 +22,8 @@ export function ContactCta() {
 							key={channel.label}
 							asChild
 							size="lg"
-							variant={i === 0 ? "default" : "outline"}
+							variant="glass"
+							glassColor={i === 0 ? "sapphire" : undefined}
 						>
 							<a
 								href={channel.href}

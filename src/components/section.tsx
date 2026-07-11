@@ -5,19 +5,74 @@ type SectionProps = {
 	id?: string;
 	className?: string;
 	children: ReactNode;
+	width?: "content" | "reading" | "wide";
+	spacing?: "default" | "compact" | "flush";
+	divided?: boolean;
 };
 
-export function Section({ id, className, children }: SectionProps) {
+const widths = {
+	content: "max-w-5xl",
+	reading: "max-w-3xl",
+	wide: "max-w-7xl",
+} as const;
+
+const spacings = {
+	default: "py-14 sm:py-20",
+	compact: "py-10 sm:py-12",
+	flush: "py-0",
+} as const;
+
+export function Section({
+	id,
+	className,
+	children,
+	width = "content",
+	spacing = "default",
+	divided = false,
+}: SectionProps) {
 	return (
 		<section
 			id={id}
 			className={cn(
-				"mx-auto w-full max-w-5xl px-4 py-14 sm:px-6 sm:py-20",
+				"mx-auto w-full px-4 sm:px-6",
+				widths[width],
+				spacings[spacing],
+				divided && "border-t",
 				className,
 			)}
 		>
 			{children}
 		</section>
+	);
+}
+
+type PageIntroProps = {
+	kicker: string;
+	title: string;
+	description?: string;
+	children?: ReactNode;
+	className?: string;
+};
+
+export function PageIntro({
+	kicker,
+	title,
+	description,
+	children,
+	className,
+}: PageIntroProps) {
+	return (
+		<header className={cn("max-w-3xl space-y-4", className)}>
+			<p className="kicker">
+				<span aria-hidden className="text-brand">
+					{"// "}
+				</span>
+				{kicker}
+			</p>
+			<h1 className="page-title">{title}</h1>
+			{description ? <p className="page-lede">{description}</p> : null}
+			{children}
+		</header>
 	);
 }
 

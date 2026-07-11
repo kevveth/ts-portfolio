@@ -6,10 +6,10 @@ import {
 } from "@tanstack/react-router";
 import { Analytics } from "@vercel/analytics/react";
 import type { ReactNode } from "react";
+import { Button } from "ui-library";
 
 import { SiteFooter } from "#/components/site-footer";
 import { SiteHeader } from "#/components/site-header";
-import { Button } from "#/components/ui/button";
 import { SITE, SITE_URL } from "#/content/site";
 import { THEME_INIT_SCRIPT } from "#/lib/theme";
 import appCss from "../styles.css?url";

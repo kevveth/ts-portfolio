@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import type { Activity } from "react-activity-calendar";
 import { ActivityCalendar } from "react-activity-calendar";
+import { ContentState } from "#/components/content-state";
 import { Reveal } from "#/components/reveal";
 import { Section, SectionHeading } from "#/components/section";
+import { Surface } from "#/components/surface";
 import { getCurrentTheme } from "#/lib/theme";
 
 // ---------------------------------------------------------------------------
@@ -64,11 +66,7 @@ export function ContributionGraph({ data }: ContributionGraphProps) {
 			<Section id="activity">
 				<SectionHeading kicker="activity" title="GitHub contributions" />
 				<Reveal>
-					<div className="rounded-lg border bg-card p-8 text-center">
-						<p className="text-sm text-muted-foreground">
-							No contribution data available yet.
-						</p>
-					</div>
+					<ContentState>No contribution data available yet.</ContentState>
 				</Reveal>
 			</Section>
 		);
@@ -78,7 +76,7 @@ export function ContributionGraph({ data }: ContributionGraphProps) {
 		<Section id="activity">
 			<SectionHeading kicker="activity" title="GitHub contributions" />
 			<Reveal>
-				<div className="overflow-hidden rounded-lg border bg-card p-4 sm:p-6">
+				<Surface className="overflow-hidden p-4 sm:p-6">
 					<ActivityCalendar
 						data={data}
 						theme={CONTRIBUTION_THEME}
@@ -89,7 +87,7 @@ export function ContributionGraph({ data }: ContributionGraphProps) {
 						blockRadius={3}
 						fontSize={12}
 					/>
-				</div>
+				</Surface>
 			</Reveal>
 		</Section>
 	);
@@ -104,9 +102,7 @@ export function ContributionGraphError({ message }: { message: string }) {
 		<Section id="activity">
 			<SectionHeading kicker="activity" title="GitHub contributions" />
 			<Reveal>
-				<div className="rounded-lg border bg-card p-8 text-center">
-					<p className="text-sm text-muted-foreground">{message}</p>
-				</div>
+				<ContentState>{message}</ContentState>
 			</Reveal>
 		</Section>
 	);

@@ -3,9 +3,9 @@
 import { Link } from "@tanstack/react-router";
 import { Github, Menu } from "lucide-react";
 import { useState } from "react";
+import { Button } from "ui-library";
 import { CONTACT_CHANNELS } from "#/components/contact-links";
 import { ThemeToggle } from "#/components/theme-toggle";
-import { Button } from "#/components/ui/button";
 import { Separator } from "#/components/ui/separator";
 import {
 	Sheet,
@@ -41,8 +41,11 @@ export function SiteHeader() {
 							<Link
 								key={item.to}
 								to={item.to}
-								className="rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
-								activeProps={{ className: "text-foreground" }}
+								className="rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+								activeProps={{
+									className:
+										"bg-accent text-foreground shadow-[inset_0_-2px_0_var(--brand)]",
+								}}
 								activeOptions={{ exact: item.to === "/" }}
 							>
 								{item.label}
@@ -84,7 +87,10 @@ export function SiteHeader() {
 										to={item.to}
 										onClick={() => setOpen(false)}
 										className="rounded-md px-4 py-3 text-base text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-										activeProps={{ className: "text-foreground" }}
+										activeProps={{
+											className:
+												"bg-accent text-foreground shadow-[inset_3px_0_0_var(--brand)]",
+										}}
 										activeOptions={{ exact: item.to === "/" }}
 									>
 										{item.label}

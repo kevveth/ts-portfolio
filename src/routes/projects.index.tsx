@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ProjectCard } from "#/components/project-card";
 import { Reveal } from "#/components/reveal";
-import { Section, SectionHeading } from "#/components/section";
+import { PageIntro, Section } from "#/components/section";
 import { getAllProjects } from "#/content/projects";
 import { SITE, SITE_URL } from "#/content/site";
 
@@ -28,7 +28,12 @@ function ProjectsIndex() {
 
 	return (
 		<Section>
-			<SectionHeading kicker="projects" title="Selected work" as="h1" />
+			<PageIntro
+				kicker="projects"
+				title="Selected work"
+				description={DESCRIPTION}
+				className="mb-10"
+			/>
 			<Reveal>
 				<div className="grid gap-6 md:grid-cols-2">
 					{projects.map((project) => (

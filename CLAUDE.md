@@ -39,3 +39,4 @@ npx shadcn@latest add <component>
 - TypeScript is strict with `verbatimModuleSyntax` — use `import type` for type-only imports.
 - Files prefixed with `demo` are scaffold examples and safe to delete.
 - `docs/spec-driven-development-with-claude-code.md` describes the spec-driven workflow the owner intends to follow (spec → plan → implement → verify, reviewing at phase gates).
+- Cross-agent handoffs (e.g. Claude → Codex) live in `docs/handoffs/`. Register every one in `docs/handoffs/CHANGELOG.md`; see `docs/handoffs/README.md` for the status lifecycle. Agents may mark a row `done` themselves once its verification checklist genuinely passes — use `needs-review` when unsure or when it's Ken's call.

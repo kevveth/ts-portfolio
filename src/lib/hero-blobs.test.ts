@@ -175,7 +175,7 @@ describe("dominantColorIndex (deprecated compat)", () => {
 /**
  * Guards the CSS side of the contract: the blob palette must stay derived
  * from --brand via color-mix (never a hardcoded hex), matching the
- * discipline already enforced for .btn-glass in glass-filter.test.ts.
+ * discipline used for other foreground elements on the animated canvas.
  */
 describe("hero blob palette tokens", () => {
 	const stylesPath = fileURLToPath(new URL("../styles.css", import.meta.url));

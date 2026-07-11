@@ -1,12 +1,13 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight } from "lucide-react";
-import { LiveSiteButton } from "#/components/live-site-button";
 import { Picture } from "#/components/picture";
+import {
+	ProjectActions,
+	ProjectMeta,
+	TechStack,
+} from "#/components/project-patterns";
 import { Reveal } from "#/components/reveal";
 import { Section, SectionHeading } from "#/components/section";
-import { StatusBadge } from "#/components/status-badge";
-import { Badge } from "#/components/ui/badge";
-import { Button } from "#/components/ui/button";
+import { Surface } from "#/components/surface";
 import { getFeaturedProject } from "#/content/projects";
 import { getProjectImage } from "#/lib/project-images";
 
@@ -24,47 +25,29 @@ export function FeaturedProject() {
 						to="/projects/$slug"
 						params={{ slug: project.slug }}
 						aria-label={`${project.title} case study`}
-						className="group block overflow-hidden rounded-lg border bg-card shadow-sm"
+						className="group block rounded-lg"
 					>
-						<Picture
-							picture={cover}
-							alt={project.gallery[0].alt}
-							sizes="(min-width: 1024px) 60vw, 100vw"
-							loading="eager"
-							fetchPriority="high"
-							imgClassName="transition-transform duration-500 group-hover:scale-[1.015]"
-						/>
+						<Surface variant="raised" className="overflow-hidden">
+							<Picture
+								picture={cover}
+								alt={project.gallery[0].alt}
+								sizes="(min-width: 1024px) 60vw, 100vw"
+								loading="eager"
+								fetchPriority="high"
+								imgClassName="project-image"
+							/>
+						</Surface>
 					</Link>
 					<div className="space-y-5">
-						<StatusBadge status={project.status} />
+						<ProjectMeta project={project} />
 						<p className="text-lg leading-relaxed text-balance">
 							{project.tagline}
 						</p>
 						<p className="leading-relaxed text-muted-foreground">
 							{project.summary}
 						</p>
-						<div className="flex flex-wrap gap-1.5">
-							{project.stack.map((tech) => (
-								<Badge
-									key={tech}
-									variant="outline"
-									className="font-mono text-xs font-normal"
-								>
-									{tech}
-								</Badge>
-							))}
-						</div>
-						<div className="flex flex-wrap gap-3 pt-1">
-							<Button asChild>
-								<Link to="/projects/$slug" params={{ slug: project.slug }}>
-									Read the case study
-									<ArrowRight aria-hidden />
-								</Link>
-							</Button>
-							{project.liveUrl ? (
-								<LiveSiteButton href={project.liveUrl} variant="outline" />
-							) : null}
-						</div>
+						<TechStack stack={project.stack} />
+						<ProjectActions project={project} caseStudy className="pt-1" />
 					</div>
 				</div>
 			</Reveal>

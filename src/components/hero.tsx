@@ -1,9 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Mail } from "lucide-react";
+import { Button } from "ui-library";
 import { HeroBlobs } from "#/components/hero-blobs";
 import { Reveal } from "#/components/reveal";
 import { Section } from "#/components/section";
-import { Button } from "#/components/ui/button";
 import { getFeaturedProject } from "#/content/projects";
 import { SITE } from "#/content/site";
 
@@ -33,13 +33,13 @@ export function Hero() {
 						{SITE.bio}
 					</p>
 					<div className="mt-9 flex flex-wrap items-center gap-3">
-						<Button asChild size="lg">
+						<Button asChild size="lg" variant="glass" glassColor="sapphire">
 							<Link to="/projects/$slug" params={{ slug: featured.slug }}>
 								View the case study
 								<ArrowRight aria-hidden />
 							</Link>
 						</Button>
-						<Button asChild size="lg" variant="outline">
+						<Button asChild size="lg" variant="glass">
 							<a href={`mailto:${SITE.email}`}>
 								<Mail aria-hidden />
 								Get in touch

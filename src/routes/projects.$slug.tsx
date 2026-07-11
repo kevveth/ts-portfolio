@@ -1,12 +1,14 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { Mail } from "lucide-react";
+import { Button } from "ui-library";
 import { Gallery } from "#/components/gallery";
-import { LiveSiteButton } from "#/components/live-site-button";
 import { Picture } from "#/components/picture";
-import { Section, SectionHeading } from "#/components/section";
-import { StatusBadge } from "#/components/status-badge";
-import { Badge } from "#/components/ui/badge";
-import { Button } from "#/components/ui/button";
+import {
+	ProjectActions,
+	ProjectMeta,
+	TechStack,
+} from "#/components/project-patterns";
+import { PageIntro, Section, SectionHeading } from "#/components/section";
+import { Surface } from "#/components/surface";
 import { getProject } from "#/content/projects";
 import { SITE, SITE_URL } from "#/content/site";
 import { getProjectImage } from "#/lib/project-images";
@@ -43,46 +45,19 @@ function ProjectDetail() {
 	return (
 		<article>
 			<Section className="pb-8 sm:pb-10">
-				<p className="kicker mb-5">
-					<span aria-hidden className="text-brand">
-						{"// "}
-					</span>
-					case study
-				</p>
-				<div className="max-w-3xl space-y-4">
-					<h1 className="text-3xl font-bold tracking-tight text-balance sm:text-5xl">
-						{project.title}
-					</h1>
-					<div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-						<p className="font-mono text-sm text-muted-foreground">
-							{project.role} · {project.year}
-						</p>
-						<StatusBadge status={project.status} />
-					</div>
-					<p className="text-lg leading-relaxed text-balance sm:text-xl">
-						{project.tagline}
-					</p>
-					<div className="flex flex-wrap gap-1.5 pt-1">
-						{project.stack.map((tech) => (
-							<Badge
-								key={tech}
-								variant="outline"
-								className="font-mono text-xs font-normal"
-							>
-								{tech}
-							</Badge>
-						))}
-					</div>
-					{project.liveUrl ? (
-						<div className="pt-2">
-							<LiveSiteButton href={project.liveUrl} />
-						</div>
-					) : null}
-				</div>
+				<PageIntro
+					kicker="case study"
+					title={project.title}
+					description={project.tagline}
+				>
+					<ProjectMeta project={project} />
+					<TechStack stack={project.stack} className="pt-1" />
+					<ProjectActions project={project} className="pt-2" />
+				</PageIntro>
 			</Section>
 
-			<Section className="py-0">
-				<div className="overflow-hidden rounded-lg border bg-card shadow-sm">
+			<Section spacing="flush">
+				<Surface variant="raised" className="overflow-hidden">
 					<Picture
 						picture={getProjectImage(cover.src)}
 						alt={cover.alt}
@@ -90,21 +65,21 @@ function ProjectDetail() {
 						loading="eager"
 						fetchPriority="high"
 					/>
-				</div>
+				</Surface>
 			</Section>
 
-			<Section className="space-y-12">
-				<div className="max-w-3xl space-y-3">
+			<Section width="reading" className="space-y-12">
+				<div className="space-y-3">
 					<SectionHeading kicker="overview" className="mb-0" />
 					<p className="leading-relaxed">{project.summary}</p>
 				</div>
-				<div className="max-w-3xl space-y-3">
+				<div className="space-y-3">
 					<SectionHeading kicker="the problem" className="mb-0" />
 					<p className="leading-relaxed text-muted-foreground">
 						{project.problem}
 					</p>
 				</div>
-				<div className="max-w-3xl space-y-3">
+				<div className="space-y-3">
 					<SectionHeading kicker="the approach" className="mb-0" />
 					<p className="leading-relaxed text-muted-foreground">
 						{project.approach}
@@ -162,15 +137,9 @@ function ProjectDetail() {
 				</Section>
 			) : null}
 
-			<Section className="border-t">
+			<Section divided>
 				<div className="flex flex-wrap items-center gap-3">
-					{project.liveUrl ? <LiveSiteButton href={project.liveUrl} /> : null}
-					<Button asChild variant="outline">
-						<a href={`mailto:${SITE.email}`}>
-							<Mail aria-hidden />
-							Get in touch
-						</a>
-					</Button>
+					<ProjectActions project={project} contact />
 					<Link
 						to="/projects"
 						className="px-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
@@ -185,14 +154,12 @@ function ProjectDetail() {
 
 function ProjectNotFound() {
 	return (
-		<Section className="py-24">
-			<p className="kicker mb-4">404 — not found</p>
-			<h1 className="text-3xl font-semibold tracking-tight">
-				No project with that name.
-			</h1>
-			<p className="mt-3 text-muted-foreground">
-				It may have been renamed, or the link is stale.
-			</p>
+		<Section spacing="default" width="reading">
+			<PageIntro
+				kicker="404 — not found"
+				title="No project with that name."
+				description="It may have been renamed, or the link is stale."
+			/>
 			<Button asChild variant="outline" className="mt-6">
 				<Link to="/projects">Browse all projects</Link>
 			</Button>

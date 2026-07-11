@@ -1,5 +1,5 @@
 import { ExternalLink } from "lucide-react";
-import { Button } from "#/components/ui/button";
+import { Button } from "ui-library";
 
 /** Shared "Visit live site" CTA — opens a project's liveUrl in a new tab. */
 export function LiveSiteButton({

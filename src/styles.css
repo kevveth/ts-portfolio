@@ -2,8 +2,28 @@
 @plugin '@tailwindcss/typography';
 
 @import 'tw-animate-css';
+@import 'ui-library/styles.css';
 
 @custom-variant dark (&:is(.dark *));
+
+/* Keep colored glass labels legible over the near-white light theme. */
+.ui-btn-glass-colored {
+	color: color-mix(in srgb, var(--glass-color) 45%, black);
+	text-shadow: none;
+}
+
+.dark .ui-btn-glass-colored {
+	color: #fff;
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+	.ui-btn-glass-colored,
+	.dark .ui-btn-glass-colored {
+		color: #fff;
+		text-shadow: none;
+	}
+}
 
 /*
  * Self-hosted fonts (public/fonts/, copied from @fontsource latin subsets).
@@ -87,8 +107,7 @@
 	 * Weighted blending in the canvas composites these into smooth gradients
 	 * at blob overlap zones. Percentages are tuned to clear WCAG AA on hero
 	 * text and both button variants (verified with the verify-contrast
-	 * skill, not eyeballed) — don't raise them without re-checking, same
-	 * discipline as the .btn-glass tint below.
+	 * skill, not eyeballed) — don't raise them without re-checking.
 	 */
 	--hero-blob-1: color-mix(in oklab, color-mix(in oklab, var(--brand) 80%, oklch(0.7 0.18 45)) 45%, transparent);
 	--hero-blob-2: color-mix(
@@ -107,6 +126,7 @@
 
 .dark {
 	--brand: oklch(0.65 0.2 25);
+	/* Lifted lightness vs. the light theme's tint so a translucent layer over the near-black page still reads blue, not black */
 
 	--background: oklch(0.148 0.004 285.8);
 	--foreground: oklch(0.96 0.002 286);
@@ -208,6 +228,32 @@ body {
 	color: var(--muted-foreground);
 }
 
+/* Shared type recipes keep page compositions consistent without hiding semantics. */
+.page-title {
+	font-size: clamp(2rem, 6vw, 3rem);
+	font-weight: 700;
+	letter-spacing: -0.025em;
+	line-height: 1.08;
+	text-wrap: balance;
+}
+.page-lede {
+	font-size: clamp(1.0625rem, 2vw, 1.25rem);
+	line-height: 1.65;
+	text-wrap: balance;
+}
+.metadata {
+	font-family: var(--font-mono);
+	font-size: 0.75rem;
+	line-height: 1.4;
+	color: var(--muted-foreground);
+}
+.project-image {
+	transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.group:hover .project-image {
+	transform: scale(1.02);
+}
+
 /* Faint blueprint grid, used behind the hero. Theme-aware via --border. */
 .bg-grid {
 	background-image:
@@ -226,7 +272,7 @@ body {
  *
  * The mask fades the effect to near-nothing across the heading/body text
  * rows (top of the hero) and concentrates it toward the button row at the
- * bottom — the whole point is making .btn-glass more noticeable without
+	 * bottom — the whole point is making the glass CTAs more noticeable without
  * competing with the copy for attention or eating into text contrast.
  */
 .hero-blobs {
@@ -247,8 +293,7 @@ body {
 /*
  * Reduced-transparency fallback for the hero blobs — hidden by default,
  * swapped in by the media query below. Flat and fully opaque (no alpha
- * compositing at all), mirroring how .btn-glass drops its material
- * entirely rather than just dimming it under this preference.
+	 * compositing at all) for a stable reduced-transparency presentation.
  */
 .hero-blobs-fallback {
 	display: none;
@@ -286,248 +331,8 @@ html.js .reveal.is-visible {
 	transform: none;
 }
 
-/*
- * Liquid Glass buttons — layered glass effect inspired by iOS 26 "Liquid Glass".
- *
- * Layers (back to front):
- *   1. Button body:    backdrop-blur + vivid brand-tinted translucent bg +
- *                       brand-cast shadow + inset edge shading
- *   2. ::after:         soft interior gloss highland + tight top-center glow
- *                       (glass "thickness" illusion) — painted behind the label
- *   3. ::before:        specular rim — a directional arc hugging the
- *                       rounded-rect outline, bright at top, dark at the sides
- *   4. Content (text):  high-contrast, theme-tuned legibility treatment
- *
- * Cascade: solid fallback → frosted glass (all browsers). There used to be a
- * Chromium-only tier that ran an SVG feTurbulence displacement over the rim;
- * it was removed because every glass button here sits on a near-flat
- * background, so the distortion had nothing to refract and only produced a
- * cloud/mold-like artifact instead of a glass bezel (see git history).
- *
- * Every glass button here also sits on a near-flat background, which means
- * backdrop-filter's brightness()/saturate() has almost nothing to act on —
- * over a light page the tint reads pastel, over a dark page it reads muddy.
- * Vividness instead comes from the tint mix itself (Tasks below), matching
- * Apple's own description of tinted glass staying close to the intended
- * brand color's vividness rather than washing out.
- */
-
-/* Tier 1: No backdrop-filter — solid brand color (identical to old default) */
-.btn-glass {
-	position: relative;
-	overflow: hidden;
-	background: var(--primary);
-	border: 1px solid color-mix(in oklab, var(--primary) 80%, transparent);
-	box-shadow: 0 1px 3px rgb(0 0 0 / 8%);
-}
-
-.btn-glass:hover {
-	border-color: var(--primary);
-	box-shadow: 0 2px 6px rgb(0 0 0 / 12%);
-}
-
-.btn-glass::before,
-.btn-glass::after {
-	content: none;
-}
-
-/*
- * The base button classes set `outline-none` and rely on a `focus-visible:ring-*`
- * utility (box-shadow-based) for the focus indicator — but .btn-glass sets its
- * own `box-shadow` above (same property, same specificity, later in the
- * cascade), which silently wins and drops the ring entirely. Restore focus
- * visibility with `outline`, a separate property nothing else here touches.
- */
-.btn-glass:focus-visible {
-	outline: 2px solid var(--ring);
-	outline-offset: 2px;
-}
-
-/* Tier 2: Blur-capable — frosted glass + rim + gloss (all browsers) */
-@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
-	.btn-glass {
-		/* Theme-tuned layer colors — overridden in .dark below */
-		--glass-rim-top: color-mix(in srgb, rgb(255 255 255 / 88%) 80%, var(--brand));
-		--glass-rim-bottom: rgb(255 255 255 / 28%);
-		--glass-gloss: rgb(255 255 255 / 22%);
-		--glass-glow: rgb(255 255 255 / 16%);
-		--glass-edge-shade: rgb(0 0 0 / 10%);
-
-		backdrop-filter: blur(14px) brightness(1.03) saturate(1.5);
-		-webkit-backdrop-filter: blur(14px) brightness(1.03) saturate(1.5);
-		/*
-		 * Glass body: vivid brand-tinted translucent. Opacity is pinned high
-		 * (98%) rather than the ~60% a "glass" material implies at face value —
-		 * measured against the actual glyph row, anything below ~98% drops
-		 * under 4.5:1 (WCAG AA). Since every glass button here sits on a flat
-		 * background anyway (see note above), there's negligible real
-		 * transparency to trade away; the "glass" read comes from the
-		 * rim/gloss/shadow layers, not from seeing the page through the fill.
-		 */
-		background: color-mix(in oklab, var(--brand) 98%, transparent);
-		/* Glass edge: near-invisible — only defines the silhouette so the rim (::before) reads */
-		border: 1px solid color-mix(in oklab, var(--brand) 30%, transparent);
-		/* Brand-cast drop shadow (colored-glass grounding) + inset edge shading */
-		box-shadow:
-			inset 0 -2px 4px var(--glass-edge-shade),
-			0 4px 14px color-mix(in oklab, var(--brand) 28%, transparent),
-			0 1px 2px rgb(0 0 0 / 6%);
-		text-shadow:
-			0 1px 2px rgb(0 0 0 / 30%),
-			0 0 8px rgb(0 0 0 / 10%);
-	}
-
-	.dark .btn-glass {
-		--glass-rim-top: color-mix(in srgb, rgb(255 255 255 / 60%) 80%, var(--brand));
-		--glass-rim-bottom: rgb(255 255 255 / 18%);
-		--glass-gloss: rgb(255 255 255 / 12%);
-		--glass-glow: rgb(255 255 255 / 8%);
-		--glass-edge-shade: rgb(0 0 0 / 22%);
-		/*
-		 * Mix brand toward white first — a translucent brand tint over a
-		 * near-black page reads muddy otherwise, since there's no light
-		 * backdrop to lift it. Opacity pinned high (88%) for the same
-		 * contrast reason as the light theme above — measured against the
-		 * near-black label, anything below ~84% drops under 4.5:1 (WCAG AA).
-		 */
-		background: color-mix(in oklab, color-mix(in oklab, var(--brand) 86%, white) 88%, transparent);
-		border-color: rgb(255 255 255 / 7%);
-		/* Colored shadows disappear against a near-black page — keep this one neutral */
-		box-shadow:
-			inset 0 -2px 4px var(--glass-edge-shade),
-			0 2px 8px rgb(0 0 0 / 25%),
-			0 1px 2px rgb(0 0 0 / 15%);
-		/* primary-foreground is near-black in dark mode — a dark drop shadow adds nothing */
-		text-shadow: none;
-	}
-
-	/* Apple: glass stays "visually quiet" at rest, then energizes with light on interaction */
-	.btn-glass:hover {
-		--glass-rim-top: color-mix(in srgb, rgb(255 255 255 / 96%) 80%, var(--brand));
-		--glass-gloss: rgb(255 255 255 / 32%);
-		backdrop-filter: blur(16px) brightness(1.06) saturate(1.6);
-		-webkit-backdrop-filter: blur(16px) brightness(1.06) saturate(1.6);
-		background: var(--brand);
-		border-color: color-mix(in oklab, var(--brand) 38%, transparent);
-		box-shadow:
-			inset 0 -3px 5px var(--glass-edge-shade),
-			0 6px 18px color-mix(in oklab, var(--brand) 34%, transparent),
-			0 2px 4px rgb(0 0 0 / 8%);
-		transform: translateY(-1px);
-	}
-
-	.dark .btn-glass:hover {
-		--glass-rim-top: color-mix(in srgb, rgb(255 255 255 / 72%) 80%, var(--brand));
-		background: color-mix(in oklab, color-mix(in oklab, var(--brand) 86%, white) 92%, transparent);
-		border-color: rgb(255 255 255 / 12%);
-		box-shadow:
-			inset 0 -3px 5px var(--glass-edge-shade),
-			0 4px 14px rgb(0 0 0 / 30%),
-			0 2px 4px rgb(0 0 0 / 15%);
-	}
-
-	/* Press: illuminate from within + a slight gel-like compress, per Apple's interaction model */
-	.btn-glass:active {
-		--glass-gloss: rgb(255 255 255 / 30%);
-		background: var(--brand);
-		box-shadow:
-			inset 0 -1px 3px var(--glass-edge-shade),
-			0 1px 4px color-mix(in oklab, var(--brand) 24%, transparent);
-		transform: translateY(0) scale(0.985);
-	}
-
-	.dark .btn-glass:active {
-		--glass-gloss: rgb(255 255 255 / 18%);
-		background: color-mix(in oklab, color-mix(in oklab, var(--brand) 86%, white) 96%, transparent);
-		box-shadow:
-			inset 0 -1px 3px var(--glass-edge-shade),
-			0 1px 4px rgb(0 0 0 / 20%);
-	}
-
-	/*
-	 * Interior gloss — a broad, soft highland across the upper interior
-	 * (curved falloff, never a hard-edged bar) plus a tight top-center glow,
-	 * simulating light passing through curved glass. z-index -1 keeps this
-	 * above the button's own background but below the in-flow label text,
-	 * so it brightens the glass without laying white over the glyphs.
-	 */
-	.btn-glass::after {
-		content: "";
-		position: absolute;
-		inset: 0;
-		pointer-events: none;
-		z-index: -1;
-		border-radius: inherit;
-		background:
-			radial-gradient(ellipse 90% 65% at 50% 0%, var(--glass-glow) 0%, transparent 60%),
-			radial-gradient(140% 110% at 50% -35%, var(--glass-gloss) 0%, transparent 62%);
-	}
-
-	/*
-	 * Specular rim — a directional arc that hugs the rounded-rect outline,
-	 * bright across the top, unlit down the sides, with a faint
-	 * counter-highlight at the bottom. This reads as a glass bezel catching
-	 * an overhead light (varying with surface-normal angle), rather than a
-	 * flat, shape-agnostic outline. Pure geometry — scales to every button
-	 * size/shape for free, no pre-baked map.
-	 */
-	.btn-glass::before {
-		content: "";
-		position: absolute;
-		inset: 0;
-		padding: 2px;
-		pointer-events: none;
-		z-index: 1;
-		border-radius: inherit;
-		background: conic-gradient(
-			from 0deg at 50% 50%,
-			var(--glass-rim-top) 0deg,
-			transparent 65deg,
-			transparent 115deg,
-			var(--glass-rim-bottom) 170deg,
-			var(--glass-rim-bottom) 190deg,
-			transparent 245deg,
-			transparent 295deg,
-			var(--glass-rim-top) 360deg
-		);
-		-webkit-mask:
-			linear-gradient(#fff 0 0) content-box,
-			linear-gradient(#fff 0 0);
-		-webkit-mask-composite: xor;
-		mask:
-			linear-gradient(#fff 0 0) content-box,
-			linear-gradient(#fff 0 0);
-		mask-composite: exclude;
-	}
-}
-
-/* Remove the glass material when the user prefers reduced transparency */
-@media (prefers-reduced-transparency: reduce) {
-	.btn-glass,
-	.btn-glass:hover,
-	.btn-glass:active {
-		backdrop-filter: none !important;
-		-webkit-backdrop-filter: none !important;
-		background: var(--primary) !important;
-		border: 1px solid color-mix(in oklab, var(--primary) 80%, transparent) !important;
-		box-shadow: 0 1px 3px rgb(0 0 0 / 8%) !important;
-		text-shadow: none !important;
-	}
-
-	.btn-glass::before,
-	.btn-glass::after {
-		content: none !important;
-	}
-}
-
-/* Suppress hover/press motion when the user prefers reduced motion (glass material itself stays) */
+/* Suppress animation when the user prefers reduced motion. */
 @media (prefers-reduced-motion: reduce) {
-	.btn-glass,
-	.btn-glass:hover,
-	.btn-glass:active {
-		transform: none !important;
-	}
-
 	html.js .reveal {
 		opacity: 1;
 		transform: none;
