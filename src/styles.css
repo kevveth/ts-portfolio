@@ -6,25 +6,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Keep colored glass labels legible over the near-white light theme. */
-.ui-btn-glass-colored {
-	color: color-mix(in srgb, var(--glass-color) 45%, black);
-	text-shadow: none;
-}
-
-.dark .ui-btn-glass-colored {
-	color: #fff;
-	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
-}
-
-@media (prefers-reduced-transparency: reduce) {
-	.ui-btn-glass-colored,
-	.dark .ui-btn-glass-colored {
-		color: #fff;
-		text-shadow: none;
-	}
-}
-
 /*
  * Self-hosted fonts (public/fonts/, copied from @fontsource latin subsets).
  * Family names are literal strings (not vars) so the fontaine vite plugin can
