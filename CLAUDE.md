@@ -8,22 +8,25 @@ A portfolio site built on TanStack Start (React SSR framework) with file-based r
 
 ## Commands
 
+**This repo is pnpm-only** — `package.json` pins `pnpm@11.6.0` via `packageManager`, and `pnpm-lock.yaml` is the single source of truth. Never run `npm install`/`npx` here: npm writes a competing `package-lock.json`, which is what previously left the repo with two conflicting lockfiles and made Vercel's package-manager detection ambiguous. Use `pnpm` and `pnpm exec` (or `pnpm dlx` for one-off CLIs).
+
 ```bash
-npm run dev              # Dev server on port 3000
-npm run build            # Production build (vite build)
-npm run test             # Run all tests (vitest run)
-npm run typecheck        # Type-check with tsc --noEmit
-npx vitest run <path>    # Run a single test file
-npm run lint             # Biome lint
-npm run format           # Biome format
-npm run check            # Biome lint + format combined
-npm run generate-routes  # Regenerate routeTree.gen.ts (tsr generate)
+pnpm install                 # Install deps from pnpm-lock.yaml
+pnpm dev                     # Dev server on port 3000
+pnpm build                   # Production build (vite build)
+pnpm test                    # Run all tests (vitest run)
+pnpm typecheck               # Type-check with tsc --noEmit
+pnpm exec vitest run <path>  # Run a single test file
+pnpm lint                    # Biome lint
+pnpm format                  # Biome format
+pnpm check                   # Biome lint + format combined
+pnpm generate-routes         # Regenerate routeTree.gen.ts (tsr generate)
 ```
 
 Add shadcn/ui components with the latest shadcn CLI (per .cursorrules):
 
 ```bash
-npx shadcn@latest add <component>
+pnpm dlx shadcn@latest add <component>
 ```
 
 ## Architecture

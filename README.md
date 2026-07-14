@@ -4,9 +4,11 @@ Personal portfolio site for Kenneth Rathbun, a full-stack developer. Built with 
 
 ## Getting started
 
+This project uses **pnpm** (pinned via `packageManager` in `package.json`). `pnpm-lock.yaml` is the only lockfile — don't run `npm install`, which would add a competing `package-lock.json`.
+
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 The dev server runs on http://localhost:3000.
@@ -14,14 +16,14 @@ The dev server runs on http://localhost:3000.
 ## Scripts
 
 ```bash
-npm run dev              # Dev server on port 3000
-npm run build            # Production build (vite build)
-npm run test             # Run tests (vitest run)
-npm run typecheck        # Type-check with tsc --noEmit
-npm run lint             # Biome lint
-npm run format           # Biome format (writes changes)
-npm run check            # Biome lint + format check
-npm run generate-routes  # Regenerate routeTree.gen.ts
+pnpm dev                 # Dev server on port 3000
+pnpm build               # Production build (vite build)
+pnpm test                # Run tests (vitest run)
+pnpm typecheck           # Type-check with tsc --noEmit
+pnpm lint                # Biome lint
+pnpm format              # Biome format (writes changes)
+pnpm check               # Biome lint + format check
+pnpm generate-routes     # Regenerate routeTree.gen.ts
 ```
 
 ## Structure
@@ -35,7 +37,7 @@ npm run generate-routes  # Regenerate routeTree.gen.ts
 ## Adding a shadcn/ui component
 
 ```bash
-npx shadcn@latest add <component>
+pnpm dlx shadcn@latest add <component>
 ```
 
 ## Adding a project

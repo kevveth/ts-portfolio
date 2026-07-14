@@ -20,7 +20,7 @@ eye but failed 4.5:1 in every state until checked this way.
 A dev server already running (see the `run-ts-portfolio` skill):
 
 ```bash
-npx vite dev --port 3061 > /tmp/vite-dev.log 2>&1 &
+pnpm exec vite dev --port 3061 > /tmp/vite-dev.log 2>&1 &
 echo $! > /tmp/vite-dev.pid
 for i in $(seq 1 30); do curl -sf http://localhost:3061 >/dev/null 2>&1 && break; sleep 1; done
 ```

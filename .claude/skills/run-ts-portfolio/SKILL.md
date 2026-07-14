@@ -13,25 +13,26 @@ All paths below are relative to the repo root.
 
 ## Prerequisites
 
-Node with npm (tested with Node v23.10.0 / npm 11.2.0 — npm prints
-`EBADENGINE` warnings against vitest/whatwg-url's stated `^20/^22/>=24`
-ranges but everything runs fine anyway; ignore the warning).
+Node with pnpm — this repo is pnpm-only (`package.json` pins
+`pnpm@11.6.0` via `packageManager`, and `pnpm-lock.yaml` is the only
+lockfile). Use `pnpm`/`pnpm exec`, never `npm`/`npx` — npm would write a
+competing `package-lock.json`. Tested with Node v23.10.0 / pnpm 11.6.0.
 
 `playwright` is a devDependency (added for this driver — see Setup).
 It needs a cached Chromium build:
 
 ```bash
-npx playwright install chromium   # skip if already cached, e.g. under ~/Library/Caches/ms-playwright
+pnpm exec playwright install chromium   # skip if already cached, e.g. under ~/Library/Caches/ms-playwright
 ```
 
 ## Setup
 
 ```bash
-npm install
+pnpm install
 ```
 
 `playwright` is already in `package.json` devDependencies. If it's
-ever missing: `npm install -D playwright`.
+ever missing: `pnpm add -D playwright`.
 
 No separate build step is needed to run the dev server.
 
@@ -40,7 +41,7 @@ No separate build step is needed to run the dev server.
 1. Start the dev server in the background and wait for it to answer:
 
 ```bash
-npx vite dev --port 3050 > /tmp/vite-dev.log 2>&1 &
+pnpm exec vite dev --port 3050 > /tmp/vite-dev.log 2>&1 &
 echo $! > /tmp/vite-dev.pid
 for i in $(seq 1 30); do curl -sf http://localhost:3050 >/dev/null 2>&1 && break; sleep 1; done
 ```
@@ -100,18 +101,16 @@ verification and is the primary path.)
 
 ## Run (human path)
 
-`package.json` has no `dev` script even though `CLAUDE.md` documents
-`npm run dev` — that script doesn't currently exist. Run Vite directly:
-
 ```bash
-npx vite dev --port 3000   # → http://localhost:3000, Ctrl-C to stop
+pnpm dev   # → http://localhost:3000, Ctrl-C to stop
 ```
 
 ## Test
 
 ```bash
-npm run test        # vitest run — 1 file, 8 tests, passes
-npm run typecheck   # tsc --noEmit — passes clean
+pnpm test        # vitest run — passes
+pnpm typecheck   # tsc --noEmit — passes clean
+pnpm check       # Biome lint + format — passes clean
 ```
 
 ## Gotchas
@@ -134,9 +133,6 @@ npm run typecheck   # tsc --noEmit — passes clean
   gallery can still lag — if a screenshot must be pixel-complete,
   either wait longer or force-load first: `eval
   document.querySelectorAll('img').forEach(img=>img.loading='eager')`.
-- **No `dev` npm script.** `CLAUDE.md` documents `npm run dev`, but
-  `package.json` only has `build`/`preview`/`test`/`typecheck`/etc.
-  Use `npx vite dev --port <port>` directly (see Run sections above).
 - **Piped-stdin heredocs can race the driver's own async commands.**
   When stdin is a heredoc (not a real TTY), Node's `readline` fires
   every `line` event synchronously before any `async` handler

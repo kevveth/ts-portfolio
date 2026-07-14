@@ -12,3 +12,10 @@ dist-ssr
 __unconfig*
 todos.json
 .vercel
+
+# pnpm is the only supported package manager (see packageManager in
+# package.json). Ignore competing lockfiles so a stray `npm install`
+# can't re-commit one and make Vercel's package-manager detection
+# ambiguous again.
+package-lock.json
+yarn.lock

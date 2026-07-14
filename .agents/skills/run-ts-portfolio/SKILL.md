@@ -100,11 +100,8 @@ verification and is the primary path.)
 
 ## Run (human path)
 
-`package.json` has no `dev` script. Run Vite directly, as `AGENTS.md`
-documents:
-
 ```bash
-pnpm exec vite dev --port 3000   # → http://localhost:3000, Ctrl-C to stop
+pnpm dev   # → http://localhost:3000, Ctrl-C to stop
 ```
 
 ## Test
@@ -135,9 +132,6 @@ pnpm check       # Biome lint + format — passes clean
   gallery can still lag — if a screenshot must be pixel-complete,
   either wait longer or force-load first: `eval
   document.querySelectorAll('img').forEach(img=>img.loading='eager')`.
-- **No `dev` script.** `package.json` only has
-  `build`/`preview`/`test`/`typecheck`/etc. Use `pnpm exec vite dev
-  --port <port>` directly (see Run sections above).
 - **Piped-stdin heredocs can race the driver's own async commands.**
   When stdin is a heredoc (not a real TTY), Node's `readline` fires
   every `line` event synchronously before any `async` handler

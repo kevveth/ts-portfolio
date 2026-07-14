@@ -156,10 +156,10 @@ Replace the island/sea theme in `src/styles.css`. Direction:
 
 ## Verification
 
-- `npm run dev` — Home, `/projects`, `/projects/chavos-parlor` render; nav + theme toggle work; no hydration/theme flash.
+- `pnpm dev` — Home, `/projects`, `/projects/chavos-parlor` render; nav + theme toggle work; no hydration/theme flash.
 - Theme toggle persists across reload; respects OS default on first visit.
-- `npm run build` succeeds; images emit optimized WebP/AVIF with dimensions.
+- `pnpm build` succeeds; images emit optimized WebP/AVIF with dimensions.
 - View-source / social debugger shows correct per-page title, description, OG image; `sitemap.xml` + `robots.txt` served.
-- `npm run check` (Biome) and `npm run test` pass; add smoke tests for `getProject` and 404 on unknown slug.
+- `pnpm check` (Biome) and `pnpm test` pass; add smoke tests for `getProject` and 404 on unknown slug.
 - Lighthouse run on Home + project detail meets targets.
 - Cross-check every barber-shop claim in the case study against the real repo; frame it as a live, shipped client project and confirm the live URL resolves.
