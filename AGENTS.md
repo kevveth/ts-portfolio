@@ -31,6 +31,22 @@ Vitest discovers colocated `*.test.ts` and `*.test.tsx` files and loads `src/tes
 
 Recent history follows Conventional Commits, typically `type(scope): imperative summary`, such as `fix(github): scale contribution graph to container`. Use `feat`, `fix`, `refactor`, `test`, or `chore` with a focused scope. Pull requests should explain the change and verification performed, link relevant issues or specs, and include before/after screenshots for visual changes. Keep generated files and related tests in the same change when applicable.
 
+## Agent Skills
+
+Reusable procedures live in `.agents/skills/`. Read the relevant `SKILL.md`
+before doing this kind of work — these exist so you don't have to guess.
+
+- **`.agents/skills/run-ts-portfolio/`** — start the dev server and drive the
+  real site in Chromium via a Playwright REPL (`driver.mjs`): navigate,
+  screenshot, click, read the DOM, check the console. **Use this before making
+  or reviewing any UI/layout claim.** Reviewing rendered UI from source alone
+  produces confident, wrong answers about centering, image `sizes`, and
+  `object-fit`; measure it instead.
+- **`.agents/skills/verify-contrast/`** — measure real WCAG contrast from
+  rendered pixels. Required for translucent, gradient, `backdrop-filter`, or
+  otherwise non-solid backgrounds, where a CSS-color contrast calculator
+  cannot give a truthful number.
+
 ## Agent Handoffs
 
 Async handoffs between agents (e.g. Claude → Codex) live in `docs/handoffs/`.
