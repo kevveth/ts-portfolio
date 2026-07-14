@@ -2,11 +2,10 @@ import { Button } from "ui-library";
 import { CONTACT_CHANNELS } from "#/components/contact-links";
 import { Reveal } from "#/components/reveal";
 import { Section, SectionHeading } from "#/components/section";
-import { SITE } from "#/content/site";
 
 export function ContactCta() {
 	return (
-		<Section id="contact" className="border-t">
+		<Section id="contact" className="contact-panel my-8 sm:my-12">
 			<SectionHeading
 				kicker="contact"
 				title="Have a role or a project in mind?"
@@ -16,14 +15,14 @@ export function ContactCta() {
 					I'm open to full-time engineering roles and select freelance work. The
 					fastest way to reach me is email — I read everything.
 				</p>
-				<div className="mt-7 flex flex-wrap items-center gap-3">
+				<div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-2">
 					{CONTACT_CHANNELS.map((channel, i) => (
 						<Button
 							key={channel.label}
 							asChild
 							size="lg"
-							variant="glass"
-							glassColor={i === 0 ? "sapphire" : undefined}
+							variant={i === 0 ? "default" : "link"}
+							className={i === 0 ? "portfolio-primary" : "portfolio-link"}
 						>
 							<a
 								href={channel.href}
@@ -32,7 +31,7 @@ export function ContactCta() {
 									: {})}
 							>
 								<channel.Icon aria-hidden />
-								{i === 0 ? SITE.email : channel.label}
+								{i === 0 ? "Email me" : channel.label}
 							</a>
 						</Button>
 					))}

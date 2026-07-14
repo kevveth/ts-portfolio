@@ -15,8 +15,8 @@ import { getCurrentTheme } from "#/lib/theme";
 // ---------------------------------------------------------------------------
 
 const CONTRIBUTION_THEME = {
-	light: ["#e1e1e4", "#156cdd"],
-	dark: ["#262629", "#f14d4c"],
+	light: ["#e1e4e7", "#b8dff5", "#75cae7", "#28b9c8", "#5b9f20"],
+	dark: ["#29272d", "#581a22", "#8f2430", "#c73341", "#f05a65"],
 };
 
 // ---------------------------------------------------------------------------
@@ -76,7 +76,7 @@ export function ContributionGraph({ data }: ContributionGraphProps) {
 		<Section id="activity">
 			<SectionHeading kicker="activity" title="GitHub contributions" />
 			<Reveal>
-				<Surface className="overflow-hidden p-4 sm:p-6">
+				<Surface className="accent-surface overflow-hidden p-4 sm:p-6">
 					<ActivityCalendar
 						data={data}
 						theme={CONTRIBUTION_THEME}

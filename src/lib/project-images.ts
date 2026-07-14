@@ -1,3 +1,4 @@
+import chavosBookingWidget from "#/assets/chavos-parlor/booking-widget.png?gallery";
 import chavosGallery from "#/assets/chavos-parlor/gallery.png?gallery";
 import chavosHero from "#/assets/chavos-parlor/hero.png?hero";
 import chavosHeroThumb from "#/assets/chavos-parlor/hero.png?thumb";
@@ -15,6 +16,7 @@ const PROJECT_IMAGES: Record<string, ImagetoolsPicture> = {
 	"chavos-parlor/hero": chavosHero,
 	"chavos-parlor/services": chavosServices,
 	"chavos-parlor/gallery": chavosGallery,
+	"chavos-parlor/booking-widget": chavosBookingWidget,
 	"chavos-parlor/wizard-service": chavosWizardService,
 	"chavos-parlor/wizard-time": chavosWizardTime,
 	"chavos-parlor/wizard-details": chavosWizardDetails,

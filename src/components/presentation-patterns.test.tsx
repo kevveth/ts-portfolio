@@ -21,6 +21,7 @@ const project: Project = {
 	slug: "example",
 	title: "Example project",
 	tagline: "A useful example",
+	thumbAlt: "Example project cover",
 	role: "Design and build",
 	year: "2026",
 	status: "live",

@@ -55,11 +55,10 @@
 }
 
 :root {
-	/*
-	 * Accent. The single point of brand color — swap these two --brand lines
-	 * (here and in .dark) to re-skin the site.
-	 */
-	--brand: oklch(0.55 0.19 258);
+	/* Light identity: accessible azure for actions, acid green for energy. */
+	--brand: oklch(0.5 0.2 250);
+	--brand-ink: var(--brand);
+	--signal: oklch(0.67 0.2 128);
 
 	--background: oklch(0.98 0.001 286);
 	--foreground: oklch(0.155 0.005 285.8);
@@ -81,33 +80,24 @@
 	--input: oklch(0.911 0.004 286.3);
 	--ring: var(--brand);
 	--radius: 0.5rem;
+	--color-fg: var(--foreground);
+	--color-primary-fg: var(--primary-foreground);
+	--color-primary-hover: oklch(0.45 0.2 250);
 
 	/*
-	 * Hero lava-lamp blobs — five tones derived from --brand, mixed toward
-	 * warm/cool oklch targets and --muted-foreground for tonal variety.
-	 * Weighted blending in the canvas composites these into smooth gradients
-	 * at blob overlap zones. Percentages are tuned to clear WCAG AA on hero
-	 * text and both button variants (verified with the verify-contrast
-	 * skill, not eyeballed) — don't raise them without re-checking.
+	 * Canvas endpoints. The renderer moves a gradient between these two colors
+	 * through every blob; opacity stays here so the browser resolves the final
+	 * wide-gamut color before canvas sampling.
 	 */
-	--hero-blob-1: color-mix(in oklab, color-mix(in oklab, var(--brand) 80%, oklch(0.7 0.18 45)) 45%, transparent);
-	--hero-blob-2: color-mix(
-		in oklab,
-		color-mix(in oklab, var(--brand) 50%, var(--muted-foreground)) 35%,
-		transparent
-	);
-	--hero-blob-3: color-mix(in oklab, color-mix(in oklab, var(--brand) 85%, oklch(0.7 0.1 260)) 42%, transparent);
-	--hero-blob-4: color-mix(
-		in oklab,
-		color-mix(in oklab, var(--brand) 40%, var(--muted-foreground)) 30%,
-		transparent
-	);
-	--hero-blob-5: color-mix(in oklab, var(--brand) 32%, transparent);
+	--hero-color-1: color-mix(in oklab, oklch(0.66 0.2 244) 62%, transparent);
+	--hero-color-2: color-mix(in oklab, oklch(0.82 0.22 128) 52%, transparent);
 }
 
 .dark {
-	--brand: oklch(0.65 0.2 25);
-	/* Lifted lightness vs. the light theme's tint so a translucent layer over the near-black page still reads blue, not black */
+	/* Dark identity: deep crimson actions with soft white highlights. */
+	--brand: oklch(0.53 0.22 25);
+	--brand-ink: oklch(0.72 0.19 25);
+	--signal: oklch(0.86 0.055 18);
 
 	--background: oklch(0.148 0.004 285.8);
 	--foreground: oklch(0.96 0.002 286);
@@ -116,7 +106,7 @@
 	--popover: oklch(0.185 0.005 285.9);
 	--popover-foreground: oklch(0.96 0.002 286);
 	--primary: var(--brand);
-	--primary-foreground: oklch(0.145 0.03 25);
+	--primary-foreground: oklch(0.985 0.003 20);
 	--secondary: oklch(0.245 0.006 286);
 	--secondary-foreground: oklch(0.96 0.002 286);
 	--muted: oklch(0.245 0.006 286);
@@ -128,26 +118,19 @@
 	--border: oklch(0.27 0.006 286);
 	--input: oklch(0.27 0.006 286);
 	--ring: var(--brand);
+	--color-fg: var(--foreground);
+	--color-primary-fg: var(--primary-foreground);
+	--color-primary-hover: oklch(0.55 0.22 25);
 
-	--hero-blob-1: color-mix(in oklab, color-mix(in oklab, var(--brand) 80%, oklch(0.7 0.18 45)) 45%, transparent);
-	--hero-blob-2: color-mix(
-		in oklab,
-		color-mix(in oklab, var(--brand) 50%, var(--muted-foreground)) 35%,
-		transparent
-	);
-	--hero-blob-3: color-mix(in oklab, color-mix(in oklab, var(--brand) 85%, oklch(0.7 0.1 260)) 42%, transparent);
-	--hero-blob-4: color-mix(
-		in oklab,
-		color-mix(in oklab, var(--brand) 40%, var(--muted-foreground)) 30%,
-		transparent
-	);
-	--hero-blob-5: color-mix(in oklab, var(--brand) 32%, transparent);
+	--hero-color-1: color-mix(in oklab, oklch(0.63 0.24 25) 68%, transparent);
+	--hero-color-2: color-mix(in oklab, oklch(0.97 0.008 20) 42%, transparent);
 }
 
 @theme inline {
 	--font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
 	--font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
-	--color-brand: var(--brand);
+	--color-brand: var(--brand-ink);
+	--color-signal: var(--signal);
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
 	--color-card: var(--card);
@@ -208,6 +191,9 @@ body {
 	text-transform: uppercase;
 	color: var(--muted-foreground);
 }
+.kicker > span {
+	color: var(--signal);
+}
 
 /* Shared type recipes keep page compositions consistent without hiding semantics. */
 .page-title {
@@ -235,26 +221,53 @@ body {
 	transform: scale(1.02);
 }
 
-/* Faint blueprint grid, used behind the hero. Theme-aware via --border. */
-.bg-grid {
-	background-image:
-		linear-gradient(color-mix(in oklab, var(--border) 55%, transparent) 1px, transparent 1px),
-		linear-gradient(90deg, color-mix(in oklab, var(--border) 55%, transparent) 1px, transparent 1px);
-	background-size: 32px 32px;
-	mask-image: radial-gradient(ellipse 90% 80% at 50% 0%, black 30%, transparent 75%);
+.hero-arena {
+	border-block: 1px solid color-mix(in oklab, var(--brand) 28%, var(--border));
+	background: color-mix(in oklab, var(--background) 96%, var(--brand));
+	box-shadow:
+		inset 0 0 42px color-mix(in oklab, var(--brand) 8%, transparent),
+		inset 0 -24px 80px color-mix(in oklab, var(--signal) 5%, transparent);
+}
+.hero-arena::after {
+	position: absolute;
+	bottom: -1px;
+	left: 50%;
+	width: min(72%, 56rem);
+	height: 2px;
+	pointer-events: none;
+	content: "";
+	background: linear-gradient(90deg, transparent, var(--brand), var(--signal), transparent);
+	filter: blur(0.5px);
+	transform: translateX(-50%);
+}
+.hero-copy-wash {
+	background: linear-gradient(
+		90deg,
+		color-mix(in oklab, var(--background) 94%, transparent) 0 42%,
+		color-mix(in oklab, var(--background) 75%, transparent) 64%,
+		transparent 100%
+	);
+	filter: blur(22px);
+}
+.hero-role {
+	position: relative;
+	color: var(--brand-ink);
+}
+.hero-role::after {
+	position: absolute;
+	right: 0;
+	bottom: -0.12em;
+	left: 0;
+	height: 2px;
+	pointer-events: none;
+	content: "";
+	background: linear-gradient(90deg, var(--brand), var(--signal));
+	opacity: 0.72;
 }
 
 /*
  * Hero "lava lamp" background — a metaball field canvas (see hero-blobs.tsx)
- * drawn at low resolution and upscaled here; `image-rendering: pixelated`
- * is what turns that upscale into chunky/retro blocks instead of a smooth
- * blur. Sits behind .bg-grid (-z-20 vs -z-10) so the blueprint grid stays
- * crisp on top of the soft ambient color.
- *
- * The mask fades the effect to near-nothing across the heading/body text
- * rows (top of the hero) and concentrates it toward the button row at the
-	 * bottom — the whole point is making the glass CTAs more noticeable without
- * competing with the copy for attention or eating into text contrast.
+ * drawn at a modest resolution and softly upscaled.
  */
 .hero-blobs {
 	/*
@@ -262,15 +275,15 @@ body {
 	 * but doesn't stretch it, so without an explicit size it falls back to
 	 * its low-res backing-store dimensions (the `width`/`height` attributes
 	 * set in hero-blobs.tsx). Forcing 100%/100% here is what makes the tiny
-	 * buffer fill the hero and get upscaled — image-rendering below is what
-	 * makes that upscale chunky instead of smoothed.
+	 * buffer fill the hero and get softly upscaled.
 	 */
 	width: 100%;
 	height: 100%;
-	image-rendering: pixelated;
-	mask-image: radial-gradient(ellipse 130% 90% at 50% 100%, black 35%, transparent 80%);
+	image-rendering: auto;
+	opacity: 0.94;
+	filter: saturate(1.18) blur(2px);
+	mask-image: linear-gradient(90deg, transparent 0 32%, rgb(0 0 0 / 22%) 48%, black 68%);
 }
-
 /*
  * Reduced-transparency fallback for the hero blobs — hidden by default,
  * swapped in by the media query below. Flat and fully opaque (no alpha
@@ -278,12 +291,122 @@ body {
  */
 .hero-blobs-fallback {
 	display: none;
-	background: radial-gradient(
-		ellipse 130% 90% at 50% 100%,
-		color-mix(in oklab, var(--brand) 14%, var(--background)) 0%,
-		var(--background) 78%
-	);
-	mask-image: radial-gradient(ellipse 130% 90% at 50% 100%, black 35%, transparent 80%);
+	background:
+		radial-gradient(ellipse 70% 90% at 76% 30%, color-mix(in oklab, var(--brand) 20%, var(--background)), transparent 72%),
+		radial-gradient(ellipse 65% 75% at 64% 78%, color-mix(in oklab, var(--signal) 17%, var(--background)), transparent 70%),
+		var(--background);
+}
+
+.portfolio-primary {
+	border-color: transparent;
+	background: var(--brand);
+	color: var(--primary-foreground);
+	box-shadow: 0 1px 0 color-mix(in oklab, var(--foreground) 18%, transparent);
+	transition-property: background-color, box-shadow, transform;
+}
+.portfolio-primary:hover {
+	background: color-mix(in oklab, var(--brand) 88%, var(--foreground));
+	box-shadow: 0 5px 18px color-mix(in oklab, var(--brand) 24%, transparent);
+	transform: translateY(-1px);
+}
+.dark .portfolio-primary:hover {
+	background: color-mix(in oklab, var(--brand) 88%, black);
+}
+.portfolio-primary:active {
+	box-shadow: none;
+	transform: translateY(0);
+}
+.portfolio-link {
+	position: relative;
+	min-height: 44px;
+	padding-inline: 0.25rem;
+	color: var(--foreground);
+	text-decoration: none;
+}
+.portfolio-link::after {
+	position: absolute;
+	right: 0.25rem;
+	bottom: 0.35rem;
+	left: 0.25rem;
+	height: 1px;
+	content: "";
+	background: linear-gradient(90deg, var(--brand), var(--signal));
+	transform: scaleX(0.28);
+	transform-origin: left;
+	transition: transform 240ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.portfolio-link:hover::after {
+	transform: scaleX(1);
+}
+
+.site-header::after {
+	position: absolute;
+	right: 0;
+	bottom: -1px;
+	left: 0;
+	height: 1px;
+	pointer-events: none;
+	content: "";
+	background: linear-gradient(90deg, transparent 12%, var(--brand), var(--signal), transparent 88%);
+	opacity: 0.32;
+}
+.desktop-nav {
+	display: none;
+}
+.mobile-menu-trigger {
+	display: inline-flex;
+}
+
+.featured-visual {
+	box-shadow:
+		10px 10px 0 color-mix(in oklab, var(--signal) 10%, transparent),
+		-8px -8px 0 color-mix(in oklab, var(--brand) 6%, transparent);
+}
+.featured-copy {
+	padding-left: 1.25rem;
+	border-left: 2px solid transparent;
+	border-image: linear-gradient(var(--brand), var(--signal), transparent 90%) 1;
+}
+.accent-surface {
+	position: relative;
+}
+.accent-surface::before {
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	height: 2px;
+	pointer-events: none;
+	content: "";
+	background: linear-gradient(90deg, var(--brand), var(--signal), transparent 72%);
+	opacity: 0.62;
+}
+.contact-panel {
+	width: calc(100% - 2rem);
+	border: 1px solid var(--border);
+	border-radius: calc(var(--radius) + 0.25rem);
+	background:
+		linear-gradient(135deg, color-mix(in oklab, var(--brand) 6%, transparent), transparent 42%),
+		linear-gradient(315deg, color-mix(in oklab, var(--signal) 5%, transparent), transparent 48%),
+		var(--card);
+}
+
+@media (min-width: 48rem) {
+	.desktop-nav {
+		display: flex;
+	}
+	.mobile-menu-trigger {
+		display: none;
+	}
+}
+
+@media (max-width: 47.999rem) {
+	.hero-blobs {
+		mask-image: linear-gradient(90deg, transparent 0 26%, rgb(0 0 0 / 32%) 54%, black 82%);
+	}
+	.featured-copy {
+		padding-left: 1rem;
+	}
 }
 
 @media (prefers-reduced-transparency: reduce) {

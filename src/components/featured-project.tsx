@@ -27,7 +27,10 @@ export function FeaturedProject() {
 						aria-label={`${project.title} case study`}
 						className="group block rounded-lg"
 					>
-						<Surface variant="raised" className="overflow-hidden">
+						<Surface
+							variant="raised"
+							className="featured-visual overflow-hidden"
+						>
 							<Picture
 								picture={cover}
 								alt={project.gallery[0].alt}
@@ -38,7 +41,7 @@ export function FeaturedProject() {
 							/>
 						</Surface>
 					</Link>
-					<div className="space-y-5">
+					<div className="featured-copy space-y-5">
 						<ProjectMeta project={project} />
 						<p className="text-lg leading-relaxed text-balance">
 							{project.tagline}

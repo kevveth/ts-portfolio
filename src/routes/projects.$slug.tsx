@@ -9,7 +9,7 @@ import {
 } from "#/components/project-patterns";
 import { PageIntro, Section, SectionHeading } from "#/components/section";
 import { Surface } from "#/components/surface";
-import { getProject } from "#/content/projects";
+import { getProject, type ProjectHighlight } from "#/content/projects";
 import { SITE, SITE_URL } from "#/content/site";
 import { getProjectImage } from "#/lib/project-images";
 
@@ -79,8 +79,19 @@ function ProjectDetail() {
 						{project.problem}
 					</p>
 				</div>
+				{project.productionConstraint ? (
+					<div className="space-y-3">
+						<SectionHeading
+							kicker="the production constraint"
+							className="mb-0"
+						/>
+						<p className="leading-relaxed text-muted-foreground">
+							{project.productionConstraint}
+						</p>
+					</div>
+				) : null}
 				<div className="space-y-3">
-					<SectionHeading kicker="the approach" className="mb-0" />
+					<SectionHeading kicker="what I shipped" className="mb-0" />
 					<p className="leading-relaxed text-muted-foreground">
 						{project.approach}
 					</p>
@@ -88,22 +99,8 @@ function ProjectDetail() {
 			</Section>
 
 			<Section className="pt-0">
-				<SectionHeading kicker="technical highlights" />
-				<dl className="grid gap-x-8 gap-y-7 sm:grid-cols-2">
-					{project.highlights.map((highlight, index) => (
-						<div key={highlight.title} className="space-y-1.5">
-							<dt className="font-semibold">
-								<span aria-hidden className="mr-2 font-mono text-xs text-brand">
-									{String(index + 1).padStart(2, "0")}
-								</span>
-								{highlight.title}
-							</dt>
-							<dd className="text-sm leading-relaxed text-muted-foreground">
-								{highlight.body}
-							</dd>
-						</div>
-					))}
-				</dl>
+				<SectionHeading kicker="production highlights" />
+				<HighlightList highlights={project.highlights} />
 			</Section>
 
 			<Section className="pt-0">
@@ -118,23 +115,35 @@ function ProjectDetail() {
 						</li>
 					))}
 				</ul>
-				{project.testimonial ? (
-					<blockquote className="mt-10 max-w-2xl border-l-2 border-brand pl-5">
-						<p className="text-lg leading-relaxed italic">
-							"{project.testimonial.quote}"
-						</p>
-						<footer className="mt-3 font-mono text-xs text-muted-foreground">
-							— {project.testimonial.author}
-						</footer>
-					</blockquote>
-				) : null}
 			</Section>
 
 			{shots.length > 0 ? (
 				<Section className="pt-0">
-					<SectionHeading kicker="screens" />
+					<SectionHeading kicker="production" title="Live site" />
 					<Gallery items={shots} />
 				</Section>
+			) : null}
+
+			{project.customFlow ? (
+				<>
+					<Section width="reading" className="pt-0">
+						<SectionHeading
+							kicker="future path"
+							title="The custom booking flow"
+						/>
+						<p className="leading-relaxed text-muted-foreground">
+							{project.customFlow.summary}
+						</p>
+					</Section>
+					<Section className="pt-0">
+						<SectionHeading kicker="custom flow engineering" />
+						<HighlightList highlights={project.customFlow.highlights} />
+					</Section>
+					<Section className="pt-0">
+						<SectionHeading kicker="sandbox only" title="Custom flow screens" />
+						<Gallery items={project.customFlow.gallery} />
+					</Section>
+				</>
 			) : null}
 
 			<Section divided>
@@ -149,6 +158,26 @@ function ProjectDetail() {
 				</div>
 			</Section>
 		</article>
+	);
+}
+
+function HighlightList({ highlights }: { highlights: ProjectHighlight[] }) {
+	return (
+		<dl className="grid gap-x-8 gap-y-7 sm:grid-cols-2">
+			{highlights.map((highlight, index) => (
+				<div key={highlight.title} className="space-y-1.5">
+					<dt className="font-semibold">
+						<span aria-hidden className="mr-2 font-mono text-xs text-brand">
+							{String(index + 1).padStart(2, "0")}
+						</span>
+						{highlight.title}
+					</dt>
+					<dd className="text-sm leading-relaxed text-muted-foreground">
+						{highlight.body}
+					</dd>
+				</div>
+			))}
+		</dl>
 	);
 }
 

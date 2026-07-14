@@ -75,7 +75,7 @@ export function ProjectActions({
 						target="_blank"
 						rel="noreferrer"
 						aria-label={`Visit ${project.title} live site (opens in a new tab)`}
-						className="inline-flex min-h-11 items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+						className="relative z-10 inline-flex min-h-11 items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
 					>
 						Live site
 						<ExternalLink aria-hidden className="size-3.5" />
@@ -86,9 +86,11 @@ export function ProjectActions({
 	}
 
 	return (
-		<div className={cn("flex flex-wrap items-center gap-3", className)}>
+		<div
+			className={cn("flex flex-wrap items-center gap-x-5 gap-y-2", className)}
+		>
 			{caseStudy ? (
-				<Button asChild variant="glass" glassColor="sapphire">
+				<Button asChild size="lg" className="portfolio-primary">
 					<Link to="/projects/$slug" params={{ slug: project.slug }}>
 						Read the case study
 						<ArrowRight aria-hidden />
@@ -96,7 +98,11 @@ export function ProjectActions({
 				</Button>
 			) : null}
 			{project.liveUrl ? (
-				<Button asChild variant={caseStudy ? "outline" : "default"}>
+				<Button
+					asChild
+					variant={caseStudy ? "link" : "default"}
+					className={caseStudy ? "portfolio-link" : "portfolio-primary"}
+				>
 					<a
 						href={project.liveUrl}
 						target="_blank"
@@ -109,7 +115,7 @@ export function ProjectActions({
 				</Button>
 			) : null}
 			{contact ? (
-				<Button asChild variant="outline">
+				<Button asChild variant="link" className="portfolio-link">
 					<a href={`mailto:${SITE.email}`}>
 						<Mail aria-hidden />
 						Get in touch

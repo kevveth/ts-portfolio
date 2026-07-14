@@ -21,7 +21,7 @@ export function SiteHeader() {
 	const [open, setOpen] = useState(false);
 
 	return (
-		<header className="sticky top-0 z-40 border-b border-border/70 bg-background/85 backdrop-blur">
+		<header className="site-header sticky top-0 z-40 border-b border-border/70 bg-background/85 backdrop-blur">
 			<div className="mx-auto flex h-14 w-full max-w-5xl items-center justify-between px-4 sm:px-6">
 				<Link
 					to="/"
@@ -33,10 +33,7 @@ export function SiteHeader() {
 					kenneth-rathbun
 				</Link>
 				<div className="flex items-center gap-0.5 sm:gap-1">
-					<nav
-						aria-label="Main"
-						className="hidden items-center gap-0.5 md:flex sm:gap-1"
-					>
+					<nav aria-label="Main" className="desktop-nav items-center gap-1">
 						{SITE.nav.map((item) => (
 							<Link
 								key={item.to}
@@ -67,7 +64,7 @@ export function SiteHeader() {
 							<Button
 								variant="ghost"
 								size="icon"
-								className="md:hidden"
+								className="mobile-menu-trigger"
 								aria-label="Open menu"
 							>
 								<Menu aria-hidden />

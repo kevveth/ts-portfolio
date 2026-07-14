@@ -8,7 +8,7 @@ export function StackStrip() {
 		<Section spacing="compact">
 			<SectionHeading kicker="stack" className="mb-5" />
 			<Reveal>
-				<Surface className="p-4 sm:p-5">
+				<Surface className="accent-surface p-4 sm:p-5">
 					<ul className="flex flex-wrap gap-2">
 						{SITE.skills.map((skill) => (
 							<li
