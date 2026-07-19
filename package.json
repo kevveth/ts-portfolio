@@ -35,7 +35,7 @@
     "tailwind-merge": "^3.0.2",
     "tailwindcss": "^4.1.18",
     "tw-animate-css": "^1.3.6",
-    "ui-library": "link:../ui-library",
+    "ui-library": "github:kevveth/ui-library#5cd28ff74cf0f714d4052146623df5efba7335cf",
     "zod": "^4.4.3"
   },
   "devDependencies": {

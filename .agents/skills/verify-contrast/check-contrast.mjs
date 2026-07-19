@@ -35,7 +35,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 function parseArgs(argv) {
-	const args = { states: ["rest", "hover", "active", "focus"], nth: 0, x: 0.06, dark: false, wait: 300 };
+	const args = { states: ["rest", "hover", "active", "focus"], nth: 0, x: 0.06, dark: false, wait: 300, width: 1280, height: 1400 };
 	for (let i = 0; i < argv.length; i++) {
 		const a = argv[i];
 		if (a === "--url") args.url = argv[++i];
@@ -46,6 +46,8 @@ function parseArgs(argv) {
 		else if (a === "--state") args.states = argv[++i].split(",");
 		else if (a === "--pre-eval") args.preEval = argv[++i];
 		else if (a === "--wait") args.wait = Number(argv[++i]);
+		else if (a === "--width") args.width = Number(argv[++i]);
+		else if (a === "--height") args.height = Number(argv[++i]);
 	}
 	if (!args.url || !args.selector) {
 		console.error(
@@ -77,7 +79,7 @@ async function main() {
 	const shotDir = await mkdtemp(join(tmpdir(), "verify-contrast-"));
 
 	const browser = await chromium.launch();
-	const page = await browser.newPage({ viewport: { width: 1280, height: 1400 } });
+	const page = await browser.newPage({ viewport: { width: args.width, height: args.height } });
 	await page.goto(args.url, { waitUntil: "load" });
 
 	// Project-specific setup (scroll-reveal, cookie banners, fonts, etc.)

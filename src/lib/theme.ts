@@ -14,6 +14,27 @@ export function getCurrentTheme(): Theme {
 	return document.documentElement.classList.contains("dark") ? "dark" : "light";
 }
 
+export function subscribeToThemeChange(
+	callback: (theme: Theme) => void,
+): () => void {
+	const observer = new MutationObserver(() => callback(getCurrentTheme()));
+	observer.observe(document.documentElement, {
+		attributes: true,
+		attributeFilter: ["class"],
+	});
+	return () => observer.disconnect();
+}
+
+/** Hydration-safe theme state: SSR starts light, then resolves after mount. */
+export function useTheme(): Theme {
+	const [theme, setThemeState] = useState<Theme>("light");
+	useEffect(() => {
+		setThemeState(getCurrentTheme());
+		return subscribeToThemeChange(setThemeState);
+	}, []);
+	return theme;
+}
+
 /** Applies the theme to <html> and persists the explicit choice. */
 export function setTheme(theme: Theme): void {
 	document.documentElement.classList.toggle("dark", theme === "dark");
@@ -23,3 +44,5 @@ export function setTheme(theme: Theme): void {
 		// Storage unavailable (private mode etc.) — theme still applies for this page.
 	}
 }
+
+import { useEffect, useState } from "react";

@@ -8,7 +8,7 @@ import { FeaturedProject } from "#/components/featured-project";
 import { Hero } from "#/components/hero";
 import { StackStrip } from "#/components/stack-strip";
 import { SITE, SITE_URL } from "#/content/site";
-import { fetchContributions } from "#/lib/github";
+import { getContributions } from "#/lib/github";
 
 export const Route = createFileRoute("/")({
 	head: () => ({
@@ -22,7 +22,7 @@ export const Route = createFileRoute("/")({
 		links: [{ rel: "canonical", href: `${SITE_URL}/` }],
 	}),
 	loader: async () => {
-		const result = await fetchContributions();
+		const result = await getContributions();
 		return result;
 	},
 	component: Home,
@@ -38,7 +38,7 @@ function Home() {
 			{result.ok ? (
 				<ContributionGraph data={result.data} />
 			) : (
-				<ContributionGraphError message={result.error} />
+				<ContributionGraphError />
 			)}
 			<StackStrip />
 			<ContactCta />

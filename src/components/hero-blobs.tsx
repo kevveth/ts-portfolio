@@ -7,6 +7,7 @@ import {
 	sampleField,
 	smoothFieldAlpha,
 } from "#/lib/hero-blobs";
+import { subscribeToThemeChange } from "#/lib/theme";
 
 const BUFFER_WIDTH = 240;
 const MIN_BUFFER_HEIGHT = 72;
@@ -198,7 +199,7 @@ export function HeroBlobs() {
 		// Theme changes are the only production event that changes the palette.
 		// Resolve the CSS colors once per theme instead of creating probe canvases
 		// during every animation frame.
-		const themeObserver = new MutationObserver(() => {
+		const unsubscribeFromTheme = subscribeToThemeChange(() => {
 			colors = readBlobColors();
 			if (rafId === null) {
 				drawFrame(
@@ -210,10 +211,6 @@ export function HeroBlobs() {
 					colors,
 				);
 			}
-		});
-		themeObserver.observe(document.documentElement, {
-			attributes: true,
-			attributeFilter: ["class"],
 		});
 
 		const intersectionObserver = new IntersectionObserver(
@@ -236,7 +233,7 @@ export function HeroBlobs() {
 		return () => {
 			if (rafId !== null) cancelAnimationFrame(rafId);
 			resizeObserver.disconnect();
-			themeObserver.disconnect();
+			unsubscribeFromTheme();
 			intersectionObserver.disconnect();
 			arena?.removeEventListener("pointermove", handlePointerMove);
 			arena?.removeEventListener("pointerleave", handlePointerLeave);

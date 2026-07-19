@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
 import type { Activity } from "react-activity-calendar";
 import { ActivityCalendar } from "react-activity-calendar";
 import { ContentState } from "#/components/content-state";
 import { Reveal } from "#/components/reveal";
 import { Section, SectionHeading } from "#/components/section";
 import { Surface } from "#/components/surface";
-import { getCurrentTheme } from "#/lib/theme";
+import { SITE } from "#/content/site";
+import { useTheme } from "#/lib/theme";
 
 // ---------------------------------------------------------------------------
 // Contribution theme — derived from the site's --border/--brand tokens.
@@ -15,8 +15,8 @@ import { getCurrentTheme } from "#/lib/theme";
 // ---------------------------------------------------------------------------
 
 const CONTRIBUTION_THEME = {
-	light: ["#e1e4e7", "#b8dff5", "#75cae7", "#28b9c8", "#5b9f20"],
-	dark: ["#29272d", "#581a22", "#8f2430", "#c73341", "#f05a65"],
+	light: ["#e1e4e7", "#0061ce"],
+	dark: ["#29272d", "#f05a65"],
 };
 
 // ---------------------------------------------------------------------------
@@ -43,21 +43,7 @@ export function ContributionGraph({ data }: ContributionGraphProps) {
 	// Must match the SSR-rendered value exactly or React logs a hydration
 	// mismatch. Resolve the real theme (and start observing changes) only
 	// after mount, inside the effect below.
-	const [colorScheme, setColorScheme] = useState<"light" | "dark">("light");
-
-	// react-activity-calendar auto-detects based on prefers-color-scheme, but
-	// this site uses a class-based dark mode — we sync the prop explicitly.
-	useEffect(() => {
-		setColorScheme(getCurrentTheme());
-		const observer = new MutationObserver(() => {
-			setColorScheme(getCurrentTheme());
-		});
-		observer.observe(document.documentElement, {
-			attributes: true,
-			attributeFilter: ["class"],
-		});
-		return () => observer.disconnect();
-	}, []);
+	const colorScheme = useTheme();
 
 	const hasActivity = data.some((d) => d.count > 0);
 
@@ -97,12 +83,18 @@ export function ContributionGraph({ data }: ContributionGraphProps) {
 // Error fallback — shown when the fetch fails
 // ---------------------------------------------------------------------------
 
-export function ContributionGraphError({ message }: { message: string }) {
+export function ContributionGraphError() {
 	return (
 		<Section id="activity">
 			<SectionHeading kicker="activity" title="GitHub contributions" />
 			<Reveal>
-				<ContentState>{message}</ContentState>
+				<ContentState>
+					Contribution data isn&apos;t available right now. You can{" "}
+					<a className="text-brand underline" href={SITE.github}>
+						see the live graph on GitHub
+					</a>
+					.
+				</ContentState>
 			</Reveal>
 		</Section>
 	);

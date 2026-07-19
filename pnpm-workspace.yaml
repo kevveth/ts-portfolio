@@ -1,0 +1,4 @@
+# Git dependencies are source checkouts. Permit only this pinned library
+# commit to run its prepare script, which builds the published dist files.
+allowBuilds:
+  ui-library@git+https://github.com/kevveth/ui-library.git#5cd28ff74cf0f714d4052146623df5efba7335cf: true

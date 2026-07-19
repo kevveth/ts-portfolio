@@ -19,9 +19,7 @@ export function Hero() {
 				/>
 				<Reveal className="relative z-10">
 					<p className="kicker mb-5">
-						<span aria-hidden className="text-brand">
-							${" "}
-						</span>
+						<span aria-hidden>$ </span>
 						whoami
 					</p>
 					<h1 className="text-4xl font-bold tracking-tight text-balance sm:text-6xl">

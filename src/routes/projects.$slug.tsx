@@ -164,11 +164,11 @@ function ProjectDetail() {
 function HighlightList({ highlights }: { highlights: ProjectHighlight[] }) {
 	return (
 		<dl className="grid gap-x-8 gap-y-7 sm:grid-cols-2">
-			{highlights.map((highlight, index) => (
+			{highlights.map((highlight) => (
 				<div key={highlight.title} className="space-y-1.5">
 					<dt className="font-semibold">
 						<span aria-hidden className="mr-2 font-mono text-xs text-brand">
-							{String(index + 1).padStart(2, "0")}
+							▸
 						</span>
 						{highlight.title}
 					</dt>

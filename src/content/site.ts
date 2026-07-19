@@ -29,10 +29,15 @@ type Site = {
 	metaDescription: string;
 	email: string;
 	github: string;
+	siteRepo: string;
 	githubUsername: string;
 	linkedin: string;
-	/** Compact skills strip on Home. */
-	skills: string[];
+	/** Tools grouped by the role they play in delivery. */
+	skills: {
+		build: readonly string[];
+		verify: readonly string[];
+		ship: readonly string[];
+	};
 	nav: NavItem[];
 };
 
@@ -45,21 +50,22 @@ export const SITE = {
 		"Full-stack developer building production web apps end to end — most recently a Square-connected site for a working barber shop.",
 	email: "dev.kenrathbun@gmail.com",
 	github: "https://github.com/kevveth",
+	siteRepo: "https://github.com/kevveth/ts-portfolio",
 	githubUsername: "kevveth",
 	linkedin: "https://www.linkedin.com/in/kenneth-rathbun",
-	skills: [
-		"TypeScript",
-		"React 19",
-		"TanStack Start",
-		"Node.js",
-		"Tailwind CSS",
-		"Square SDK",
-		"Zod",
-		"Vitest",
-		"Playwright",
-		"axe-core",
-		"Vercel",
-	],
+	skills: {
+		build: [
+			"TypeScript",
+			"React 19",
+			"TanStack Start",
+			"Node.js",
+			"Tailwind CSS",
+			"Square SDK",
+			"Zod",
+		],
+		verify: ["Vitest", "Playwright", "axe-core"],
+		ship: ["Vercel"],
+	},
 	nav: [
 		{ label: "Home", to: "/" },
 		{ label: "Projects", to: "/projects" },

@@ -86,6 +86,12 @@ export function mapContributions(days: GitHubContribution[]): Activity[] {
 // ---------------------------------------------------------------------------
 
 const GITHUB_GQL_ENDPOINT = "https://api.github.com/graphql";
+const CACHE_TTL_MS = 60 * 60 * 1000;
+const VISITOR_SAFE_ERROR = "Contribution data isn't available right now.";
+
+let contributionCache:
+	| { result: Extract<ContributionResult, { ok: true }>; expiresAt: number }
+	| undefined;
 
 const CONTRIBUTIONS_QUERY = `
 query($username: String!, $from: DateTime!, $to: DateTime!) {
@@ -110,8 +116,8 @@ query($username: String!, $from: DateTime!, $to: DateTime!) {
  * `{ ok: false, error: string }` on failure (missing token, network error,
  * GraphQL errors, or invalid response shape).
  *
- * The PAT (GITHUB_TOKEN) must be available at build time — it is read from
- * `process.env` and never shipped to the client bundle.
+ * The PAT (GITHUB_TOKEN) is read at request time on the server and is never
+ * shipped to the client bundle.
  */
 export async function fetchContributions(): Promise<ContributionResult> {
 	const token = import.meta.env.GITHUB_TOKEN;
@@ -171,3 +177,26 @@ export async function fetchContributions(): Promise<ContributionResult> {
 		};
 	}
 }
+
+/** Server-only contribution loader with a one-hour successful-result cache. */
+export const getContributions = createServerFn({ method: "GET" }).handler(
+	async (): Promise<ContributionResult> => {
+		if (contributionCache && contributionCache.expiresAt > Date.now()) {
+			return contributionCache.result;
+		}
+
+		const result = await fetchContributions();
+		if (result.ok) {
+			contributionCache = {
+				result,
+				expiresAt: Date.now() + CACHE_TTL_MS,
+			};
+			return result;
+		}
+
+		console.error("Unable to load GitHub contributions:", result.error);
+		return { ok: false, error: VISITOR_SAFE_ERROR };
+	},
+);
+
+import { createServerFn } from "@tanstack/react-start";

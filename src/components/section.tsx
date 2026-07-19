@@ -64,9 +64,7 @@ export function PageIntro({
 	return (
 		<header className={cn("max-w-3xl space-y-4", className)}>
 			<p className="kicker">
-				<span aria-hidden className="text-brand">
-					{"// "}
-				</span>
+				<span aria-hidden>{"// "}</span>
 				{kicker}
 			</p>
 			<h1 className="page-title">{title}</h1>
@@ -99,9 +97,7 @@ export function SectionHeading({
 	const Heading = as;
 	const kickerLabel = (
 		<>
-			<span aria-hidden className="text-brand">
-				{"// "}
-			</span>
+			<span aria-hidden>{"// "}</span>
 			{kicker}
 		</>
 	);
