@@ -1,5 +1,4 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { Button } from "ui-library";
 import { Gallery } from "#/components/gallery";
 import { Picture } from "#/components/picture";
 import {
@@ -9,6 +8,7 @@ import {
 } from "#/components/project-patterns";
 import { PageIntro, Section, SectionHeading } from "#/components/section";
 import { Surface } from "#/components/surface";
+import { Button } from "#/components/ui/button";
 import { getProject, type ProjectHighlight } from "#/content/projects";
 import { SITE, SITE_URL } from "#/content/site";
 import { getProjectImage } from "#/lib/project-images";
@@ -70,40 +70,37 @@ function ProjectDetail() {
 
 			<Section width="reading" className="space-y-12">
 				<div className="space-y-3">
-					<SectionHeading kicker="overview" className="mb-0" />
+					<SectionHeading kicker="overview" spacing="none" />
 					<p className="leading-relaxed">{project.summary}</p>
 				</div>
 				<div className="space-y-3">
-					<SectionHeading kicker="the problem" className="mb-0" />
+					<SectionHeading kicker="the problem" spacing="none" />
 					<p className="leading-relaxed text-muted-foreground">
 						{project.problem}
 					</p>
 				</div>
 				{project.productionConstraint ? (
 					<div className="space-y-3">
-						<SectionHeading
-							kicker="the production constraint"
-							className="mb-0"
-						/>
+						<SectionHeading kicker="the production constraint" spacing="none" />
 						<p className="leading-relaxed text-muted-foreground">
 							{project.productionConstraint}
 						</p>
 					</div>
 				) : null}
 				<div className="space-y-3">
-					<SectionHeading kicker="what I shipped" className="mb-0" />
+					<SectionHeading kicker="what I shipped" spacing="none" />
 					<p className="leading-relaxed text-muted-foreground">
 						{project.approach}
 					</p>
 				</div>
 			</Section>
 
-			<Section className="pt-0">
+			<Section spacing="continued">
 				<SectionHeading kicker="production highlights" />
 				<HighlightList highlights={project.highlights} />
 			</Section>
 
-			<Section className="pt-0">
+			<Section spacing="continued">
 				<SectionHeading kicker="outcomes" />
 				<ul className="max-w-3xl space-y-2.5">
 					{project.outcomes.map((outcome) => (
@@ -118,7 +115,7 @@ function ProjectDetail() {
 			</Section>
 
 			{shots.length > 0 ? (
-				<Section className="pt-0">
+				<Section spacing="continued">
 					<SectionHeading kicker="production" title="Live site" />
 					<Gallery items={shots} />
 				</Section>
@@ -126,7 +123,7 @@ function ProjectDetail() {
 
 			{project.customFlow ? (
 				<>
-					<Section width="reading" className="pt-0">
+					<Section width="reading" spacing="continued">
 						<SectionHeading
 							kicker="future path"
 							title="The custom booking flow"
@@ -135,11 +132,11 @@ function ProjectDetail() {
 							{project.customFlow.summary}
 						</p>
 					</Section>
-					<Section className="pt-0">
+					<Section spacing="continued">
 						<SectionHeading kicker="custom flow engineering" />
 						<HighlightList highlights={project.customFlow.highlights} />
 					</Section>
-					<Section className="pt-0">
+					<Section spacing="continued">
 						<SectionHeading kicker="sandbox only" title="Custom flow screens" />
 						<Gallery items={project.customFlow.gallery} />
 					</Section>

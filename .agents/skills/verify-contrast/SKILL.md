@@ -118,6 +118,31 @@ hover    rgb(21,108,221)     4.81:1   PASS            PASS
   `oklch()`/`oklab()`/`color-mix()` — this script resolves it through a real
   in-page `<canvas>` fillStyle round-trip rather than string-parsing, which
   handles any valid CSS color.
+- **Sampling can land on glyph ink instead of the backdrop, and that reads as
+  a catastrophic false failure.** `--x` defaults to `0.06` — 6% across the
+  element. On a *padded* element (a button) that lands in padding, ahead of
+  the label. On a **bare inline `<span>` with no leading padding** it lands
+  squarely on the first letter, so you sample an anti-aliased glyph edge and
+  compute the text color against a blend of itself. This produced a bogus
+  1.91:1 reading on `.hero-role` (2026-07-21) that triggered a whole
+  wild-goose-chase "fix" for a defect that never existed — the true value was
+  5.39:1, passing. The script now hides the element's own text color for the
+  backdrop screenshot only (the text color for the math is resolved before
+  the override), so the sampled pixel is always the real composited backdrop.
+  **If a number looks impossibly bad, suspect the probe before the CSS** —
+  and sanity-check it against the text color's theoretical maximum (e.g. mid
+  azure `rgb(0,97,206)` can't exceed ~5.9:1 against pure white, so any
+  "regression from 15:1" for that color is a measurement mismatch, not a
+  regression).
+- **`--scan N`** samples N points across the element width and reports the
+  worst. Prefer it over a single `--x` for anything sitting on a gradient,
+  canvas, or image backdrop that varies across the text run — one point can
+  pass comfortably while a few characters over fails.
+- **The `active` state leaves a text selection behind.** Driving `:active`
+  means mousedown-then-move-away, which is mechanically a selection drag; the
+  native `::selection` highlight then tints every state captured afterward.
+  The script clears it now. If you see a non-interactive element's "focus"
+  state reading differently from "rest", suspect this before believing it.
 - A translucent fill's *rest* state is usually the tightest margin — hover
   and active states in this project's glass buttons only increase fill
   opacity, so if rest passes with margin the rest usually do too, but check

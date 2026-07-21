@@ -1,8 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, ExternalLink, Mail } from "lucide-react";
-import { Button } from "ui-library";
 import { StatusBadge } from "#/components/status-badge";
 import { Badge } from "#/components/ui/badge";
+import { Button } from "#/components/ui/button";
 import type { Project } from "#/content/projects";
 import { SITE } from "#/content/site";
 import { cn } from "#/lib/utils";
@@ -90,7 +90,7 @@ export function ProjectActions({
 			className={cn("flex flex-wrap items-center gap-x-5 gap-y-2", className)}
 		>
 			{caseStudy ? (
-				<Button asChild size="lg" className="portfolio-primary">
+				<Button asChild size="lg">
 					<Link to="/projects/$slug" params={{ slug: project.slug }}>
 						Read the case study
 						<ArrowRight aria-hidden />
@@ -98,11 +98,7 @@ export function ProjectActions({
 				</Button>
 			) : null}
 			{project.liveUrl ? (
-				<Button
-					asChild
-					variant={caseStudy ? "link" : "default"}
-					className={caseStudy ? "portfolio-link" : "portfolio-primary"}
-				>
+				<Button asChild variant={caseStudy ? "brand-link" : "default"}>
 					<a
 						href={project.liveUrl}
 						target="_blank"
@@ -115,7 +111,7 @@ export function ProjectActions({
 				</Button>
 			) : null}
 			{contact ? (
-				<Button asChild variant="link" className="portfolio-link">
+				<Button asChild variant="brand-link">
 					<a href={`mailto:${SITE.email}`}>
 						<Mail aria-hidden />
 						Get in touch

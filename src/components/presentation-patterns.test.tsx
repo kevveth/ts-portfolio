@@ -1,8 +1,7 @@
 // @vitest-environment jsdom
 
 import { render, screen } from "@testing-library/react";
-import type { ReactNode } from "react";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { ContentState } from "#/components/content-state";
 import {
 	ProjectActions,
@@ -12,10 +11,6 @@ import {
 import { PageIntro, Section } from "#/components/section";
 import { Surface } from "#/components/surface";
 import type { Project } from "#/content/projects";
-
-vi.mock("ui-library", () => ({
-	Button: ({ children }: { children: ReactNode }) => children,
-}));
 
 const project: Project = {
 	slug: "example",

@@ -30,23 +30,20 @@ export const STATUS_META: Record<
 > = {
 	live: {
 		label: "Live",
-		dotClass: "bg-green-500",
-		badgeClass:
-			"border-green-600/40 bg-green-500/10 text-green-800 dark:border-green-400/40 dark:text-green-400",
+		dotClass: "bg-success",
+		badgeClass: "border-success/40 bg-success/10 text-success-ink",
 		live: true,
 	},
 	prototype: {
 		label: "Prototype",
-		dotClass: "bg-violet-500",
-		badgeClass:
-			"border-violet-600/40 bg-violet-500/10 text-violet-700 dark:border-violet-400/40 dark:text-violet-400",
+		dotClass: "bg-notice",
+		badgeClass: "border-notice/40 bg-notice/10 text-notice-ink",
 		live: false,
 	},
 	private: {
 		label: "Private",
-		dotClass: "bg-zinc-500",
-		badgeClass:
-			"border-zinc-500/40 bg-zinc-500/10 text-zinc-700 dark:border-zinc-400/40 dark:text-zinc-300",
+		dotClass: "bg-muted-foreground",
+		badgeClass: "border-border bg-muted text-muted-foreground",
 		live: false,
 	},
 };

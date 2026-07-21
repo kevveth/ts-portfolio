@@ -6,21 +6,20 @@ import {
 } from "@tanstack/react-router";
 import { Analytics } from "@vercel/analytics/react";
 import type { ReactNode } from "react";
-import { Button } from "ui-library";
 
 import { SiteFooter } from "#/components/site-footer";
 import { SiteHeader } from "#/components/site-header";
+import { Button } from "#/components/ui/button";
 import { SITE, SITE_URL } from "#/content/site";
 import { THEME_INIT_SCRIPT } from "#/lib/theme";
 import appCss from "../styles.css?url";
 
 const DEFAULT_TITLE = `${SITE.name} — ${SITE.role}`;
 
-const PRELOADED_FONTS = [
-	"ibm-plex-sans-400",
-	"ibm-plex-sans-700",
-	"ibm-plex-mono-500",
-];
+// Variable fonts: one file per subset covers the whole weight range, so only
+// the latin subset needs preloading for above-the-fold text (hero h1 + the
+// mono `.kicker` line). latin-ext loads lazily if extended-Latin text shows up.
+const PRELOADED_FONTS = ["space-grotesk-latin", "jetbrains-mono-latin"];
 
 export const Route = createRootRoute({
 	head: () => ({
@@ -77,9 +76,7 @@ function NotFound() {
 	return (
 		<div className="mx-auto flex w-full max-w-5xl flex-col items-start gap-4 px-4 py-24 sm:px-6">
 			<p className="kicker">404 — not found</p>
-			<h1 className="text-3xl font-semibold tracking-tight">
-				This page doesn't exist.
-			</h1>
+			<h1 className="page-title">This page doesn't exist.</h1>
 			<p className="text-muted-foreground">
 				The address may be mistyped, or the page may have moved.
 			</p>

@@ -1,6 +1,6 @@
 import { defineConfig } from "vitest/config";
 
-const IMAGE_MARKER = /[?&](hero|gallery|thumb)\b/;
+const IMAGE_MARKER = /[?&](hero|gallery|thumb|credential)\b/;
 const STUB_PREFIX = "\0image-stub:";
 
 export default defineConfig({

@@ -13,6 +13,10 @@ type ProjectCardProps = {
 
 export function ProjectCard({ project, imageSizes }: ProjectCardProps) {
 	return (
+		// Surface itself carries no padding prop here: the header/content
+		// regions below apply their own asymmetric px-6 pt-5 / px-6 pt-4 pb-6
+		// (a leftover of the deleted CardHeader/CardContent split), which
+		// doesn't map onto Surface's uniform padding scale.
 		<Surface
 			variant="interactive"
 			className="group relative flex h-full flex-col overflow-hidden"

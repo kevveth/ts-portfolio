@@ -6,7 +6,7 @@ type SectionProps = {
 	className?: string;
 	children: ReactNode;
 	width?: "content" | "reading" | "wide";
-	spacing?: "default" | "compact" | "flush";
+	spacing?: "default" | "compact" | "flush" | "continued";
 	divided?: boolean;
 };
 
@@ -20,6 +20,10 @@ const spacings = {
 	default: "py-14 sm:py-20",
 	compact: "py-10 sm:py-12",
 	flush: "py-0",
+	/** Continues a preceding section: drops the top padding (the two
+	 * sections read as one visual block) while keeping the default's
+	 * bottom padding. */
+	continued: "pt-0 pb-14 sm:pb-20",
 } as const;
 
 export function Section({
@@ -79,8 +83,16 @@ type SectionHeadingProps = {
 	title?: string;
 	/** Heading level for the section's heading element. Defaults to "h2". */
 	as?: "h1" | "h2" | "h3";
+	/** Bottom margin before the heading's following content. Defaults to "default". */
+	spacing?: "default" | "tight" | "none";
 	className?: string;
 };
+
+const headingSpacings = {
+	default: "mb-8",
+	tight: "mb-4",
+	none: "",
+} as const;
 
 /**
  * Section label + optional title. When `title` is set it is the section's
@@ -92,6 +104,7 @@ export function SectionHeading({
 	kicker,
 	title,
 	as = "h2",
+	spacing = "default",
 	className,
 }: SectionHeadingProps) {
 	const Heading = as;
@@ -101,13 +114,22 @@ export function SectionHeading({
 			{kicker}
 		</>
 	);
+	// h3 renders genuinely smaller than h2 so heading level is visible in the
+	// type scale, not just semantics — both previously measured 30px/600/36px.
+	const titleSizeClass =
+		as === "h3" ? "text-xl sm:text-2xl" : "text-2xl sm:text-3xl";
 
 	return (
-		<div className={cn("mb-8 space-y-2", className)}>
+		<div className={cn(headingSpacings[spacing], "space-y-2", className)}>
 			{title ? (
 				<>
 					<p className="kicker">{kickerLabel}</p>
-					<Heading className="text-2xl font-semibold tracking-tight text-balance sm:text-3xl">
+					<Heading
+						className={cn(
+							titleSizeClass,
+							"font-semibold tracking-tight text-balance",
+						)}
+					>
 						{title}
 					</Heading>
 				</>

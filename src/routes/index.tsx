@@ -4,6 +4,7 @@ import {
 	ContributionGraph,
 	ContributionGraphError,
 } from "#/components/contribution-graph";
+import { Credentials } from "#/components/credentials";
 import { FeaturedProject } from "#/components/featured-project";
 import { Hero } from "#/components/hero";
 import { StackStrip } from "#/components/stack-strip";
@@ -41,6 +42,7 @@ function Home() {
 				<ContributionGraphError />
 			)}
 			<StackStrip />
+			<Credentials />
 			<ContactCta />
 		</>
 	);

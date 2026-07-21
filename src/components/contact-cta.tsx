@@ -1,7 +1,7 @@
-import { Button } from "ui-library";
 import { CONTACT_CHANNELS } from "#/components/contact-links";
 import { Reveal } from "#/components/reveal";
 import { Section, SectionHeading } from "#/components/section";
+import { Button } from "#/components/ui/button";
 
 export function ContactCta() {
 	return (
@@ -21,8 +21,7 @@ export function ContactCta() {
 							key={channel.label}
 							asChild
 							size="lg"
-							variant={i === 0 ? "default" : "link"}
-							className={i === 0 ? "portfolio-primary" : "portfolio-link"}
+							variant={i === 0 ? "default" : "brand-link"}
 						>
 							<a
 								href={channel.href}

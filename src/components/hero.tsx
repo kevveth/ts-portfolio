@@ -1,9 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight, Mail } from "lucide-react";
-import { Button } from "ui-library";
 import { HeroBlobs } from "#/components/hero-blobs";
 import { Reveal } from "#/components/reveal";
 import { Section } from "#/components/section";
+import { Button } from "#/components/ui/button";
 import { SITE } from "#/content/site";
 
 export function Hero() {
@@ -33,13 +33,13 @@ export function Hero() {
 						{SITE.bio}
 					</p>
 					<div className="mt-9 flex flex-wrap items-center gap-x-5 gap-y-2">
-						<Button asChild size="lg" className="portfolio-primary">
+						<Button asChild size="lg">
 							<a href={`mailto:${SITE.email}`}>
 								<Mail aria-hidden />
 								Start a conversation
 							</a>
 						</Button>
-						<Button asChild size="lg" variant="link" className="portfolio-link">
+						<Button asChild size="lg" variant="brand-link">
 							<Link to="/projects">
 								Explore projects
 								<ArrowUpRight aria-hidden />

@@ -17,6 +17,11 @@ const IMAGE_PRESETS: Record<string, Record<string, string>> = {
 	hero: { w: "768;1280;1920", format: "avif;webp;png", as: "picture" },
 	gallery: { w: "640;1024;1440", format: "avif;webp;png", as: "picture" },
 	thumb: { w: "480;768", format: "avif;webp;png", as: "picture" },
+	credential: {
+		w: "640;1024;1600;2400",
+		format: "avif;webp;png",
+		as: "picture",
+	},
 };
 
 // Vercel injects VERCEL_PROJECT_PRODUCTION_URL (host only, no protocol) at
@@ -53,7 +58,10 @@ const config = defineConfig({
 		// self-hosted woff2 files so the swap to the web font causes ~zero
 		// layout shift.
 		FontaineTransform.vite({
-			fallbacks: ["Arial", "Georgia", "sans-serif"],
+			fallbacks: {
+				"Space Grotesk": ["Arial", "Helvetica Neue", "sans-serif"],
+				"JetBrains Mono": ["Courier New", "ui-monospace", "monospace"],
+			},
 			resolvePath: (id) =>
 				fileURLToPath(new URL(`./public${id}`, import.meta.url)),
 		}),
@@ -75,7 +83,13 @@ const config = defineConfig({
 			prerender: { enabled: true, crawlLinks: true, failOnError: true },
 			// The crawler reaches the projects index as both /projects and
 			// /projects/; keep only the canonical form in the sitemap.
-			pages: [{ path: "/projects/", sitemap: { exclude: true } }],
+			// /style is the internal style guide — it sets `noindex` in its own
+			// head, so listing it here too would hand crawlers contradictory
+			// signals (Search Console flags "submitted URL marked noindex").
+			pages: [
+				{ path: "/projects/", sitemap: { exclude: true } },
+				{ path: "/style", sitemap: { exclude: true } },
+			],
 		}),
 		viteReact(),
 	],

@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
-import { Button } from "ui-library";
 import { ProjectCard } from "#/components/project-card";
 import { Reveal } from "#/components/reveal";
 import { PageIntro, Section, SectionHeading } from "#/components/section";
+import { Button } from "#/components/ui/button";
 import { getAllProjects } from "#/content/projects";
 import { SITE, SITE_URL } from "#/content/site";
 import { cn } from "#/lib/utils";
@@ -76,12 +76,7 @@ function ProjectsIndex() {
 						motion and transparency, a contribution graph fed by GitHub&apos;s
 						GraphQL API, and Vitest, Playwright, and axe-core keeping it honest.
 					</p>
-					<Button
-						asChild
-						size="lg"
-						variant="link"
-						className="portfolio-link mt-5"
-					>
+					<Button asChild size="lg" variant="brand-link" className="mt-5">
 						<a
 							href={SITE.siteRepo}
 							target="_blank"

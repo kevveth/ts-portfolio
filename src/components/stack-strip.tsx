@@ -6,9 +6,11 @@ import { SITE } from "#/content/site";
 export function StackStrip() {
 	return (
 		<Section spacing="compact">
+			{/* mb-5 sits between the tight (mb-4) and default (mb-8) spacing
+			steps; neither matches, so it stays on className. */}
 			<SectionHeading kicker="stack" className="mb-5" />
 			<Reveal>
-				<Surface className="accent-surface space-y-4 p-4 sm:p-5">
+				<Surface padding="sm" className="accent-surface space-y-4">
 					{Object.entries(SITE.skills).map(([group, skills]) => (
 						<div key={group} className="flex flex-wrap items-center gap-2">
 							<span className="kicker w-14 shrink-0">{group}</span>

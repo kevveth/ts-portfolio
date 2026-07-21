@@ -1,9 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { Github, Menu } from "lucide-react";
 import { useState } from "react";
-import { Button } from "ui-library";
 import { CONTACT_CHANNELS } from "#/components/contact-links";
 import { ThemeToggle } from "#/components/theme-toggle";
+import { Button } from "#/components/ui/button";
 import { Separator } from "#/components/ui/separator";
 import {
 	Sheet,
