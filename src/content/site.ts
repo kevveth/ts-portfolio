@@ -69,5 +69,6 @@ export const SITE = {
 	nav: [
 		{ label: "Home", to: "/" },
 		{ label: "Projects", to: "/projects" },
+		{ label: "Credentials", to: "/credentials" },
 	],
 } as const satisfies Site;

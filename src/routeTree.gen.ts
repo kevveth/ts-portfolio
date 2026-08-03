@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CredentialsRouteImport } from './routes/credentials'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as StyleRouteImport } from './routes/style'
 import { Route as ProjectsIndexRouteImport } from './routes/projects.index'
@@ -18,6 +19,11 @@ import { Route as ProjectsSlugRouteImport } from './routes/projects.$slug'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CredentialsRoute = CredentialsRouteImport.update({
+  id: '/credentials',
+  path: '/credentials',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
@@ -43,6 +49,7 @@ const ProjectsSlugRoute = ProjectsSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/credentials': typeof CredentialsRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/style': typeof StyleRoute
   '/projects/$slug': typeof ProjectsSlugRoute
@@ -50,6 +57,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/credentials': typeof CredentialsRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/style': typeof StyleRoute
   '/projects/$slug': typeof ProjectsSlugRoute
@@ -58,6 +66,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/credentials': typeof CredentialsRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/style': typeof StyleRoute
   '/projects/$slug': typeof ProjectsSlugRoute
@@ -65,12 +74,25 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/robots.txt' | '/style' | '/projects/$slug' | '/projects/'
+  fullPaths:
+    | '/'
+    | '/credentials'
+    | '/robots.txt'
+    | '/style'
+    | '/projects/$slug'
+    | '/projects/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/robots.txt' | '/style' | '/projects/$slug' | '/projects'
+  to:
+    | '/'
+    | '/credentials'
+    | '/robots.txt'
+    | '/style'
+    | '/projects/$slug'
+    | '/projects'
   id:
     | '__root__'
     | '/'
+    | '/credentials'
     | '/robots.txt'
     | '/style'
     | '/projects/$slug'
@@ -79,6 +101,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CredentialsRoute: typeof CredentialsRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   StyleRoute: typeof StyleRoute
   ProjectsSlugRoute: typeof ProjectsSlugRoute
@@ -92,6 +115,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/credentials': {
+      id: '/credentials'
+      path: '/credentials'
+      fullPath: '/credentials'
+      preLoaderRoute: typeof CredentialsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/robots.txt': {
@@ -127,6 +157,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CredentialsRoute: CredentialsRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   StyleRoute: StyleRoute,
   ProjectsSlugRoute: ProjectsSlugRoute,

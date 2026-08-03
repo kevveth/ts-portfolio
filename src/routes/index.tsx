@@ -4,10 +4,11 @@ import {
 	ContributionGraph,
 	ContributionGraphError,
 } from "#/components/contribution-graph";
-import { Credentials } from "#/components/credentials";
+import { FeaturedCredentials } from "#/components/credentials";
 import { FeaturedProject } from "#/components/featured-project";
 import { Hero } from "#/components/hero";
 import { StackStrip } from "#/components/stack-strip";
+import { type DateOnly, getFeaturedCredentials } from "#/content/credentials";
 import { SITE, SITE_URL } from "#/content/site";
 import { getContributions } from "#/lib/github";
 
@@ -23,26 +24,30 @@ export const Route = createFileRoute("/")({
 		links: [{ rel: "canonical", href: `${SITE_URL}/` }],
 	}),
 	loader: async () => {
-		const result = await getContributions();
-		return result;
+		const contributions = await getContributions();
+		const asOf = new Date().toISOString().slice(0, 10) as DateOnly;
+		return {
+			contributions,
+			featuredCredentials: getFeaturedCredentials(asOf),
+		};
 	},
 	component: Home,
 });
 
 function Home() {
-	const result = Route.useLoaderData();
+	const { contributions, featuredCredentials } = Route.useLoaderData();
 
 	return (
 		<>
 			<Hero />
 			<FeaturedProject />
-			{result.ok ? (
-				<ContributionGraph data={result.data} />
+			{contributions.ok ? (
+				<ContributionGraph data={contributions.data} />
 			) : (
 				<ContributionGraphError />
 			)}
 			<StackStrip />
-			<Credentials />
+			<FeaturedCredentials credentials={featuredCredentials} />
 			<ContactCta />
 		</>
 	);
