@@ -177,6 +177,17 @@ body {
 	line-height: 1.05;
 	text-wrap: balance;
 }
+/*
+ * The hero's h1 is the one signature line on the site and legitimately reads
+ * larger than every other page's h1 — but it should still be one type system,
+ * not a second ad-hoc treatment. Layered on top of .page-title (weight,
+ * tracking, line-height, balance all stay shared) and only swaps font-size,
+ * scaled ~1.22x over .page-title's clamp so the step reads as a deliberate
+ * size, not an arbitrary one.
+ */
+.hero-title {
+	font-size: clamp(2.75rem, 8vw, 4.25rem);
+}
 .page-lede {
 	font-size: clamp(1.0625rem, 2vw, 1.25rem);
 	line-height: 1.7;

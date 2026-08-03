@@ -22,9 +22,7 @@ export function Hero() {
 						<span aria-hidden>$ </span>
 						whoami
 					</p>
-					<h1 className="text-4xl font-bold tracking-tight text-balance sm:text-6xl">
-						{SITE.name}
-					</h1>
+					<h1 className="page-title hero-title">{SITE.name}</h1>
 					<p className="mt-4 max-w-2xl text-xl text-balance sm:text-2xl">
 						<span className="hero-role font-semibold">{SITE.role}.</span>{" "}
 						{SITE.headline}

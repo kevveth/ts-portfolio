@@ -1,6 +1,7 @@
 import { Reveal } from "#/components/reveal";
 import { Section, SectionHeading } from "#/components/section";
 import { Surface } from "#/components/surface";
+import { Badge } from "#/components/ui/badge";
 import { SITE } from "#/content/site";
 
 export function StackStrip() {
@@ -16,11 +17,15 @@ export function StackStrip() {
 							<span className="kicker w-14 shrink-0">{group}</span>
 							<ul className="flex flex-wrap gap-2">
 								{skills.map((skill) => (
-									<li
-										key={skill}
-										className="rounded-md border bg-background px-2.5 py-1.5 font-mono text-xs text-muted-foreground"
-									>
-										{skill}
+									<li key={skill}>
+										{/* Same treatment as TechStack (project-patterns.tsx) — both
+										render technology tags and should read as one recipe. */}
+										<Badge
+											variant="outline"
+											className="font-mono text-xs font-normal"
+										>
+											{skill}
+										</Badge>
 									</li>
 								))}
 							</ul>

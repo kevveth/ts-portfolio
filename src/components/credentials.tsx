@@ -42,14 +42,8 @@ export function Credentials({
 	const hasMultipleCredentials = credentials.length > 1;
 
 	return (
-		<Section id="credentials" spacing="compact">
-			{/* mb-5 sits between the tight (mb-4) and default (mb-8) spacing
-			steps; neither matches, so it stays on className. */}
-			<SectionHeading
-				kicker="credentials"
-				title="Certificates & credentials"
-				className="mb-5"
-			/>
+		<Section id="credentials">
+			<SectionHeading kicker="credentials" title="Certificates & credentials" />
 			<Reveal>
 				<div
 					className={cn(
