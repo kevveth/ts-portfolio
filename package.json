@@ -10,6 +10,7 @@
     "generate-routes": "tsr generate",
     "build": "vite build",
     "preview": "vite preview",
+    "skills:update": "pnpm dlx skills@latest update --project --yes",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "format": "biome format --write",

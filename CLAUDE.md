@@ -43,3 +43,17 @@ pnpm dlx shadcn@latest add <component>
 - Files prefixed with `demo` are scaffold examples and safe to delete.
 - `docs/spec-driven-development-with-claude-code.md` describes the spec-driven workflow the owner intends to follow (spec → plan → implement → verify, reviewing at phase gates).
 - Cross-agent handoffs (e.g. Claude → Codex) live in `docs/handoffs/`. Register every one in `docs/handoffs/CHANGELOG.md`; see `docs/handoffs/README.md` for the status lifecycle. Agents may mark a row `done` themselves once its verification checklist genuinely passes — use `needs-review` when unsure or when it's Ken's call.
+
+## Agent skills
+
+### Issue tracker
+
+Issues and agent-generated specs or tickets are tracked in GitHub Issues for `kevveth/ts-portfolio`. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Use the default Matt Pocock triage vocabulary: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, and `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+This is a single-context repository. Domain vocabulary lives in root `CONTEXT.md`, architectural decisions in `docs/adr/`, and existing product and architecture records remain in `specs/` and `docs/`. See `docs/agents/domain.md`.
