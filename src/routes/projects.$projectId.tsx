@@ -13,16 +13,16 @@ import { getProject, type ProjectHighlight } from "#/content/projects";
 import { SITE, SITE_URL } from "#/content/site";
 import { getProjectImage } from "#/lib/project-images";
 
-export const Route = createFileRoute("/projects/$slug")({
+export const Route = createFileRoute("/projects/$projectId")({
 	loader: ({ params }) => {
-		const project = getProject(params.slug);
+		const project = getProject(params.projectId);
 		if (!project) throw notFound();
 		return project;
 	},
 	head: ({ loaderData }) => {
 		if (!loaderData) return {};
-		const title = `${loaderData.title} — ${SITE.name}`;
-		const url = `${SITE_URL}/projects/${loaderData.slug}`;
+		const title = `${loaderData.title} | ${SITE.name}`;
+		const url = `${SITE_URL}/projects/${loaderData.projectId}`;
 		return {
 			meta: [
 				{ title },

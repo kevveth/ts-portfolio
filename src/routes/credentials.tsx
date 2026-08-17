@@ -4,7 +4,7 @@ import { PageIntro, Section } from "#/components/section";
 import { getAllCredentials } from "#/content/credentials";
 import { SITE, SITE_URL } from "#/content/site";
 
-const TITLE = `Credentials — ${SITE.name}`;
+const TITLE = `Credentials | ${SITE.name}`;
 const DESCRIPTION =
 	"A complete collection of role-relevant credentials, with certificate and verification evidence.";
 

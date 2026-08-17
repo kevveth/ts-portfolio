@@ -61,8 +61,8 @@ export function ProjectActions({
 			<div className={cn("flex flex-wrap items-center gap-4", className)}>
 				{caseStudy ? (
 					<Link
-						to="/projects/$slug"
-						params={{ slug: project.slug }}
+						to="/projects/$projectId"
+						params={{ projectId: project.projectId }}
 						className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-brand transition-colors hover:text-brand/80"
 					>
 						Case study
@@ -91,7 +91,10 @@ export function ProjectActions({
 		>
 			{caseStudy ? (
 				<Button asChild size="lg">
-					<Link to="/projects/$slug" params={{ slug: project.slug }}>
+					<Link
+						to="/projects/$projectId"
+						params={{ projectId: project.projectId }}
+					>
 						Read the case study
 						<ArrowRight aria-hidden />
 					</Link>

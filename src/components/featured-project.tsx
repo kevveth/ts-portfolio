@@ -22,8 +22,8 @@ export function FeaturedProject() {
 			<Reveal>
 				<div className="grid items-start gap-8 lg:grid-cols-[3fr_2fr]">
 					<Link
-						to="/projects/$slug"
-						params={{ slug: project.slug }}
+						to="/projects/$projectId"
+						params={{ projectId: project.projectId }}
 						aria-label={`${project.title} case study`}
 						className="group block rounded-lg"
 					>

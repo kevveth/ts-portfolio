@@ -1,6 +1,6 @@
 /**
  * Project case studies. Hardcoded, typed content — adding a project is a new
- * entry here plus its gallery images in src/assets/<slug>/ (registered in
+ * entry here plus its gallery images in src/assets/<projectId>/ (registered in
  * src/lib/project-images.ts).
  *
  * Gallery `src` values are string keys, not imports, so this module stays
@@ -63,7 +63,7 @@ export type CustomFlow = {
 };
 
 export type Project = {
-	slug: string;
+	projectId: string;
 	title: string;
 	tagline: string;
 	thumbAlt: string;
@@ -72,7 +72,6 @@ export type Project = {
 	status: ProjectStatus;
 	stack: string[];
 	liveUrl?: string;
-	repoUrl?: string;
 	featured: boolean;
 	summary: string;
 	problem: string;
@@ -86,7 +85,7 @@ export type Project = {
 
 const PROJECTS: Project[] = [
 	{
-		slug: "chavos-parlor",
+		projectId: "chavos-parlor",
 		title: "Chavo's Parlor",
 		tagline:
 			"A branded home for a working barber shop, with live Square services and an embedded booking flow.",
@@ -212,8 +211,8 @@ export function getAllProjects(): Project[] {
 	return PROJECTS;
 }
 
-export function getProject(slug: string): Project | undefined {
-	return PROJECTS.find((project) => project.slug === slug);
+export function getProject(projectId: string): Project | undefined {
+	return PROJECTS.find((project) => project.projectId === projectId);
 }
 
 export function getFeaturedProject(): Project {

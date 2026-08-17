@@ -14,7 +14,7 @@ import { Route as CredentialsRouteImport } from './routes/credentials'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as StyleRouteImport } from './routes/style'
 import { Route as ProjectsIndexRouteImport } from './routes/projects.index'
-import { Route as ProjectsSlugRouteImport } from './routes/projects.$slug'
+import { Route as ProjectsProjectIdRouteImport } from './routes/projects.$projectId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -41,9 +41,9 @@ const ProjectsIndexRoute = ProjectsIndexRouteImport.update({
   path: '/projects/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProjectsSlugRoute = ProjectsSlugRouteImport.update({
-  id: '/projects/$slug',
-  path: '/projects/$slug',
+const ProjectsProjectIdRoute = ProjectsProjectIdRouteImport.update({
+  id: '/projects/$projectId',
+  path: '/projects/$projectId',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -52,7 +52,7 @@ export interface FileRoutesByFullPath {
   '/credentials': typeof CredentialsRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/style': typeof StyleRoute
-  '/projects/$slug': typeof ProjectsSlugRoute
+  '/projects/$projectId': typeof ProjectsProjectIdRoute
   '/projects/': typeof ProjectsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -60,7 +60,7 @@ export interface FileRoutesByTo {
   '/credentials': typeof CredentialsRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/style': typeof StyleRoute
-  '/projects/$slug': typeof ProjectsSlugRoute
+  '/projects/$projectId': typeof ProjectsProjectIdRoute
   '/projects': typeof ProjectsIndexRoute
 }
 export interface FileRoutesById {
@@ -69,7 +69,7 @@ export interface FileRoutesById {
   '/credentials': typeof CredentialsRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/style': typeof StyleRoute
-  '/projects/$slug': typeof ProjectsSlugRoute
+  '/projects/$projectId': typeof ProjectsProjectIdRoute
   '/projects/': typeof ProjectsIndexRoute
 }
 export interface FileRouteTypes {
@@ -79,7 +79,7 @@ export interface FileRouteTypes {
     | '/credentials'
     | '/robots.txt'
     | '/style'
-    | '/projects/$slug'
+    | '/projects/$projectId'
     | '/projects/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -87,7 +87,7 @@ export interface FileRouteTypes {
     | '/credentials'
     | '/robots.txt'
     | '/style'
-    | '/projects/$slug'
+    | '/projects/$projectId'
     | '/projects'
   id:
     | '__root__'
@@ -95,7 +95,7 @@ export interface FileRouteTypes {
     | '/credentials'
     | '/robots.txt'
     | '/style'
-    | '/projects/$slug'
+    | '/projects/$projectId'
     | '/projects/'
   fileRoutesById: FileRoutesById
 }
@@ -104,7 +104,7 @@ export interface RootRouteChildren {
   CredentialsRoute: typeof CredentialsRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   StyleRoute: typeof StyleRoute
-  ProjectsSlugRoute: typeof ProjectsSlugRoute
+  ProjectsProjectIdRoute: typeof ProjectsProjectIdRoute
   ProjectsIndexRoute: typeof ProjectsIndexRoute
 }
 
@@ -145,11 +145,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/projects/$slug': {
-      id: '/projects/$slug'
-      path: '/projects/$slug'
-      fullPath: '/projects/$slug'
-      preLoaderRoute: typeof ProjectsSlugRouteImport
+    '/projects/$projectId': {
+      id: '/projects/$projectId'
+      path: '/projects/$projectId'
+      fullPath: '/projects/$projectId'
+      preLoaderRoute: typeof ProjectsProjectIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -160,7 +160,7 @@ const rootRouteChildren: RootRouteChildren = {
   CredentialsRoute: CredentialsRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   StyleRoute: StyleRoute,
-  ProjectsSlugRoute: ProjectsSlugRoute,
+  ProjectsProjectIdRoute: ProjectsProjectIdRoute,
   ProjectsIndexRoute: ProjectsIndexRoute,
 }
 export const routeTree = rootRouteImport

@@ -14,7 +14,7 @@ import { SITE, SITE_URL } from "#/content/site";
 import { THEME_INIT_SCRIPT } from "#/lib/theme";
 import appCss from "../styles.css?url";
 
-const DEFAULT_TITLE = `${SITE.name} — ${SITE.role}`;
+const DEFAULT_TITLE = `${SITE.name} | ${SITE.role}`;
 
 // Variable fonts: one file per subset covers the whole weight range, so only
 // the latin subset needs preloading for above-the-fold text (hero h1 + the

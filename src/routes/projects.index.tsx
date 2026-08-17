@@ -8,7 +8,7 @@ import { getAllProjects } from "#/content/projects";
 import { SITE, SITE_URL } from "#/content/site";
 import { cn } from "#/lib/utils";
 
-const TITLE = `Projects — ${SITE.name}`;
+const TITLE = `Projects | ${SITE.name}`;
 const DESCRIPTION =
 	"Selected projects and case studies: production web apps designed and built end to end.";
 const VISIBLE_DESCRIPTION =
@@ -17,6 +17,10 @@ const SINGLE_PROJECT_IMAGE_SIZES = "(min-width: 768px) 768px, 100vw";
 const GRID_IMAGE_SIZES = "(min-width: 768px) 50vw, 100vw";
 
 export const Route = createFileRoute("/projects/")({
+	loader: () => {
+		const projects = getAllProjects();
+		return projects;
+	},
 	head: () => ({
 		meta: [
 			{ title: TITLE },
@@ -31,7 +35,7 @@ export const Route = createFileRoute("/projects/")({
 });
 
 function ProjectsIndex() {
-	const projects = getAllProjects();
+	const projects = Route.useLoaderData();
 	const isSingleProject = projects.length === 1;
 
 	return (
@@ -52,7 +56,7 @@ function ProjectsIndex() {
 					>
 						{projects.map((project) => (
 							<ProjectCard
-								key={project.slug}
+								key={project.projectId}
 								project={project}
 								imageSizes={
 									isSingleProject

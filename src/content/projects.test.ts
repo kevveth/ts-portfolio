@@ -21,7 +21,7 @@ describe("projects content", () => {
 	it("has a featured project for the Home hero", () => {
 		const featured = getFeaturedProject();
 		expect(featured.featured).toBe(true);
-		expect(featured.slug).toBe("chavos-parlor");
+		expect(featured.projectId).toBe("chavos-parlor");
 	});
 
 	it("featured project has a live URL", () => {
@@ -31,7 +31,7 @@ describe("projects content", () => {
 
 	it("every project has complete card/case-study fields", () => {
 		for (const project of getAllProjects()) {
-			expect(project.slug).toMatch(/^[a-z0-9-]+$/);
+			expect(project.projectId).toMatch(/^[a-z0-9-]+$/);
 			expect(project.tagline.length).toBeGreaterThan(0);
 			expect(project.highlights.length).toBeGreaterThan(0);
 			expect(project.outcomes.length).toBeGreaterThan(0);

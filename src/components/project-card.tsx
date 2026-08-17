@@ -21,9 +21,9 @@ export function ProjectCard({ project, imageSizes }: ProjectCardProps) {
 			variant="interactive"
 			className="group relative flex h-full flex-col overflow-hidden"
 		>
-			<div className="aspect-[16/10] overflow-hidden border-b">
+			<div className="aspect-16/10 overflow-hidden border-b">
 				<Picture
-					picture={getProjectThumb(project.slug)}
+					picture={getProjectThumb(project.projectId)}
 					alt={project.thumbAlt}
 					sizes={imageSizes}
 					className="block h-full w-full"
@@ -33,8 +33,8 @@ export function ProjectCard({ project, imageSizes }: ProjectCardProps) {
 			<header className="flex flex-col gap-2 px-6 pt-5">
 				<h2 className="text-lg leading-none font-semibold">
 					<Link
-						to="/projects/$slug"
-						params={{ slug: project.slug }}
+						to="/projects/$projectId"
+						params={{ projectId: project.projectId }}
 						aria-label={`View ${project.title} case study`}
 						className="transition-colors after:absolute after:inset-0 after:rounded-lg after:content-[''] hover:text-brand focus-visible:outline-none focus-visible:after:ring-2 focus-visible:after:ring-brand focus-visible:after:ring-offset-2"
 					>

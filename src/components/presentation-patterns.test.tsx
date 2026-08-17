@@ -13,7 +13,7 @@ import { Surface } from "#/components/surface";
 import type { Project } from "#/content/projects";
 
 const project: Project = {
-	slug: "example",
+	projectId: "example",
 	title: "Example project",
 	tagline: "A useful example",
 	thumbAlt: "Example project cover",

@@ -86,7 +86,7 @@ export function mapContributions(days: GitHubContribution[]): Activity[] {
 // ---------------------------------------------------------------------------
 
 const GITHUB_GQL_ENDPOINT = "https://api.github.com/graphql";
-const CACHE_TTL_MS = 60 * 60 * 1000;
+const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 const VISITOR_SAFE_ERROR = "Contribution data isn't available right now.";
 
 let contributionCache:
