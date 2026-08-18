@@ -78,7 +78,7 @@ function ProjectsIndex() {
 						This portfolio is built the same way I build client work: TanStack
 						Start with SSR, a hand-rolled canvas hero that respects reduced
 						motion and transparency, a contribution graph fed by GitHub&apos;s
-						GraphQL API, and Vitest, Playwright, and axe-core keeping it honest.
+						GraphQL API, and Vitest, TypeScript, and Biome keeping it honest.
 					</p>
 					<Button asChild size="lg" variant="brand-link" className="mt-5">
 						<a

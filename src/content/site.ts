@@ -63,7 +63,7 @@ export const SITE = {
 			"Square SDK",
 			"Zod",
 		],
-		verify: ["Vitest", "Playwright", "axe-core"],
+		verify: ["Vitest", "TypeScript", "Biome"],
 		ship: ["Vercel"],
 	},
 	nav: [
