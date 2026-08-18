@@ -1,5 +1,3 @@
-import { readFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import tailwindcss from "@tailwindcss/vite";
 import { devtools } from "@tanstack/devtools-vite";
@@ -32,26 +30,10 @@ const siteUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
 	? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
 	: (process.env.VITE_SITE_URL ?? "http://localhost:3000");
 
-// Resolve GITHUB_TOKEN from local .env for build-time server function access.
-// Vercel provides it as an env var at deploy time; local dev reads .env.
-const githubToken = (() => {
-	const envToken = process.env.GITHUB_TOKEN;
-	if (envToken) return envToken;
-	try {
-		const envPath = resolve(dirname(fileURLToPath(import.meta.url)), ".env");
-		const contents = readFileSync(envPath, "utf-8");
-		const match = contents.match(/^GITHUB_TOKEN="?([^"\n]+)"?/m);
-		return match?.[1] ?? "";
-	} catch {
-		return "";
-	}
-})();
-
 const config = defineConfig({
 	resolve: { tsconfigPaths: true },
 	define: {
 		"import.meta.env.VITE_SITE_URL": JSON.stringify(siteUrl),
-		"import.meta.env.GITHUB_TOKEN": JSON.stringify(githubToken),
 	},
 	plugins: [
 		// Generate metric-matched fallback @font-face rules from the real

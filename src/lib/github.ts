@@ -115,8 +115,9 @@ query($username: String!, $from: DateTime!, $to: DateTime!) {
  * The PAT (GITHUB_TOKEN) is read at request time on the server and is never
  * shipped to the client bundle.
  */
-export async function fetchContributions(): Promise<ContributionResult> {
-	const token = import.meta.env.GITHUB_TOKEN;
+export async function fetchContributions(
+	token: string,
+): Promise<ContributionResult> {
 	if (!token) {
 		return { ok: false, error: "GITHUB_TOKEN is not set" };
 	}
@@ -177,7 +178,7 @@ export async function fetchContributions(): Promise<ContributionResult> {
 /** Server-only contribution loader; scrubs internal error details before they reach the client. */
 export const getContributions = createServerFn({ method: "GET" }).handler(
 	async (): Promise<ContributionResult> => {
-		const result = await fetchContributions();
+		const result = await fetchContributions(process.env.GITHUB_TOKEN ?? "");
 
 		if (!result.ok) {
 			console.error("Unable to load GitHub contributions:", result.error);
