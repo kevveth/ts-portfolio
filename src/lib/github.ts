@@ -1,3 +1,4 @@
+import { createServerFn } from "@tanstack/react-start";
 import type { Activity } from "react-activity-calendar";
 import { z } from "zod";
 import { SITE } from "#/content/site";
@@ -86,12 +87,7 @@ export function mapContributions(days: GitHubContribution[]): Activity[] {
 // ---------------------------------------------------------------------------
 
 const GITHUB_GQL_ENDPOINT = "https://api.github.com/graphql";
-const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 const VISITOR_SAFE_ERROR = "Contribution data isn't available right now.";
-
-let contributionCache:
-	| { result: Extract<ContributionResult, { ok: true }>; expiresAt: number }
-	| undefined;
 
 const CONTRIBUTIONS_QUERY = `
 query($username: String!, $from: DateTime!, $to: DateTime!) {
@@ -178,25 +174,16 @@ export async function fetchContributions(): Promise<ContributionResult> {
 	}
 }
 
-/** Server-only contribution loader with a one-hour successful-result cache. */
+/** Server-only contribution loader; scrubs internal error details before they reach the client. */
 export const getContributions = createServerFn({ method: "GET" }).handler(
 	async (): Promise<ContributionResult> => {
-		if (contributionCache && contributionCache.expiresAt > Date.now()) {
-			return contributionCache.result;
-		}
-
 		const result = await fetchContributions();
-		if (result.ok) {
-			contributionCache = {
-				result,
-				expiresAt: Date.now() + CACHE_TTL_MS,
-			};
-			return result;
+
+		if (!result.ok) {
+			console.error("Unable to load GitHub contributions:", result.error);
+			return { ok: false, error: VISITOR_SAFE_ERROR };
 		}
 
-		console.error("Unable to load GitHub contributions:", result.error);
-		return { ok: false, error: VISITOR_SAFE_ERROR };
+		return result;
 	},
 );
-
-import { createServerFn } from "@tanstack/react-start";
