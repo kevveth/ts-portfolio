@@ -1,18 +1,10 @@
 // @vitest-environment jsdom
 
-import {
-	cleanup,
-	fireEvent,
-	render,
-	screen,
-	waitFor,
-} from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
-import {
-	CredentialCollection,
-	FeaturedCredentials,
-} from "#/components/credentials";
+import { CredentialList, FeaturedCredentials } from "#/components/credentials";
 import type { Credential } from "#/content/credentials";
+import { renderWithRouter } from "#/test/router";
 
 beforeAll(() => {
 	Object.defineProperty(window, "matchMedia", {
@@ -32,13 +24,18 @@ beforeAll(() => {
 
 afterEach(cleanup);
 
+const stubCertificate: ImagetoolsPicture = {
+	sources: { webp: "/stub.webp 1200w" },
+	img: { src: "/stub.png", w: 1200, h: 800 },
+};
+
 const certificateCredential: Credential = {
 	id: "example-certificate-credential",
 	title: "Example Certificate Credential",
 	issuer: "Example Institute",
 	earnedOn: "2026-01-10",
 	description: "A certificate-backed achievement.",
-	certificateKey: "anthropic-ai-fluency-for-students",
+	certificate: stubCertificate,
 };
 
 const verifiedCredential: Credential = {
@@ -46,81 +43,52 @@ const verifiedCredential: Credential = {
 	title: "Example Verified Credential",
 	issuer: "Example Institute",
 	earnedOn: "2027-01-10",
-	expiresOn: "2030-01-10",
 	description: "A renewable achievement with two evidence paths.",
-	certificateKey: "anthropic-claude-code-101",
+	certificate: stubCertificate,
 	verificationUrl: "https://example.com/verify/example",
 };
 
-const verificationOnlyCredential: Credential = {
-	id: "example-verification-only-credential",
+const longCopyCredential: Credential = {
+	id: "example-long-copy-credential",
 	title:
-		"Example Verification-Only Credential With a Deliberately Long Professional Title",
+		"Example Credential With a Deliberately Long Professional Title That Should Not Be Truncated",
 	issuer: "Example Institute",
 	earnedOn: "2025-06-15",
 	description:
-		"A deliberately long description that verifies the collection preserves complete portfolio copy even when a Credential has official verification evidence but no certificate preview.",
+		"A deliberately long description that verifies the list preserves complete portfolio copy rather than clipping it to fit a row.",
+	certificate: stubCertificate,
 	verificationUrl: "https://example.com/verify/official",
 };
 
-const expiredCredential: Credential = {
-	...certificateCredential,
-	id: "example-expired-credential",
-	title: "Example Expired Credential",
-	expiresOn: "2025-12-31",
-};
-
-describe("FeaturedCredentials", () => {
-	it("renders an unnumbered editorial list in the supplied order", () => {
+describe("CredentialList", () => {
+	it("renders title, metadata, description, and certificate for each Credential", () => {
 		render(
-			<FeaturedCredentials
+			<CredentialList
 				credentials={[certificateCredential, verifiedCredential]}
 			/>,
 		);
 
-		expect(screen.getByRole("heading", { name: "Credentials" })).toBeVisible();
 		const headings = screen.getAllByRole("heading", { level: 3 });
 		expect(headings.map((heading) => heading.textContent)).toEqual([
 			"Example Certificate Credential",
 			"Example Verified Credential",
 		]);
+
+		expect(screen.getByText("January 10, 2026")).toHaveAttribute(
+			"datetime",
+			"2026-01-10",
+		);
+		expect(screen.getByText("A certificate-backed achievement.")).toBeVisible();
 		expect(
-			screen.queryByRole("list", { name: /topics/i }),
-		).not.toBeInTheDocument();
-		expect(screen.queryByText(/^\d+[.)]$/)).not.toBeInTheDocument();
-		expect(
-			screen.getByRole("link", { name: "View all credentials" }),
-		).toHaveAttribute("href", "/credentials");
+			screen.getAllByRole("img", { name: /certificate issued to/ }),
+		).toHaveLength(2);
 	});
 
-	it("renders exactly one preferred evidence action per Credential", () => {
-		render(
-			<FeaturedCredentials
-				credentials={[certificateCredential, verifiedCredential]}
-			/>,
-		);
+	it("keeps the certificate in the DOM while its disclosure is closed", () => {
+		render(<CredentialList credentials={[certificateCredential]} />);
 
-		expect(
-			screen.getAllByRole("button", { name: "View certificate" }),
-		).toHaveLength(1);
-		expect(
-			screen.getAllByRole("link", { name: /Verify credential/ }),
-		).toHaveLength(1);
-		expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
-	});
-});
-
-describe("certificate lightbox", () => {
-	it("is labeled, describes the evidence, and gives the certificate useful alternative text", async () => {
-		render(<FeaturedCredentials credentials={[certificateCredential]} />);
-		fireEvent.click(screen.getByRole("button", { name: "View certificate" }));
-
-		const dialog = await screen.findByRole("dialog", {
-			name: "Example Certificate Credential certificate",
-		});
-		expect(dialog).toHaveAccessibleDescription(
-			"Issued by Example Institute on January 10, 2026. Full certificate preview.",
-		);
+		const disclosure = screen.getByText("View certificate").closest("details");
+		expect(disclosure).not.toHaveAttribute("open");
 		expect(
 			screen.getByRole("img", {
 				name: "Example Certificate Credential certificate issued to Kenneth Rathbun by Example Institute",
@@ -128,65 +96,43 @@ describe("certificate lightbox", () => {
 		).toBeInTheDocument();
 	});
 
-	it("closes on Escape and restores focus to its trigger", async () => {
-		render(<FeaturedCredentials credentials={[certificateCredential]} />);
-		const trigger = screen.getByRole("button", { name: "View certificate" });
-		fireEvent.click(trigger);
-		await screen.findByRole("dialog");
-
-		fireEvent.keyDown(document, { key: "Escape" });
-
-		await waitFor(() =>
-			expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
-		);
-		expect(trigger).toHaveFocus();
-	});
-});
-
-describe("CredentialCollection", () => {
-	it("renders expiration metadata and every available evidence path", () => {
-		render(<CredentialCollection credentials={[verifiedCredential]} />);
-
-		expect(screen.getByText("January 10, 2030")).toHaveAttribute(
-			"datetime",
-			"2030-01-10",
-		);
-		expect(screen.getByText(/Expiration/)).toBeVisible();
-		expect(
-			screen.getByRole("button", { name: "View certificate" }),
-		).toBeVisible();
-		expect(
-			screen.getByRole("link", { name: /Verify credential/ }),
-		).toHaveAttribute("href", "https://example.com/verify/example");
-	});
-
-	it("keeps expired and verification-only Credentials with complete copy", () => {
+	it("renders a verification link only when the Credential has one", () => {
 		render(
-			<CredentialCollection
-				credentials={[verificationOnlyCredential, expiredCredential]}
+			<CredentialList
+				credentials={[certificateCredential, verifiedCredential]}
 			/>,
 		);
 
-		expect(
-			screen.getByRole("heading", {
-				name: verificationOnlyCredential.title,
-			}),
-		).toBeVisible();
-		expect(
-			screen.getByText(verificationOnlyCredential.description),
-		).toBeVisible();
-		expect(
-			screen.getByRole("link", { name: /Verify credential/ }),
-		).toHaveAttribute("href", "https://example.com/verify/official");
-		expect(
-			screen.getByRole("heading", { name: "Example Expired Credential" }),
-		).toBeVisible();
-		expect(screen.getByText("December 31, 2025")).toHaveAttribute(
-			"datetime",
-			"2025-12-31",
+		const links = screen.getAllByRole("link", { name: /Verify credential/ });
+		expect(links).toHaveLength(1);
+		expect(links[0]).toHaveAttribute(
+			"href",
+			"https://example.com/verify/example",
 		);
+	});
+
+	it("preserves complete copy for long titles and descriptions", () => {
+		render(<CredentialList credentials={[longCopyCredential]} />);
+
 		expect(
-			screen.getAllByRole("button", { name: "View certificate" }),
-		).toHaveLength(1);
+			screen.getByRole("heading", { name: longCopyCredential.title }),
+		).toBeVisible();
+		expect(screen.getByText(longCopyCredential.description)).toBeVisible();
+	});
+});
+
+describe("FeaturedCredentials", () => {
+	it("wraps the list with section chrome and a link to the full collection", async () => {
+		await renderWithRouter(
+			<FeaturedCredentials
+				credentials={[certificateCredential, verifiedCredential]}
+			/>,
+		);
+
+		expect(screen.getByRole("heading", { name: "Credentials" })).toBeVisible();
+		expect(screen.getAllByRole("heading", { level: 3 })).toHaveLength(2);
+		expect(
+			screen.getByRole("link", { name: "View all credentials" }),
+		).toHaveAttribute("href", "/credentials");
 	});
 });

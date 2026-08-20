@@ -1,23 +1,11 @@
-import { ArrowRightIcon, ExternalLinkIcon, Maximize2Icon } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { ArrowRightIcon, ExternalLinkIcon } from "lucide-react";
 import { Picture } from "#/components/picture";
 import { Reveal } from "#/components/reveal";
 import { Section, SectionHeading } from "#/components/section";
-import { Surface } from "#/components/surface";
 import { Button } from "#/components/ui/button";
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "#/components/ui/dialog";
-import {
-	type Credential,
-	type DateOnly,
-	getPreferredCredentialEvidence,
-} from "#/content/credentials";
-import { getCredentialPreview } from "#/lib/credential-images";
+import type { Credential } from "#/content/credentials";
+import { SITE } from "#/content/site";
 
 const DATE_FORMATTER = new Intl.DateTimeFormat("en-US", {
 	year: "numeric",
@@ -26,138 +14,88 @@ const DATE_FORMATTER = new Intl.DateTimeFormat("en-US", {
 	timeZone: "UTC",
 });
 
-function formatCredentialDate(date: DateOnly): string {
+function formatCredentialDate(date: Credential["earnedOn"]): string {
 	return DATE_FORMATTER.format(new Date(`${date}T00:00:00Z`));
 }
 
 function getCertificateAlt(credential: Credential): string {
-	return `${credential.title} certificate issued to Kenneth Rathbun by ${credential.issuer}`;
+	return `${credential.title} certificate issued to ${SITE.name} by ${credential.issuer}`;
 }
 
 type CredentialsProps = {
 	credentials: readonly Credential[];
 };
 
-export function FeaturedCredentials({ credentials }: CredentialsProps) {
-	return (
-		<Section id="credentials">
-			<SectionHeading kicker="credentials" title="Credentials" />
-			<Reveal>
-				<ul className="border-b">
-					{credentials.map((credential) => (
-						<li
-							key={credential.id}
-							className="grid gap-5 border-t py-6 first:pt-0 first:border-t-0 md:grid-cols-[minmax(0,1fr)_auto] md:items-center"
-						>
-							<div className="min-w-0">
-								<h3 className="text-lg leading-tight font-semibold">
-									{credential.title}
-								</h3>
-								<CredentialMetadata credential={credential} />
-								<p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-									{credential.description}
-								</p>
-							</div>
-							<PreferredEvidenceAction credential={credential} />
-						</li>
-					))}
-				</ul>
-				<Button asChild variant="brand-link" className="mt-6">
-					<a href="/credentials">
-						View all credentials
-						<ArrowRightIcon data-icon="inline-end" aria-hidden />
-					</a>
-				</Button>
-			</Reveal>
-		</Section>
-	);
-}
-
-export function CredentialCollection({ credentials }: CredentialsProps) {
+/**
+ * The one Credential renderer, shared by the homepage and /credentials. Rows
+ * are identical on both; only the surrounding chrome and how many records
+ * they receive differ.
+ */
+export function CredentialList({ credentials }: CredentialsProps) {
 	return (
 		<Reveal>
-			<div className="grid gap-8 md:grid-cols-2">
+			<ul className="border-b">
 				{credentials.map((credential) => (
-					<Surface
+					<li
 						key={credential.id}
-						padding="none"
-						className="flex h-full flex-col overflow-hidden"
+						className="border-t py-8 first:border-t-0 first:pt-0"
 					>
-						{credential.certificateKey ? (
+						<h3 className="text-lg leading-tight font-semibold">
+							{credential.title}
+						</h3>
+						<p className="metadata mt-2">
+							{credential.issuer}
+							<span aria-hidden> · </span>
+							<time dateTime={credential.earnedOn}>
+								{formatCredentialDate(credential.earnedOn)}
+							</time>
+						</p>
+						<p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+							{credential.description}
+						</p>
+						<details className="group mt-4">
+							<summary className="inline-flex cursor-pointer list-none items-center text-sm font-medium text-muted-foreground hover:text-foreground [&::-webkit-details-marker]:hidden">
+								<ArrowRightIcon
+									className="mr-1.5 size-4 transition-transform group-open:rotate-90"
+									aria-hidden
+								/>
+								View certificate
+							</summary>
 							<Picture
-								picture={getCredentialPreview(credential.certificateKey)}
+								picture={credential.certificate}
 								alt={getCertificateAlt(credential)}
-								sizes="(min-width: 1024px) 496px, (min-width: 768px) 50vw, 100vw"
-								className="flex aspect-[4/3] items-center justify-center border-b bg-muted p-3"
-								imgClassName="max-h-full w-auto max-w-full object-contain"
+								sizes="(min-width: 768px) 640px, 100vw"
+								className="mt-3 block max-w-2xl overflow-hidden rounded-md border bg-muted"
 							/>
+						</details>
+						{credential.verificationUrl ? (
+							<VerificationLink url={credential.verificationUrl} />
 						) : null}
-						<div className="flex flex-1 flex-col p-5 sm:p-6">
-							<h2 className="text-xl leading-tight font-semibold">
-								{credential.title}
-							</h2>
-							<CredentialMetadata credential={credential} showExpiration />
-							<p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-								{credential.description}
-							</p>
-							<div className="mt-auto flex flex-wrap items-center gap-2 pt-6">
-								{credential.certificateKey ? (
-									<CertificateLightbox credential={credential} />
-								) : null}
-								{credential.verificationUrl ? (
-									<VerificationLink url={credential.verificationUrl} />
-								) : null}
-							</div>
-						</div>
-					</Surface>
+					</li>
 				))}
-			</div>
+			</ul>
 		</Reveal>
 	);
 }
 
-function CredentialMetadata({
-	credential,
-	showExpiration = false,
-}: {
-	credential: Credential;
-	showExpiration?: boolean;
-}) {
+export function FeaturedCredentials({ credentials }: CredentialsProps) {
 	return (
-		<p className="metadata mt-2">
-			{credential.issuer}
-			<span aria-hidden> · </span>
-			<time dateTime={credential.earnedOn}>
-				{formatCredentialDate(credential.earnedOn)}
-			</time>
-			{showExpiration && credential.expiresOn ? (
-				<>
-					<span aria-hidden> · </span>
-					<span>
-						Expiration:{" "}
-						<time dateTime={credential.expiresOn}>
-							{formatCredentialDate(credential.expiresOn)}
-						</time>
-					</span>
-				</>
-			) : null}
-		</p>
-	);
-}
-
-function PreferredEvidenceAction({ credential }: { credential: Credential }) {
-	const evidence = getPreferredCredentialEvidence(credential);
-
-	return evidence.type === "verification" ? (
-		<VerificationLink url={evidence.url} />
-	) : (
-		<CertificateLightbox credential={credential} />
+		<Section id="credentials">
+			<SectionHeading kicker="credentials" title="Credentials" />
+			<CredentialList credentials={credentials} />
+			<Button asChild variant="brand-link" className="mt-6">
+				<Link to="/credentials">
+					View all credentials
+					<ArrowRightIcon data-icon="inline-end" aria-hidden />
+				</Link>
+			</Button>
+		</Section>
 	);
 }
 
 function VerificationLink({ url }: { url: string }) {
 	return (
-		<Button asChild variant="outline" size="sm">
+		<Button asChild variant="outline" size="sm" className="mt-4">
 			<a
 				href={url}
 				target="_blank"
@@ -168,39 +106,5 @@ function VerificationLink({ url }: { url: string }) {
 				<ExternalLinkIcon data-icon="inline-end" aria-hidden />
 			</a>
 		</Button>
-	);
-}
-
-function CertificateLightbox({ credential }: { credential: Credential }) {
-	if (!credential.certificateKey) return null;
-
-	const earnedOn = formatCredentialDate(credential.earnedOn);
-	const preview = getCredentialPreview(credential.certificateKey);
-
-	return (
-		<Dialog>
-			<DialogTrigger asChild>
-				<Button variant="outline" size="sm">
-					<Maximize2Icon data-icon="inline-start" aria-hidden />
-					View certificate
-				</Button>
-			</DialogTrigger>
-			<DialogContent className="flex max-h-[calc(100svh-2rem)] flex-col gap-4 overflow-hidden p-4 sm:max-w-[calc(100%-2rem)] sm:p-6 2xl:max-w-7xl">
-				<DialogHeader className="pr-8 text-left">
-					<DialogTitle>{credential.title} certificate</DialogTitle>
-					<DialogDescription>
-						Issued by {credential.issuer} on {earnedOn}. Full certificate
-						preview.
-					</DialogDescription>
-				</DialogHeader>
-				<Picture
-					picture={preview}
-					alt={getCertificateAlt(credential)}
-					sizes="(min-width: 1280px) 1152px, calc(100vw - 4rem)"
-					className="flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-md border bg-muted"
-					imgClassName="h-auto max-h-[calc(100svh-10rem)] w-auto max-w-full object-contain"
-				/>
-			</DialogContent>
-		</Dialog>
 	);
 }

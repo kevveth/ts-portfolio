@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { CredentialCollection } from "#/components/credentials";
+import { CredentialList } from "#/components/credentials";
 import { PageIntro, Section } from "#/components/section";
-import { getAllCredentials } from "#/content/credentials";
+import { allCredentials } from "#/content/credentials";
 import { SITE, SITE_URL } from "#/content/site";
 
 const TITLE = `Credentials | ${SITE.name}`;
@@ -19,13 +19,12 @@ export const Route = createFileRoute("/credentials")({
 		],
 		links: [{ rel: "canonical", href: `${SITE_URL}/credentials` }],
 	}),
-	loader: () => getAllCredentials(),
 	component: CredentialsPage,
 });
 
 function CredentialsPage() {
-	const credentials = Route.useLoaderData();
-
+	// Static, compile-time content — a loader would only park it in the eager
+	// route bundle and dehydrate a second copy into the HTML.
 	return (
 		<Section width="wide">
 			<PageIntro
@@ -34,7 +33,7 @@ function CredentialsPage() {
 				description="Achievements supported by issuer-provided certificate previews and official verification where available."
 				className="mb-10"
 			/>
-			<CredentialCollection credentials={credentials} />
+			<CredentialList credentials={allCredentials} />
 		</Section>
 	);
 }

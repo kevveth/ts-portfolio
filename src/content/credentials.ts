@@ -1,101 +1,93 @@
 /**
  * Portfolio Credentials and the domain rules that select them. Certificate
- * keys stay as strings so this module remains dependency-free and testable;
- * credential-images.ts maps them to optimized image imports.
+ * images are imported directly so a Credential always carries its own
+ * evidence — there is no registry to keep in sync.
+ *
+ * `credentialSchema` is the single source of truth: `Credential` is inferred
+ * from it, and `credentials.test.ts` parses the entries through it. The parse
+ * stays in the test on purpose — this content is frozen when the build
+ * finishes, so the only way it goes wrong is a typo while authoring. A failing
+ * test catches that; a runtime check would re-prove it to every visitor.
+ *
+ * Every Credential carries its own `id`. That is what a Link params object
+ * reads from the day these get their own route, and it is what keys the list
+ * today, so a reworded title stays a copy edit. `CredentialId` is derived from
+ * the entries themselves, so featuring an id that doesn't exist is a compile
+ * error. Ids are not unique for free the way object keys were — the test
+ * checks them.
  */
 
-export type DateOnly = `${number}-${number}-${number}`;
+import { z } from "zod";
+import aiFluency from "#/assets/credentials/ai-fluency-for-students-anthropic.png?credential";
+import claudeCode101 from "#/assets/credentials/claude-code-101-anthropic.png?credential";
+import tanstackStart from "#/assets/credentials/tanstack-start-fundamentals-startdev.png?credential";
+import validationWithZod from "#/assets/credentials/validation-with-zod-startdev.png?credential";
 
-type CertificateEvidence = {
-	certificateKey: string;
-	verificationUrl?: string;
-};
+export const credentialSchema = z.object({
+	/** Stable identity, independent of the title. Lowercase kebab-case. */
+	id: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+	title: z.string().min(1),
+	issuer: z.string().min(1),
+	/** Real calendar date, not just `YYYY-MM-DD` shaped — see the test. */
+	earnedOn: z.iso.date(),
+	description: z.string().min(1),
+	/** Built by vite-imagetools; its shape is an ambient declaration, not ours. */
+	certificate: z.custom<ImagetoolsPicture>(),
+	verificationUrl: z.url().optional(),
+});
 
-type VerificationEvidence = {
-	certificateKey?: string;
-	verificationUrl: string;
-};
+export type Credential = z.infer<typeof credentialSchema>;
 
-export type Credential = {
-	id: string;
-	title: string;
-	issuer: string;
-	earnedOn: DateOnly;
-	expiresOn?: DateOnly;
-	description: string;
-} & (CertificateEvidence | VerificationEvidence);
-
-export type PreferredCredentialEvidence =
-	| { type: "verification"; url: string }
-	| { type: "certificate"; key: string };
-
-const CREDENTIAL_ENTRIES = [
+const CREDENTIALS = [
 	{
-		id: "anthropic-claude-code-101",
+		id: "claude-code-101",
 		title: "Claude Code 101",
 		issuer: "Anthropic",
 		earnedOn: "2026-07-21",
 		description:
 			"Foundational training in using Claude Code for practical, agentic software development workflows.",
-		certificateKey: "anthropic-claude-code-101",
+		certificate: claudeCode101,
 	},
 	{
-		id: "anthropic-ai-fluency-for-students",
+		id: "ai-fluency-for-students",
 		title: "AI Fluency for Students",
 		issuer: "Anthropic",
 		earnedOn: "2026-07-17",
 		description:
 			"Anthropic’s framework for using AI effectively, efficiently, ethically, and safely.",
-		certificateKey: "anthropic-ai-fluency-for-students",
+		certificate: aiFluency,
+	},
+	{
+		id: "tanstack-start-fundamentals",
+		title: "TanStack Start Fundamentals",
+		issuer: "start.dev",
+		earnedOn: "2026-08-09",
+		description:
+			"Full-stack TanStack Start: type-safe file-based routing, server-side data loading, search params, and server functions, capped with an end-to-end project.",
+		certificate: tanstackStart,
+		verificationUrl:
+			"https://start.dev/certificates/cert_196e01005db4427fb586889fa8465181",
+	},
+	{
+		id: "validation-with-zod",
+		title: "Validation with Zod",
+		issuer: "start.dev",
+		earnedOn: "2026-08-15",
+		description:
+			"Schema-first validation with Zod: parsing untrusted data, inferring types instead of duplicating them, and wiring validation into React forms.",
+		certificate: validationWithZod,
+		verificationUrl:
+			"https://start.dev/certificates/cert_b6e0cc4387c346849f3915517be9f613",
 	},
 ] as const satisfies readonly Credential[];
 
+/** The ids that actually exist, so featuring a typo is a compile error. */
+export type CredentialId = (typeof CREDENTIALS)[number]["id"];
+
 export const FEATURED_CREDENTIAL_IDS = [
-	"anthropic-ai-fluency-for-students",
-	"anthropic-claude-code-101",
-] as const;
-
-type FeaturedCredentialSource = {
-	credentials: readonly Credential[];
-	featuredIds: readonly string[];
-};
-
-const DATE_ONLY_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
-const CREDENTIAL_ID_PATTERN = /^[a-z0-9-]+$/;
-
-function isValidDateOnly(value: string): value is DateOnly {
-	if (!DATE_ONLY_PATTERN.test(value)) return false;
-	const [year, month, day] = value.split("-").map(Number);
-	const date = new Date(Date.UTC(year, month - 1, day));
-	return (
-		date.getUTCFullYear() === year &&
-		date.getUTCMonth() === month - 1 &&
-		date.getUTCDate() === day
-	);
-}
-
-function validateCredentials(credentials: readonly Credential[]): void {
-	const ids = new Set<string>();
-
-	for (const credential of credentials) {
-		if (!CREDENTIAL_ID_PATTERN.test(credential.id) || ids.has(credential.id)) {
-			throw new Error(`Invalid or duplicate Credential ID: ${credential.id}`);
-		}
-		ids.add(credential.id);
-
-		if (!isValidDateOnly(credential.earnedOn)) {
-			throw new Error(`Invalid earned date for Credential: ${credential.id}`);
-		}
-		if (credential.expiresOn && !isValidDateOnly(credential.expiresOn)) {
-			throw new Error(
-				`Invalid expiration date for Credential: ${credential.id}`,
-			);
-		}
-		if (!credential.certificateKey && !credential.verificationUrl) {
-			throw new Error(`Credential has no evidence: ${credential.id}`);
-		}
-	}
-}
+	"ai-fluency-for-students",
+	"claude-code-101",
+] as const satisfies readonly CredentialId[];
 
 function sortCredentialsNewestFirst(
 	credentials: readonly Credential[],
@@ -105,55 +97,16 @@ function sortCredentialsNewestFirst(
 	);
 }
 
-validateCredentials(CREDENTIAL_ENTRIES);
-const CREDENTIALS = sortCredentialsNewestFirst(CREDENTIAL_ENTRIES);
+export const allCredentials: readonly Credential[] =
+	sortCredentialsNewestFirst(CREDENTIALS);
 
-export function getAllCredentials(): readonly Credential[] {
-	return CREDENTIALS;
-}
-
-export function getFeaturedCredentials(
-	asOf: DateOnly,
-	source: FeaturedCredentialSource = {
-		credentials: CREDENTIALS,
-		featuredIds: FEATURED_CREDENTIAL_IDS,
-	},
-): readonly Credential[] {
-	if (!isValidDateOnly(asOf)) {
-		throw new Error(`Invalid featured Credential date: ${asOf}`);
-	}
-	validateCredentials(source.credentials);
-
-	const credentialById = new Map(
-		source.credentials.map((credential) => [credential.id, credential]),
-	);
-	const featuredIds = new Set<string>();
-
-	return source.featuredIds.flatMap((id) => {
-		if (featuredIds.has(id)) {
-			throw new Error(`Duplicate Featured Credential ID: ${id}`);
-		}
-		featuredIds.add(id);
-
-		const credential = credentialById.get(id);
-		if (!credential) {
-			throw new Error(`Unknown Featured Credential ID: ${id}`);
-		}
-
-		return credential.expiresOn && credential.expiresOn < asOf
-			? []
-			: [credential];
-	});
-}
-
-export function getPreferredCredentialEvidence(
-	credential: Pick<Credential, "certificateKey" | "verificationUrl">,
-): PreferredCredentialEvidence {
-	if (credential.verificationUrl) {
-		return { type: "verification", url: credential.verificationUrl };
-	}
-	if (credential.certificateKey) {
-		return { type: "certificate", key: credential.certificateKey };
-	}
-	throw new Error("Credential has no evidence");
-}
+/**
+ * Relevance order, not chronological — so this maps the featured ids rather
+ * than filtering the collection. The lookup cannot miss (`CredentialId` is
+ * derived from these same entries); the filter is how that is expressed
+ * without a cast or a throw.
+ */
+export const featuredCredentials: readonly Credential[] =
+	FEATURED_CREDENTIAL_IDS.map((id) =>
+		CREDENTIALS.find((credential) => credential.id === id),
+	).filter((credential) => credential !== undefined);

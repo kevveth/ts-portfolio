@@ -8,7 +8,7 @@ import { FeaturedCredentials } from "#/components/credentials";
 import { FeaturedProject } from "#/components/featured-project";
 import { Hero } from "#/components/hero";
 import { StackStrip } from "#/components/stack-strip";
-import { type DateOnly, getFeaturedCredentials } from "#/content/credentials";
+import { featuredCredentials } from "#/content/credentials";
 import { SITE_URL } from "#/content/site";
 import { getContributions } from "#/lib/github";
 
@@ -17,19 +17,14 @@ export const Route = createFileRoute("/")({
 		meta: [{ property: "og:url", content: `${SITE_URL}/` }],
 		links: [{ rel: "canonical", href: `${SITE_URL}/` }],
 	}),
-	loader: async () => {
-		const contributions = await getContributions();
-		const asOf = new Date().toISOString().slice(0, 10) as DateOnly;
-		return {
-			contributions,
-			featuredCredentials: getFeaturedCredentials(asOf),
-		};
-	},
+	// Only the GitHub contributions need a loader; the featured Credentials are
+	// static content the component imports directly.
+	loader: () => getContributions(),
 	component: Home,
 });
 
 function Home() {
-	const { contributions, featuredCredentials } = Route.useLoaderData();
+	const contributions = Route.useLoaderData();
 
 	return (
 		<>

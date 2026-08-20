@@ -5,7 +5,7 @@ The portfolio presents selected professional work and achievements as evidence o
 ## Language
 
 **Credential**:
-A portfolio-worthy achievement awarded or recognized by an issuer. It keeps the issuer's title without an inferred course or certification classification, and every published credential has at least one evidence path.
+A portfolio-worthy achievement awarded or recognized by an issuer. It keeps the issuer's title without an inferred course or certification classification. Every published credential carries a certificate; an external verification link is an additional evidence path where the issuer offers one. A credential's identity is a stable id that is independent of its title, so a retitled credential keeps its links and its place in the collection.
 _Avoid_: Certificate, course completion
 
 **Certificate**:
@@ -24,8 +24,6 @@ The complete set of credentials published by the portfolio.
 _Avoid_: Archive
 
 **Featured Credential**:
-A current credential selected from the Credential Collection for homepage prominence because of its relevance to target roles. Featured Credentials have an intentional relevance order rather than inheriting chronological order; expired credentials are ineligible.
+A credential selected from the Credential Collection for homepage prominence because of its relevance to target roles. Featured Credentials have an intentional relevance order rather than inheriting chronological order.
 _Avoid_: Highlighted credential
 
-**Expired Credential**:
-A credential whose issuer-defined validity period has ended. It remains part of the Credential Collection as a historical achievement but is not a Featured Credential.
