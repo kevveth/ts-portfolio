@@ -17,7 +17,7 @@ The dev server runs on http://localhost:3000.
 
 ```bash
 pnpm dev                 # Dev server on port 3000
-pnpm build               # Production build (vite build)
+pnpm build               # Verify, then create the production build
 pnpm test                # Run tests (vitest run)
 pnpm typecheck           # Type-check with tsc --noEmit
 pnpm lint                # Biome lint
