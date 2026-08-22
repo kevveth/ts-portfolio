@@ -8,13 +8,12 @@ import {
 import { Reveal } from "#/components/reveal";
 import { Section, SectionHeading } from "#/components/section";
 import { Surface } from "#/components/surface";
-import { getFeaturedProject } from "#/content/projects";
-import { getProjectImage } from "#/lib/project-images";
+import { featuredProject } from "#/content/projects";
 
 /** Home's flagship-project spotlight — the site's de-facto hero image. */
 export function FeaturedProject() {
-	const project = getFeaturedProject();
-	const cover = getProjectImage(project.gallery[0].src);
+	const project = featuredProject;
+	const { cover } = project;
 
 	return (
 		<Section id="featured">
@@ -32,8 +31,8 @@ export function FeaturedProject() {
 							className="featured-visual overflow-hidden"
 						>
 							<Picture
-								picture={cover}
-								alt={project.gallery[0].alt}
+								picture={cover.picture}
+								alt={cover.alt}
 								sizes="(min-width: 1024px) 60vw, 100vw"
 								loading="eager"
 								fetchPriority="high"

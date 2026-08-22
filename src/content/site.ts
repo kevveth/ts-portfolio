@@ -1,6 +1,6 @@
 /**
- * Site-wide identity, links, and nav. Single edit point — components read
- * from here and never hardcode copy or URLs.
+ * Site-wide identity and links. Single edit point — components read from here
+ * and never hardcode shared copy or URLs.
  *
  * Keep this module dependency-free (no `#/` imports): it's a leaf imported
  * broadly — client components for meta, server routes (robots.txt), and the
@@ -11,35 +11,6 @@
 // `define` in vite.config.ts; falls back to localhost for dev/test.
 export const SITE_URL =
 	import.meta.env.VITE_SITE_URL ?? "http://localhost:3000";
-
-type NavItem = {
-	label: string;
-	to: string;
-};
-
-type Site = {
-	name: string;
-	/** Short role line used in the header/hero and default meta title. */
-	role: string;
-	/** One-line positioning statement for the hero and meta description. */
-	headline: string;
-	/** Short supporting bio paragraph for the hero. */
-	bio: string;
-	/** ~150-char default meta/OG description. */
-	metaDescription: string;
-	email: string;
-	github: string;
-	siteRepo: string;
-	githubUsername: string;
-	linkedin: string;
-	/** Tools grouped by the role they play in delivery. */
-	skills: {
-		build: readonly string[];
-		verify: readonly string[];
-		ship: readonly string[];
-	};
-	nav: NavItem[];
-};
 
 export const SITE = {
 	name: "Kenneth Rathbun",
@@ -53,22 +24,4 @@ export const SITE = {
 	siteRepo: "https://github.com/kevveth/ts-portfolio",
 	githubUsername: "kevveth",
 	linkedin: "https://www.linkedin.com/in/kenneth-rathbun",
-	skills: {
-		build: [
-			"TypeScript",
-			"React 19",
-			"TanStack Start",
-			"Node.js",
-			"Tailwind CSS",
-			"Square SDK",
-			"Zod",
-		],
-		verify: ["Vitest", "TypeScript", "Biome"],
-		ship: ["Vercel"],
-	},
-	nav: [
-		{ label: "Home", to: "/" },
-		{ label: "Projects", to: "/projects" },
-		{ label: "Credentials", to: "/credentials" },
-	],
-} as const satisfies Site;
+} as const;

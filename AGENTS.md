@@ -4,7 +4,7 @@
 
 This portfolio is a TanStack Start/React 19 application. File-based pages live in `src/routes/`; `__root.tsx` provides the document shell, and `routeTree.gen.ts` is generated—never edit it manually. Reusable application components belong in `src/components/`, while shadcn primitives belong in `src/components/ui/`. Keep typed portfolio data in `src/content/`, shared helpers in `src/lib/`, and global Tailwind v4 styles and theme variables in `src/styles.css`.
 
-Place project screenshots under `src/assets/<project-slug>/` and register them in `src/lib/project-images.ts`. Static, unprocessed files such as icons and fonts live in `public/`. Tests are colocated with their subjects as `src/**/*.test.ts` or `.test.tsx`. Product and architecture records are maintained in `specs/` and `docs/`.
+Place project screenshots under `src/assets/<project-id>/`, import them with the appropriate imagetools query in `src/content/projects.ts`, and store the resulting pictures directly on the project content. Static, unprocessed files such as icons and fonts live in `public/`. Tests are colocated with their subjects as `src/**/*.test.ts` or `.test.tsx`. Product and architecture records are maintained in `specs/` and `docs/`.
 
 ## Build, Test, and Development Commands
 

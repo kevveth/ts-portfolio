@@ -1,5 +1,7 @@
 # Credentials experience refactor plan
 
+Status: completed; retained as a historical implementation record.
+
 ## Outcome
 
 Refactor the portfolio's credentials feature around a single domain concept,
@@ -119,8 +121,8 @@ component tree.
    current date and pass them to `FeaturedCredentials`.
 2. Add `src/routes/credentials.tsx` with page metadata, canonical URL, a
    `PageIntro`, and `CredentialCollection`.
-3. Add `{ label: "Credentials", to: "/credentials" }` to `SITE.nav`; the
-   existing desktop and mobile navigation should consume it automatically.
+3. Add the Credentials route to the header's typed `NAV_ITEMS`; the existing
+   desktop and mobile navigation should consume the same local list.
 4. Run `pnpm generate-routes`; never edit `src/routeTree.gen.ts` manually.
 
 ## Implementation slices

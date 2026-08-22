@@ -1,10 +1,9 @@
 import { Picture } from "#/components/picture";
 import { Surface } from "#/components/surface";
 import type { GalleryImage } from "#/content/projects";
-import { getProjectImage } from "#/lib/project-images";
 import { cn } from "#/lib/utils";
 
-export function Gallery({ items }: { items: GalleryImage[] }) {
+export function Gallery({ items }: { items: readonly GalleryImage[] }) {
 	return (
 		<div className="grid gap-x-6 gap-y-8 sm:grid-cols-2">
 			{items.map((item, index) => {
@@ -13,7 +12,7 @@ export function Gallery({ items }: { items: GalleryImage[] }) {
 
 				return (
 					<figure
-						key={item.src}
+						key={item.picture.img.src}
 						className={cn(
 							"space-y-2.5",
 							isCenteredOrphan &&
@@ -25,7 +24,7 @@ export function Gallery({ items }: { items: GalleryImage[] }) {
 							className="flex aspect-[16/10] items-center justify-center overflow-hidden"
 						>
 							<Picture
-								picture={getProjectImage(item.src)}
+								picture={item.picture}
 								alt={item.alt}
 								sizes="(min-width: 640px) 50vw, 100vw"
 								className="block h-full w-full"

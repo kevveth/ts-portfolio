@@ -44,38 +44,40 @@ File-based routes under `src/routes/`:
 
 - `/` — **Home**: hero + one-line positioning, featured project (Chavo's Parlor) given hero treatment so the site never feels empty, a compact skills/stack strip, and a contact CTA footer.
 - `/projects` — **Projects index**: responsive grid of project cards (one card in v1). Each card: title, one-line blurb, stack tags, thumbnail, links to detail + live/repo.
-- `/projects/$slug` — **Project detail**: the case study. `$slug` resolves against the hardcoded projects data; unknown slug → 404 via router `notFoundComponent`.
+- `/projects/$projectId` — **Project detail**: the case study. `$projectId` resolves against the hardcoded projects data; unknown ids → 404 via router `notFoundComponent`.
 - Contact is a **section** on Home (and repeated in the global footer), not a separate route.
-- `__root.tsx` — document shell: header/nav (Home, Projects, contact links), theme toggle, footer, global head/meta defaults, `<HeadContent>`, `<Scripts>`. Update the default title/meta away from "TanStack Start Starter".
+- `__root.tsx` — document shell: header/nav (Home, Projects, Credentials, contact links), theme toggle, footer, global head/meta defaults, `<HeadContent>`, and `<Scripts>`.
 
 ## Content / data model
 
 New `src/content/` directory, hardcoded and typed (pattern proven in the barber-shop repo):
 
-- `src/content/projects.ts` — array of `Project`. Suggested type:
+- `src/content/projects.ts` — readonly array of `Project` records with their optimized images imported directly. Core shape:
   ```ts
   type Project = {
-    slug: string;
+    projectId: string;
     title: string;
     tagline: string;            // one-line blurb for cards
+    cover: {
+      picture: ImagetoolsPicture;    // full-size hero
+      thumbnail: ImagetoolsPicture;  // card-sized variant
+      alt: string;
+    };
     role: string;               // e.g. "Design & full-stack build"
     year: string;
-    stack: string[];            // tag chips
+    stack: readonly string[];   // tag chips
     liveUrl?: string;           // omit/disable if not publicly linkable
-    repoUrl?: string;
-    featured: boolean;          // drives Home hero
     summary: string;            // short intro paragraph
     problem: string;
     approach: string;           // narrative; may include tradeoffs
-    highlights: { title: string; body: string }[];  // technical wins
-    outcomes: string[];         // proof points
-    testimonial?: { quote: string; author: string };
-    gallery: { src: string; alt: string; caption?: string }[];
+    highlights: readonly { title: string; body: string }[];  // technical wins
+    outcomes: readonly string[];  // proof points
+    gallery: readonly { picture: ImagetoolsPicture; alt: string; caption?: string }[];
   };
   ```
-- `src/content/site.ts` — name, headline, short bio, social links (email, GitHub, LinkedIn), nav config.
+- `src/content/site.ts` — shared identity, headline, short bio, and social links.
 
-Rendering: a helper (`getProject(slug)` / `getAllProjects()`) keeps routes thin. No server functions needed — this is static data; pages can be prerendered.
+Rendering: routes import the static `projects` collection directly; `getProject(projectId)` resolves the dynamic detail route. The first project is the homepage editorial selection. No server functions are needed, so pages can be prerendered.
 
 ## Flagship case study content — Chavo's Parlor
 

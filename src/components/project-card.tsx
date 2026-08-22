@@ -4,7 +4,6 @@ import { Picture } from "#/components/picture";
 import { ProjectMeta, TechStack } from "#/components/project-patterns";
 import { Surface } from "#/components/surface";
 import type { Project } from "#/content/projects";
-import { getProjectThumb } from "#/lib/project-images";
 
 type ProjectCardProps = {
 	project: Project;
@@ -23,8 +22,8 @@ export function ProjectCard({ project, imageSizes }: ProjectCardProps) {
 		>
 			<div className="aspect-16/10 overflow-hidden border-b">
 				<Picture
-					picture={getProjectThumb(project.projectId)}
-					alt={project.thumbAlt}
+					picture={project.cover.thumbnail}
+					alt={project.cover.alt}
 					sizes={imageSizes}
 					className="block h-full w-full"
 					imgClassName="project-image h-full w-full object-contain object-center"

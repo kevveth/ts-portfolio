@@ -1,6 +1,30 @@
 import { Badge } from "#/components/ui/badge";
-import { getStatusMeta, type ProjectStatus } from "#/content/projects";
+import type { ProjectStatus } from "#/content/projects";
 import { cn } from "#/lib/utils";
+
+const STATUS_META = {
+	live: {
+		label: "Live",
+		dotClass: "bg-success",
+		badgeClass: "border-success/40 bg-success/10 text-success-ink",
+		live: true,
+	},
+	prototype: {
+		label: "Prototype",
+		dotClass: "bg-notice",
+		badgeClass: "border-notice/40 bg-notice/10 text-notice-ink",
+		live: false,
+	},
+	private: {
+		label: "Private",
+		dotClass: "bg-muted-foreground",
+		badgeClass: "border-border bg-muted text-muted-foreground",
+		live: false,
+	},
+} as const satisfies Record<
+	ProjectStatus,
+	{ label: string; dotClass: string; badgeClass: string; live: boolean }
+>;
 
 /**
  * Lifecycle status indicator for a project — a colored dot + label. The "live"
@@ -13,7 +37,7 @@ export function StatusBadge({
 	status: ProjectStatus;
 	className?: string;
 }) {
-	const meta = getStatusMeta(status);
+	const meta = STATUS_META[status];
 
 	return (
 		<Badge

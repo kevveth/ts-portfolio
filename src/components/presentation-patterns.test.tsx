@@ -12,23 +12,31 @@ import { PageIntro, Section } from "#/components/section";
 import { Surface } from "#/components/surface";
 import type { Project } from "#/content/projects";
 
+const projectPicture: ImagetoolsPicture = {
+	sources: { webp: "/example.webp 1200w" },
+	img: { src: "/example.png", w: 1200, h: 800 },
+};
+
 const project: Project = {
 	projectId: "example",
 	title: "Example project",
 	tagline: "A useful example",
-	thumbAlt: "Example project cover",
+	cover: {
+		picture: projectPicture,
+		thumbnail: projectPicture,
+		alt: "Example project cover",
+	},
 	role: "Design and build",
 	year: "2026",
 	status: "live",
 	stack: ["React", "TypeScript"],
 	liveUrl: "https://example.com",
-	featured: false,
 	summary: "Summary",
 	problem: "Problem",
 	approach: "Approach",
 	highlights: [],
 	outcomes: [],
-	gallery: [{ src: "example/cover", alt: "Example" }],
+	gallery: [],
 };
 
 describe("presentation patterns", () => {

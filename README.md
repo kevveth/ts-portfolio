@@ -30,8 +30,8 @@ pnpm generate-routes     # Regenerate routeTree.gen.ts
 
 - `src/routes/` — file-based routes; `__root.tsx` is the document shell. Adding a file regenerates `src/routeTree.gen.ts` automatically.
 - `src/components/` — UI components; `src/components/ui/` holds shadcn/ui primitives.
-- `src/content/` — typed site and project content (`site.ts`, `projects.ts`).
-- `src/lib/` — helpers (`utils.ts`, `theme.ts`, `project-images.ts`).
+- `src/content/` — typed site, project, credential, and optimized-image content.
+- `src/lib/` — shared application helpers.
 - `src/styles.css` — Tailwind v4 theme via CSS variables (no config file).
 
 ## Adding a shadcn/ui component
@@ -42,4 +42,4 @@ pnpm dlx shadcn@latest add <component>
 
 ## Adding a project
 
-Add an entry to `src/content/projects.ts` and register its images in `src/lib/project-images.ts`, with the source images under `src/assets/<slug>/`.
+Put source images under `src/assets/<project-id>/`, import them with the appropriate imagetools query in `src/content/projects.ts`, and add the typed project entry there.

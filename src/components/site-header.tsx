@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, linkOptions } from "@tanstack/react-router";
 import { Github, Menu } from "lucide-react";
 import { useState } from "react";
 import { CONTACT_CHANNELS } from "#/components/contact-links";
@@ -14,6 +14,12 @@ import {
 	SheetTrigger,
 } from "#/components/ui/sheet";
 import { SITE } from "#/content/site";
+
+const NAV_ITEMS = linkOptions([
+	{ label: "Home", to: "/" },
+	{ label: "Projects", to: "/projects" },
+	{ label: "Credentials", to: "/credentials" },
+]);
 
 export function SiteHeader() {
 	const [open, setOpen] = useState(false);
@@ -32,7 +38,7 @@ export function SiteHeader() {
 				</Link>
 				<div className="flex items-center gap-0.5 sm:gap-1">
 					<nav aria-label="Main" className="desktop-nav items-center gap-1">
-						{SITE.nav.map((item) => (
+						{NAV_ITEMS.map((item) => (
 							<Link
 								key={item.to}
 								to={item.to}
@@ -76,7 +82,7 @@ export function SiteHeader() {
 								</SheetDescription>
 							</SheetHeader>
 							<nav aria-label="Main" className="flex flex-col gap-0.5 px-2">
-								{SITE.nav.map((item) => (
+								{NAV_ITEMS.map((item) => (
 									<Link
 										key={item.to}
 										to={item.to}

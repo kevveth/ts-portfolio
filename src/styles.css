@@ -22,7 +22,7 @@
 
 	/*
 	 * Status accents — project lifecycle indicators (STATUS_META in
-	 * src/content/projects.ts). Each has a vivid variant (dot, border,
+	 * src/components/status-badge.tsx). Each has a vivid variant (dot, border,
 	 * background tint, all via opacity modifiers) and a text-tuned "-ink"
 	 * variant, mirroring the brand/brand-ink split above.
 	 */

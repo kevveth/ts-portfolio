@@ -1,96 +1,71 @@
-/**
- * Project case studies. Hardcoded, typed content — adding a project is a new
- * entry here plus its gallery images in src/assets/<projectId>/ (registered in
- * src/lib/project-images.ts).
- *
- * Gallery `src` values are string keys, not imports, so this module stays
- * pure and node-testable; components resolve keys through project-images.ts.
- *
- * Chavo's Parlor facts were cross-checked against the real repo
- * (~/Documents/projects/barber-shop) on 2026-07-13. Production uses Square's
- * official embedded booking widget because Chavo's Free Appointments plan
- * rejects Bookings API writes; the custom API flow remains feature-gated and
- * is not presented as live. The production highlights and test-file count are
- * grounded in that repository rather than inferred from the sandbox UI.
- */
+/** Static, typed project case studies and their build-optimized images. */
 
-/** Lifecycle state of a project, shown as a labeled status indicator. */
+import chavosBookingWidget from "#/assets/chavos-parlor/booking-widget.png?gallery";
+import chavosGallery from "#/assets/chavos-parlor/gallery.png?gallery";
+import chavosHero from "#/assets/chavos-parlor/hero.png?hero";
+import chavosHeroThumbnail from "#/assets/chavos-parlor/hero.png?thumb";
+import chavosServices from "#/assets/chavos-parlor/services.png?gallery";
+import chavosWizardDetails from "#/assets/chavos-parlor/wizard-details.png?gallery";
+import chavosWizardService from "#/assets/chavos-parlor/wizard-service.png?gallery";
+import chavosWizardTime from "#/assets/chavos-parlor/wizard-time.png?gallery";
+
 export type ProjectStatus = "live" | "prototype" | "private";
 
-/**
- * Presentation metadata per status. `dotClass` colors the indicator dot,
- * `badgeClass` tints the badge (border/background/text) so a status stands out
- * from the neutral outline stack chips, and `live` flags the pulsing "ping"
- * ring. Adding a status (e.g. "archived") is one entry here plus one member on
- * ProjectStatus.
- */
-export const STATUS_META: Record<
-	ProjectStatus,
-	{ label: string; dotClass: string; badgeClass: string; live: boolean }
-> = {
-	live: {
-		label: "Live",
-		dotClass: "bg-success",
-		badgeClass: "border-success/40 bg-success/10 text-success-ink",
-		live: true,
-	},
-	prototype: {
-		label: "Prototype",
-		dotClass: "bg-notice",
-		badgeClass: "border-notice/40 bg-notice/10 text-notice-ink",
-		live: false,
-	},
-	private: {
-		label: "Private",
-		dotClass: "bg-muted-foreground",
-		badgeClass: "border-border bg-muted text-muted-foreground",
-		live: false,
-	},
+export type GalleryImage = {
+	picture: ImagetoolsPicture;
+	alt: string;
+	caption?: string;
 };
 
-export function getStatusMeta(status: ProjectStatus) {
-	return STATUS_META[status];
-}
+export type ProjectHighlight = {
+	title: string;
+	body: string;
+};
 
-export type GalleryImage = { src: string; alt: string; caption?: string };
+type ProjectCover = {
+	picture: ImagetoolsPicture;
+	thumbnail: ImagetoolsPicture;
+	alt: string;
+};
 
-export type ProjectHighlight = { title: string; body: string };
-
-export type CustomFlow = {
+type CustomFlow = {
 	summary: string;
-	highlights: ProjectHighlight[];
-	gallery: [GalleryImage, ...GalleryImage[]];
+	highlights: readonly ProjectHighlight[];
+	gallery: readonly [GalleryImage, ...GalleryImage[]];
 };
 
 export type Project = {
+	/** Stable lowercase, kebab-case identity used as the route parameter. */
 	projectId: string;
 	title: string;
 	tagline: string;
-	thumbAlt: string;
+	cover: ProjectCover;
 	role: string;
 	year: string;
 	status: ProjectStatus;
-	stack: string[];
+	stack: readonly string[];
 	liveUrl?: string;
-	featured: boolean;
 	summary: string;
 	problem: string;
 	productionConstraint?: string;
 	approach: string;
-	highlights: ProjectHighlight[];
-	outcomes: string[];
-	gallery: [GalleryImage, ...GalleryImage[]];
+	highlights: readonly ProjectHighlight[];
+	outcomes: readonly string[];
+	gallery: readonly GalleryImage[];
 	customFlow?: CustomFlow;
 };
 
-const PROJECTS: Project[] = [
+export const projects = [
 	{
 		projectId: "chavos-parlor",
 		title: "Chavo's Parlor",
 		tagline:
 			"A branded home for a working barber shop, with live Square services and an embedded booking flow.",
-		thumbAlt:
-			"Chavo's Parlor landing page hero with the shop wordmark and Book Now call to action",
+		cover: {
+			picture: chavosHero,
+			thumbnail: chavosHeroThumbnail,
+			alt: "Chavo's Parlor landing page hero with the shop wordmark and Book Now call to action",
+		},
 		role: "Design & full-stack build",
 		year: "2026",
 		status: "live",
@@ -106,7 +81,6 @@ const PROJECTS: Project[] = [
 			"Vercel",
 		],
 		liveUrl: "https://www.chavosparlor.com",
-		featured: true,
 		summary:
 			"I designed and built Chavo's public site end to end: brand, UI, live services, and a Square-hosted booking flow that opens without sending customers away. A custom API flow is also designed and tested behind a feature flag, ready if the shop's plan changes.",
 		problem:
@@ -140,24 +114,19 @@ const PROJECTS: Project[] = [
 		],
 		gallery: [
 			{
-				src: "chavos-parlor/hero",
-				alt: "Chavo's Parlor landing page hero with the shop wordmark and Book Now call to action",
-				caption: "Landing hero — dark, brand-forward, fast first paint.",
-			},
-			{
-				src: "chavos-parlor/services",
+				picture: chavosServices,
 				alt: "Services menu listing haircuts and prices loaded live from the Square catalog",
 				caption:
 					"Service menu, fed live from Square Catalog with a fail-open fallback.",
 			},
 			{
-				src: "chavos-parlor/gallery",
+				picture: chavosGallery,
 				alt: "Photo gallery section of the Chavo's Parlor site",
 				caption:
 					"Work samples stay fast with responsive, lazy-loaded WebP images.",
 			},
 			{
-				src: "chavos-parlor/booking-widget",
+				picture: chavosBookingWidget,
 				alt: "Square's service picker open inside the Chavo's Parlor booking modal",
 				caption:
 					"Live booking — Square's supported widget, kept inside the branded site.",
@@ -186,18 +155,18 @@ const PROJECTS: Project[] = [
 			],
 			gallery: [
 				{
-					src: "chavos-parlor/wizard-service",
+					picture: chavosWizardService,
 					alt: "Sandbox custom booking wizard step one: choosing a service",
 					caption: "Sandbox build — service selection backed by URL state.",
 				},
 				{
-					src: "chavos-parlor/wizard-time",
+					picture: chavosWizardTime,
 					alt: "Sandbox custom booking wizard step two: picking an appointment time",
 					caption:
 						"Sandbox build — live availability rendered in the shop's timezone.",
 				},
 				{
-					src: "chavos-parlor/wizard-details",
+					picture: chavosWizardDetails,
 					alt: "Sandbox custom booking wizard step three: entering contact details",
 					caption:
 						"Sandbox build — contact inputs feed the idempotency boundary.",
@@ -205,22 +174,11 @@ const PROJECTS: Project[] = [
 			],
 		},
 	},
-];
+] as const satisfies readonly Project[];
 
-export function getAllProjects(): Project[] {
-	return PROJECTS;
-}
+/** The first project is the homepage's editorial selection. */
+export const featuredProject: Project = projects[0];
 
 export function getProject(projectId: string): Project | undefined {
-	return PROJECTS.find((project) => project.projectId === projectId);
-}
-
-export function getFeaturedProject(): Project {
-	const featured = PROJECTS.find((project) => project.featured);
-	if (!featured) {
-		throw new Error(
-			"No featured project configured in src/content/projects.ts",
-		);
-	}
-	return featured;
+	return projects.find((project) => project.projectId === projectId);
 }

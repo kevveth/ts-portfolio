@@ -11,7 +11,6 @@ import { Surface } from "#/components/surface";
 import { Button } from "#/components/ui/button";
 import { getProject, type ProjectHighlight } from "#/content/projects";
 import { SITE, SITE_URL } from "#/content/site";
-import { getProjectImage } from "#/lib/project-images";
 
 export const Route = createFileRoute("/projects/$projectId")({
 	loader: ({ params }) => {
@@ -40,7 +39,7 @@ export const Route = createFileRoute("/projects/$projectId")({
 
 function ProjectDetail() {
 	const project = Route.useLoaderData();
-	const [cover, ...shots] = project.gallery;
+	const { cover, gallery } = project;
 
 	return (
 		<article>
@@ -59,7 +58,7 @@ function ProjectDetail() {
 			<Section spacing="flush">
 				<Surface variant="raised" className="overflow-hidden">
 					<Picture
-						picture={getProjectImage(cover.src)}
+						picture={cover.picture}
 						alt={cover.alt}
 						sizes="(min-width: 1024px) 1024px, 100vw"
 						loading="eager"
@@ -114,10 +113,10 @@ function ProjectDetail() {
 				</ul>
 			</Section>
 
-			{shots.length > 0 ? (
+			{gallery.length > 0 ? (
 				<Section spacing="continued">
 					<SectionHeading kicker="production" title="Live site" />
-					<Gallery items={shots} />
+					<Gallery items={gallery} />
 				</Section>
 			) : null}
 
@@ -158,7 +157,11 @@ function ProjectDetail() {
 	);
 }
 
-function HighlightList({ highlights }: { highlights: ProjectHighlight[] }) {
+function HighlightList({
+	highlights,
+}: {
+	highlights: readonly ProjectHighlight[];
+}) {
 	return (
 		<dl className="grid gap-x-8 gap-y-7 sm:grid-cols-2">
 			{highlights.map((highlight) => (

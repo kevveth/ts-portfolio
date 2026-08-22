@@ -2,7 +2,20 @@ import { Reveal } from "#/components/reveal";
 import { Section, SectionHeading } from "#/components/section";
 import { Surface } from "#/components/surface";
 import { Badge } from "#/components/ui/badge";
-import { SITE } from "#/content/site";
+
+const SKILLS = {
+	build: [
+		"TypeScript",
+		"React 19",
+		"TanStack Start",
+		"Node.js",
+		"Tailwind CSS",
+		"Square SDK",
+		"Zod",
+	],
+	verify: ["Vitest", "TypeScript", "Biome"],
+	ship: ["Vercel"],
+} as const;
 
 export function StackStrip() {
 	return (
@@ -12,7 +25,7 @@ export function StackStrip() {
 			<SectionHeading kicker="stack" className="mb-5" />
 			<Reveal>
 				<Surface padding="sm" className="accent-surface space-y-4">
-					{Object.entries(SITE.skills).map(([group, skills]) => (
+					{Object.entries(SKILLS).map(([group, skills]) => (
 						<div key={group} className="flex flex-wrap items-center gap-2">
 							<span className="kicker w-14 shrink-0">{group}</span>
 							<ul className="flex flex-wrap gap-2">

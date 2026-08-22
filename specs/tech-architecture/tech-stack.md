@@ -34,13 +34,12 @@
 
 ```
 src/
-├── content/          ← Pure data modules (no side effects, no app imports)
-│   ├── site.ts       ← SITE identity, nav, skills, meta
-│   └── projects.ts   ← Project case studies, typed Project[] array
+├── content/          ← Typed, repository-owned portfolio content
+│   ├── site.ts       ← Shared SITE identity, links, and meta copy
+│   └── projects.ts   ← Project case studies and optimized image imports
 ├── lib/              ← Utility modules (leaf dependencies only)
 │   ├── utils.ts      ← cn() (clsx + twMerge)
-│   ├── theme.ts      ← Theme init script, localStorage helpers
-│   └── project-images.ts ← Image import registry (build-time optimized)
+│   └── theme.ts      ← Theme init script, localStorage helpers
 ├── components/       ← Presentational components
 │   ├── ui/           ← shadcn/ui primitives (button, card, badge, separator, sheet)
 │   └── *.tsx         ← App components (hero, section, reveal, gallery, etc.)
@@ -54,11 +53,11 @@ src/
 
 ### Data Flow
 
-1. **Content (source of truth):** `src/content/` exports typed, dependency-free data modules. Site identity is `SITE` constant; projects are a `Project[]` array with getter functions (`getAllProjects`, `getProject`, `getFeaturedProject`). Content modules import nothing from `#/` — they're pure leaf modules usable by client, server, and test.
+1. **Content (source of truth):** `src/content/` exports repository-owned literals checked with handwritten TypeScript types and `satisfies`. Site identity is the `SITE` constant. Project records import their optimized images directly and export `projects`, `featuredProject`, and `getProject(projectId)`.
 
-2. **Image registry:** `src/lib/project-images.ts` imports vite-imagetools-processed images and maps string keys → `ImagetoolsPicture` objects. Content modules store string keys; components resolve them via `getProjectImage(key)` / `getProjectThumb(slug)`.
+2. **Images:** Vite-imagetools imports produce `ImagetoolsPicture` values stored directly on project and credential records. There is no string-key registry to synchronize.
 
-3. **Routes → Components → Content:** Routes pull data from content layer at load time (via loader in `$slug`), no async server functions. Components read content + image registry directly.
+3. **Routes → Components → Content:** Static routes import content directly. The dynamic project loader resolves its URL parameter with `getProject` and produces a typed 404 for unknown IDs. No async content server functions are needed.
 
 4. **Theme pipeline:** Pre-paint `<script>` in `<head>` (via `THEME_INIT_SCRIPT`) → reads localStorage or system preference → applies `.dark` class before first paint → React components (ThemeToggle) read/write the same key. SSR never sends theme-specific content — icons use `dark:hidden` / `hidden dark:block` CSS to avoid hydration mismatch.
 
@@ -73,9 +72,7 @@ src/
 ### Error Handling
 - TypeScript `strict` mode: `noUnusedLocals`, `noUnusedParameters`, `noFallthroughCasesInSwitch`, `noUncheckedSideEffectImports`
 - `verbatimModuleSyntax` enforces `import type` for type-only imports
-- Content validation via Vitest tests (slug format, required fields, status validity, alt text)
-- `getFeaturedProject()` throws if no project is marked featured
-- `getProjectImage()` / `getProjectThumb()` throw for unregistered keys
+- Focused Vitest authoring tests cover route-safe unique IDs, credential dates and URLs, and editorial ordering
 - No global error boundary, no structured error logging, no health check
 
 ### API Design
@@ -99,7 +96,7 @@ src/
 
 ### Testing
 - **Environment:** Node (not jsdom) — tests run against pure data modules
-- **Coverage:** `src/content/projects.test.ts` (7 tests) validates project data integrity
+- **Coverage:** colocated content tests cover behavior and authoring invariants that TypeScript cannot express conveniently
 - **Setup:** `src/test/setup.ts` loads `@testing-library/jest-dom/vitest`
 - **Pattern:** Vitest `describe`/`it` blocks, no mocks needed (pure data)
 - **Gaps:** No component tests, no Playwright/e2e tests (Playwright is installed but unused), no a11y checks wired to test suite
@@ -117,7 +114,7 @@ src/
 
 2. **No error boundary.** TypeScript catches compile-time issues but runtime errors (e.g. failed image imports) have no React boundary. The site has no `<ErrorBoundary>` component.
 
-3. **Content-light.** Only 1 project (Chavo's Parlor). The site structure supports multiple but the content layer is thin. Adding a second project is manual: edit `projects.ts` + add images to `assets/<slug>/` + register in `project-images.ts`.
+3. **Content-light.** Only 1 project (Chavo's Parlor). Adding a second means adding its assets and one typed entry with direct image imports in `projects.ts`.
 
 4. **No observability.** Zero structured logging, no health check endpoint, no error tracking. Vercel Analytics is the only telemetry.
 
@@ -126,11 +123,9 @@ src/
 6. **CONVENTIONS.md missing.** Only CLAUDE.md exists; no structured agent convention file.
 
 ### Debt Hotspots
-1. **Image registration is manual.** Adding a project requires touching three files (`projects.ts`, image assets, `project-images.ts`). No automation or validation that keys match between content and registry.
+1. **Single-project design.** The first project is the homepage editorial selection. Revisit that convention only when multiple projects need independent featured ordering.
 
-2. **Single-project design.** `getFeaturedProject()` assumes exactly one featured project exists. Gallery, hero, and detail page are all built for the one-project case — scaling to multiple projects may surface edge cases.
-
-3. **Package manager pin.** The `packageManager` field in `package.json` (unstaged diff) locks to pnpm 11.6.0 — this can break contributors on different versions.
+2. **Package manager pin.** The `packageManager` field in `package.json` locks to pnpm 11.6.0, so contributors need Corepack or a compatible pnpm installation.
 
 ### Integration Points
 - **Square SDK:** Referenced in skills but not used in this repo (the portfolio site has no Square integration — that's the *referenced* project's dependency)
