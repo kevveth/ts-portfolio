@@ -26,12 +26,25 @@ type CredentialsProps = {
 	credentials: readonly Credential[];
 };
 
+type CredentialListProps = CredentialsProps & {
+	/**
+	 * Level for each row's title. The homepage nests these under the section's
+	 * h2, so h3 is right there; /credentials puts them straight under the page
+	 * h1, where h3 would skip a level. Rows look identical either way — the
+	 * size comes from the class, not the tag.
+	 */
+	headingLevel?: "h2" | "h3";
+};
+
 /**
  * The one Credential renderer, shared by the homepage and /credentials. Rows
- * are identical on both; only the surrounding chrome and how many records
- * they receive differ.
+ * are identical on both; only the surrounding chrome, the heading level, and
+ * how many records they receive differ.
  */
-export function CredentialList({ credentials }: CredentialsProps) {
+export function CredentialList({
+	credentials,
+	headingLevel: RowHeading = "h3",
+}: CredentialListProps) {
 	return (
 		<Reveal>
 			<ul className="border-b">
@@ -40,9 +53,9 @@ export function CredentialList({ credentials }: CredentialsProps) {
 						key={credential.id}
 						className="border-t py-8 first:border-t-0 first:pt-0"
 					>
-						<h3 className="text-lg leading-tight font-semibold">
+						<RowHeading className="text-lg leading-tight font-semibold">
 							{credential.title}
-						</h3>
+						</RowHeading>
 						<p className="metadata mt-2">
 							{credential.issuer}
 							<span aria-hidden> · </span>
@@ -53,7 +66,9 @@ export function CredentialList({ credentials }: CredentialsProps) {
 						<p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">
 							{credential.description}
 						</p>
-						<details className="group mt-4">
+						{/* Shared `name` makes these mutually exclusive natively —
+						    opening one certificate closes the others, no JS. */}
+						<details name="credential-certificates" className="group mt-4">
 							<summary className="inline-flex cursor-pointer list-none items-center text-sm font-medium text-muted-foreground hover:text-foreground [&::-webkit-details-marker]:hidden">
 								<ArrowRightIcon
 									className="mr-1.5 size-4 transition-transform group-open:rotate-90"

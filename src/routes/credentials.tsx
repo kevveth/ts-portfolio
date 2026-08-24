@@ -33,7 +33,8 @@ function CredentialsPage() {
 				description="Achievements supported by issuer-provided certificate previews and official verification where available."
 				className="mb-10"
 			/>
-			<CredentialList credentials={allCredentials} />
+			{/* Straight under the page h1, so rows take h2 — see CredentialList. */}
+			<CredentialList credentials={allCredentials} headingLevel="h2" />
 		</Section>
 	);
 }

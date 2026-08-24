@@ -2,6 +2,12 @@ import type { ComponentProps } from "react";
 import { cn } from "#/lib/utils";
 
 type SurfaceProps = ComponentProps<"div"> & {
+	/**
+	 * Element to render. A small closed union rather than a generic
+	 * ElementType: these are the only tags whose semantics fit a surface,
+	 * and they all take the same props as a div.
+	 */
+	as?: "div" | "article" | "figure";
 	variant?: "plain" | "raised" | "interactive";
 	/** Uniform padding scale. Defaults to "none" since most callers still
 	 * apply their own (often asymmetric) padding via className. */
@@ -23,13 +29,14 @@ const paddings = {
 } as const;
 
 export function Surface({
+	as: Component = "div",
 	variant = "plain",
 	padding = "none",
 	className,
 	...props
 }: SurfaceProps) {
 	return (
-		<div
+		<Component
 			data-slot="surface"
 			data-variant={variant}
 			className={cn(

@@ -27,6 +27,7 @@ export function FeaturedProject() {
 						className="group block rounded-lg"
 					>
 						<Surface
+							as="figure"
 							variant="raised"
 							className="featured-visual overflow-hidden"
 						>

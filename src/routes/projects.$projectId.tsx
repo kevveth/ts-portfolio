@@ -64,7 +64,7 @@ function ProjectDetail() {
 			</Section>
 
 			<Section spacing="flush">
-				<Surface variant="raised" className="overflow-hidden">
+				<Surface as="figure" variant="raised" className="overflow-hidden">
 					<Picture
 						picture={cover.picture}
 						alt={cover.alt}

@@ -96,6 +96,21 @@ describe("CredentialList", () => {
 		).toBeInTheDocument();
 	});
 
+	it("groups the certificate disclosures into one exclusive accordion", () => {
+		const { container } = render(
+			<CredentialList
+				credentials={[certificateCredential, verifiedCredential]}
+			/>,
+		);
+
+		const disclosures = container.querySelectorAll("details");
+		expect(disclosures).toHaveLength(2);
+		for (const disclosure of disclosures) {
+			// A shared name makes the browser close the others natively.
+			expect(disclosure).toHaveAttribute("name", "credential-certificates");
+		}
+	});
+
 	it("renders a verification link only when the Credential has one", () => {
 		render(
 			<CredentialList
@@ -109,6 +124,24 @@ describe("CredentialList", () => {
 			"href",
 			"https://example.com/verify/example",
 		);
+	});
+
+	it("renders row titles at the requested heading level", () => {
+		// /credentials sits row titles directly under the page h1, so it asks for
+		// h2; the homepage nests them under a section h2 and takes the default.
+		render(
+			<CredentialList
+				credentials={[certificateCredential]}
+				headingLevel="h2"
+			/>,
+		);
+
+		expect(
+			screen.getByRole("heading", {
+				level: 2,
+				name: "Example Certificate Credential",
+			}),
+		).toBeVisible();
 	});
 
 	it("preserves complete copy for long titles and descriptions", () => {

@@ -26,6 +26,7 @@ const project: Project = {
 		thumbnail: projectPicture,
 		alt: "Example project cover",
 	},
+	socialImage: "/og/example.jpg",
 	role: "Design and build",
 	year: "2026",
 	status: "live",
@@ -50,7 +51,7 @@ describe("presentation patterns", () => {
 	});
 
 	it("renders a semantic page intro", () => {
-		render(
+		const { container } = render(
 			<PageIntro
 				kicker="projects"
 				title="Selected work"
@@ -61,11 +62,28 @@ describe("presentation patterns", () => {
 			screen.getByRole("heading", { level: 1, name: "Selected work" }),
 		).toBeInTheDocument();
 		expect(screen.getByText("Case studies")).toHaveClass("page-lede");
+		expect(container.querySelector("header > hgroup")).toBeInTheDocument();
 	});
 
 	it("exposes surface variants for styling", () => {
 		const { container } = render(<Surface variant="interactive">Card</Surface>);
 		expect(container.firstChild).toHaveAttribute("data-variant", "interactive");
+	});
+
+	it("renders the requested semantic surface element", () => {
+		const { container } = render(
+			<>
+				<Surface as="article">Project</Surface>
+				<Surface as="figure">Media</Surface>
+			</>,
+		);
+
+		expect(
+			container.querySelector("article[data-slot='surface']"),
+		).toHaveTextContent("Project");
+		expect(
+			container.querySelector("figure[data-slot='surface']"),
+		).toHaveTextContent("Media");
 	});
 
 	it("renders project metadata and a labeled technology list", () => {
@@ -75,7 +93,12 @@ describe("presentation patterns", () => {
 				<TechStack stack={project.stack} />
 			</>,
 		);
-		expect(screen.getByText("Design and build · 2026")).toBeInTheDocument();
+		expect(screen.getByText("Design and build")).toBeInTheDocument();
+		const year = screen.getByText("2026");
+		expect(year.tagName).toBe("TIME");
+		expect(year).toHaveAttribute("datetime", "2026");
+		// Terms are present but sr-only, so the rendered line is unchanged.
+		expect(screen.getByText("Role")).toHaveClass("sr-only");
 		expect(
 			screen.getByRole("list", { name: "Technology stack" }),
 		).toHaveTextContent("ReactTypeScript");
@@ -92,8 +115,10 @@ describe("presentation patterns", () => {
 		);
 	});
 
-	it("uses one shared accessible state treatment", () => {
-		render(<ContentState>Nothing to show.</ContentState>);
-		expect(screen.getByRole("status")).toHaveTextContent("Nothing to show.");
+	it("renders empty-state copy without a misleading live region", () => {
+		const { container } = render(<ContentState>Nothing to show.</ContentState>);
+		expect(screen.getByText("Nothing to show.")).toBeInTheDocument();
+		// Static SSR content that never updates must not announce itself.
+		expect(container.querySelector('[role="status"]')).toBeNull();
 	});
 });

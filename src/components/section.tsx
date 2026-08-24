@@ -67,12 +67,17 @@ export function PageIntro({
 }: PageIntroProps) {
 	return (
 		<header className={cn("max-w-3xl space-y-4", className)}>
-			<p className="kicker">
-				<span aria-hidden>{"// "}</span>
-				{kicker}
-			</p>
-			<h1 className="page-title">{title}</h1>
-			{description ? <p className="page-lede">{description}</p> : null}
+			{/* kicker + h1 + lede is exactly <hgroup>'s shape. `children`
+			    stays outside it: hgroup may only contain one heading and
+			    <p>s, and callers pass arbitrary content here. */}
+			<hgroup className="space-y-4">
+				<p className="kicker">
+					<span aria-hidden>{"// "}</span>
+					{kicker}
+				</p>
+				<h1 className="page-title">{title}</h1>
+				{description ? <p className="page-lede">{description}</p> : null}
+			</hgroup>
 			{children}
 		</header>
 	);
@@ -122,7 +127,7 @@ export function SectionHeading({
 	return (
 		<div className={cn(headingSpacings[spacing], "space-y-2", className)}>
 			{title ? (
-				<>
+				<hgroup className="space-y-2">
 					<p className="kicker">{kickerLabel}</p>
 					<Heading
 						className={cn(
@@ -132,7 +137,7 @@ export function SectionHeading({
 					>
 						{title}
 					</Heading>
-				</>
+				</hgroup>
 			) : (
 				<Heading className="kicker">{kickerLabel}</Heading>
 			)}

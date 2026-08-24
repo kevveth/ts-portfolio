@@ -45,24 +45,25 @@ function ProjectsIndex() {
 					className="mb-10"
 				/>
 				<Reveal>
-					<div
+					<ul
 						className={cn(
 							"grid gap-6",
 							isSingleProject ? "max-w-3xl" : "md:grid-cols-2",
 						)}
 					>
 						{projects.map((project) => (
-							<ProjectCard
-								key={project.projectId}
-								project={project}
-								imageSizes={
-									isSingleProject
-										? SINGLE_PROJECT_IMAGE_SIZES
-										: GRID_IMAGE_SIZES
-								}
-							/>
+							<li key={project.projectId}>
+								<ProjectCard
+									project={project}
+									imageSizes={
+										isSingleProject
+											? SINGLE_PROJECT_IMAGE_SIZES
+											: GRID_IMAGE_SIZES
+									}
+								/>
+							</li>
 						))}
-					</div>
+					</ul>
 				</Reveal>
 			</Section>
 			<Section spacing="compact" divided>

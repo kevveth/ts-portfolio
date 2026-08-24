@@ -7,14 +7,29 @@ import type { Project } from "#/content/projects";
 import { SITE } from "#/content/site";
 import { cn } from "#/lib/utils";
 
+/**
+ * Role / year / status as a description list: each value has a real term,
+ * kept sr-only so the rendered line is unchanged. The sr-only <dt>s are
+ * absolutely positioned, so they drop out of the flex flow and never earn a
+ * gap; the year's negative margin cancels the one gap that would otherwise
+ * sit where the "·" separator goes.
+ */
 export function ProjectMeta({ project }: { project: Project }) {
 	return (
-		<div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-			<p className="metadata">
-				{project.role} · {project.year}
-			</p>
-			<StatusBadge status={project.status} />
-		</div>
+		<dl className="flex flex-wrap items-center gap-x-3 gap-y-2">
+			<dt className="sr-only">Role</dt>
+			<dd className="metadata">{project.role}</dd>
+			<dt className="sr-only">Year</dt>
+			<dd className="metadata -ml-3 before:px-[0.6em] before:content-['·']">
+				<time dateTime={project.year}>{project.year}</time>
+			</dd>
+			<dt className="sr-only">Status</dt>
+			{/* flex, not the default block: a block <dd> puts the inline-flex
+			    badge on a text baseline and inherits the descender space. */}
+			<dd className="flex">
+				<StatusBadge status={project.status} />
+			</dd>
+		</dl>
 	);
 }
 
@@ -22,7 +37,7 @@ export function TechStack({
 	stack,
 	className,
 }: {
-	stack: string[];
+	stack: readonly string[];
 	className?: string;
 }) {
 	return (
@@ -45,7 +60,6 @@ type ProjectActionsProps = {
 	project: Project;
 	caseStudy?: boolean;
 	contact?: boolean;
-	compact?: boolean;
 	className?: string;
 };
 
@@ -53,38 +67,8 @@ export function ProjectActions({
 	project,
 	caseStudy = false,
 	contact = false,
-	compact = false,
 	className,
 }: ProjectActionsProps) {
-	if (compact) {
-		return (
-			<div className={cn("flex flex-wrap items-center gap-4", className)}>
-				{caseStudy ? (
-					<Link
-						to="/projects/$projectId"
-						params={{ projectId: project.projectId }}
-						className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-brand transition-colors hover:text-brand/80"
-					>
-						Case study
-						<ArrowRight aria-hidden className="size-3.5" />
-					</Link>
-				) : null}
-				{project.liveUrl ? (
-					<a
-						href={project.liveUrl}
-						target="_blank"
-						rel="noreferrer"
-						aria-label={`Visit ${project.title} live site (opens in a new tab)`}
-						className="relative z-10 inline-flex min-h-11 items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
-					>
-						Live site
-						<ExternalLink aria-hidden className="size-3.5" />
-					</a>
-				) : null}
-			</div>
-		);
-	}
-
 	return (
 		<div
 			className={cn("flex flex-wrap items-center gap-x-5 gap-y-2", className)}

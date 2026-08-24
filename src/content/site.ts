@@ -24,4 +24,6 @@ export const SITE = {
 	siteRepo: "https://github.com/kevveth/ts-portfolio",
 	githubUsername: "kevveth",
 	linkedin: "https://www.linkedin.com/in/kenneth-rathbun",
+	// Hardcoded because a prerendered current year still goes stale between deploys.
+	copyrightYear: "2026",
 } as const;

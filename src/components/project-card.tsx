@@ -17,6 +17,7 @@ export function ProjectCard({ project, imageSizes }: ProjectCardProps) {
 		// (a leftover of the deleted CardHeader/CardContent split), which
 		// doesn't map onto Surface's uniform padding scale.
 		<Surface
+			as="article"
 			variant="interactive"
 			className="group relative flex h-full flex-col overflow-hidden"
 		>
