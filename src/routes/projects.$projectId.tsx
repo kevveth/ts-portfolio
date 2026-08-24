@@ -29,6 +29,14 @@ export const Route = createFileRoute("/projects/$projectId")({
 				{ property: "og:title", content: title },
 				{ property: "og:description", content: loaderData.tagline },
 				{ property: "og:url", content: url },
+				{
+					property: "og:image",
+					content: `${SITE_URL}${loaderData.socialImage}`,
+				},
+				{ property: "og:image:type", content: "image/jpeg" },
+				{ property: "og:image:width", content: "1200" },
+				{ property: "og:image:height", content: "630" },
+				{ property: "og:image:alt", content: loaderData.cover.alt },
 			],
 			links: [{ rel: "canonical", href: url }],
 		};

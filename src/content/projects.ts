@@ -40,6 +40,8 @@ export type Project = {
 	title: string;
 	tagline: string;
 	cover: ProjectCover;
+	/** Dedicated 1200×630 image for Open Graph and large social cards. */
+	socialImage: string;
 	role: string;
 	year: string;
 	status: ProjectStatus;
@@ -66,6 +68,7 @@ export const projects = [
 			thumbnail: chavosHeroThumbnail,
 			alt: "Chavo's Parlor landing page hero with the shop wordmark and Book Now call to action",
 		},
+		socialImage: "/og/chavos-parlor.jpg",
 		role: "Design & full-stack build",
 		year: "2026",
 		status: "live",
