@@ -25,7 +25,6 @@ in_scope:
   - test-content: "Cover the data-fetch and error paths with Vitest tests."
 
 out_of_scope:
-  - claude-activity: "Claude does not expose a public activity API for personal accounts (Enterprise Compliance API only). Deferred until a personal API exists."
   - pinned-repos: "Out of scope for this deliverable — a separate feature (stats cards, repo list, timeline) can be scoped later."
   - repo-stats: "No star count, fork count, or language breakdown."
   - commit-timeline: "No list of recent commits or PRs — the graph alone is the deliverable."
@@ -50,9 +49,8 @@ success_criteria:
 
 references:
   - tech_stack: specs/tech-architecture/tech-stack.md
-  - conventions: CLAUDE.md
+  - conventions: AGENTS.md
   - epic: e24 (GitHub activity)
-  - related_out_of_scope: "Claude activity (researched 2026-07-08 — no personal API exists)"
 
 prior_art:
   - candidate: "react-activity-calendar (grubersjoe)"

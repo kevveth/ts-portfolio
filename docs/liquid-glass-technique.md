@@ -114,7 +114,7 @@ Concretely: the fill here had to be pinned to ~96–98% opacity (barely
 translucent at all) to clear 4.5:1 against real glyph pixels — a ~60%
 opacity value that looked fine in a quick screenshot measured at 2.5:1 in
 one state. **Never eyeball this. Use the `verify-contrast` skill**
-(`.claude/skills/verify-contrast/`) to measure the actual composited pixel
+(`.agents/skills/verify-contrast/`) to measure the actual composited pixel
 at the actual text row, in every interactive state (rest/hover/active/
 focus) and both themes, before shipping an opacity/tint value. See that
 skill's notes for why a plain contrast calculator can't do this for a
@@ -376,7 +376,7 @@ can diverge from its glass identity — this follows the same precedent.
 
 - Live implementation: `src/styles.css` (search `.btn-glass`),
   `src/components/ui/button.tsx` (`default` variant).
-- Contrast verification: `.claude/skills/verify-contrast/`.
+- Contrast verification: `.agents/skills/verify-contrast/`.
 - Apple's own description of the material (lensing, highlights, adaptive
   tint/shadow, accessibility modifiers): WWDC25 session "Meet Liquid Glass"
   (`developer.apple.com/videos/play/wwdc2025/219/`).

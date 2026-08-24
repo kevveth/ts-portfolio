@@ -4,10 +4,10 @@ description: Build, run, test, and drive the ts-portfolio TanStack Start site. U
 ---
 
 ts-portfolio is a TanStack Start (React SSR) site served by `vite dev`.
-There's no `chromium-cli` in this environment, so it's driven by a
-custom Playwright REPL at
-`.agents/skills/run-ts-portfolio/driver.mjs`: start the dev server,
-pipe commands into the driver's stdin, read screenshots back off disk.
+Use the available in-app Browser integration for UI inspection when possible.
+The custom Playwright REPL at
+`.agents/skills/run-ts-portfolio/driver.mjs` is an optional fallback when the
+`playwright` package and a compatible browser are already available.
 
 All paths below are relative to the repo root.
 
@@ -17,11 +17,12 @@ Node with pnpm — `package.json` pins `pnpm@11.6.0` via `packageManager`,
 and `AGENTS.md` specifies pnpm, so use `pnpm`/`pnpm exec` throughout
 rather than `npm`/`npx` (tested with Node v23.10.0 / pnpm 11.6.0).
 
-`playwright` is a devDependency (added for this driver — see Setup).
-It needs a cached Chromium build:
+`playwright` is not a project dependency. Do not add it merely to review this
+repository. If the optional local driver is used, verify that Playwright and a
+compatible browser are already available:
 
 ```bash
-pnpm exec playwright install chromium   # skip if already cached, e.g. under ~/Library/Caches/ms-playwright
+pnpm exec playwright --version
 ```
 
 ## Setup
@@ -30,12 +31,9 @@ pnpm exec playwright install chromium   # skip if already cached, e.g. under ~/L
 pnpm install
 ```
 
-`playwright` is already in `package.json` devDependencies. If it's
-ever missing: `pnpm add -D playwright`.
-
 No separate build step is needed to run the dev server.
 
-## Run (agent path)
+## Run and inspect
 
 1. Start the dev server in the background and wait for it to answer:
 
@@ -48,7 +46,11 @@ for i in $(seq 1 30); do curl -sf http://localhost:3050 >/dev/null 2>&1 && break
 (No `timeout` binary on macOS — use the poll loop above, not
 `timeout 30 bash -c '...'`.)
 
-2. Pipe commands into the driver via a heredoc (the driver defaults to
+2. Open `http://localhost:3050` with the in-app Browser integration and use its
+   Playwright-backed inspection, interaction, console, and screenshot tools.
+
+3. If that integration is unavailable and the prerequisite check above
+   succeeds, pipe commands into the optional driver (it defaults to
    `http://localhost:3050`; override with `PORTFOLIO_BASE`):
 
 ```bash
@@ -68,7 +70,7 @@ EOF
 Screenshots land in `/tmp/portfolio-shots/` (override:
 `SCREENSHOT_DIR`).
 
-3. Stop the dev server when done: `kill $(cat /tmp/vite-dev.pid)`.
+4. Stop the dev server when done: `kill $(cat /tmp/vite-dev.pid)`.
    Don't `pkill -f vite` broadly — this machine may have unrelated
    `vite preview`/other dev processes running; only kill the PID you
    started.

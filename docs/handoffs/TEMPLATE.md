@@ -1,6 +1,6 @@
 # Handoff: <one-line goal>
 
-Audience: implementing agent (<Claude|Codex>). Scope: <files/areas, branch>.
+Audience: next Codex session. Scope: <files/areas, branch>.
 Goal: <what "done" means, as a falsifiable statement>.
 
 Every claim below was **measured on <date>** against <method — running app,

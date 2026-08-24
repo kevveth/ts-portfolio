@@ -80,7 +80,7 @@ Exit code is non-zero if the worst-case state fails 4.5:1.
 
 1. Copy `check-contrast.mjs` (the whole file — it's self-contained).
 2. Make sure `playwright` and `sharp` are devDependencies there (or
-   `npm install -D playwright sharp`; run `npx playwright install chromium`
+   `pnpm add -D playwright sharp`; run `pnpm exec playwright install chromium`
    once if it's a fresh install).
 3. Start that project's dev server, then invoke with `--url`/`--selector`
    and whatever `--pre-eval` that project needs (often nothing at all).

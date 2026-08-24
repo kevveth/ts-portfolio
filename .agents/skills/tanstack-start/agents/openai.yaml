@@ -1,0 +1,4 @@
+interface:
+  display_name: "TanStack Start"
+  short_description: "Verify current Start and Router behavior"
+  default_prompt: "Use $tanstack-start to verify the current TanStack Start guidance for this task."

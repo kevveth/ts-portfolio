@@ -1,23 +1,22 @@
 # Agent handoffs
 
-This directory is the async handoff changelog between coding agents working
-this repo — currently Claude Code and Codex CLI. Ken stays in the loop by
-reading the changelog, not by gating every status change.
+This directory preserves async handoffs between Codex sessions working on
+this repo. Ken stays in the loop by reading the changelog, not by gating every
+status change.
 
 ## Why file-based
 
-Both agents are terminal tools a human launches; they don't run concurrently
-watching a queue. A git-tracked handoff doc is async and diffable, and it
-keeps Ken visible into what agents did without requiring him to merge work
-into `main` himself.
+Codex sessions do not continuously watch a queue. A git-tracked handoff doc is
+async and diffable, and it keeps Ken visible into what earlier sessions did
+without requiring him to merge work into `main` himself.
 
 ## When to write one
 
-Write a handoff when you're stopping mid-task and want another agent (or your
-next session) to pick it up: a scoped fix inside code you don't own (e.g. the
-linked `ui-library` package), a task Ken explicitly wants routed to "the
-other agent," or an audit whose findings should survive past this session.
-Don't write one for work you're about to finish yourself in the same session.
+Write a handoff when you're stopping mid-task and want a later Codex session
+to pick it up: a scoped fix inside code you don't own (e.g. the linked
+`ui-library` package), a deferred task, or an audit whose findings should
+survive past this session. Don't write one for work you're about to finish
+yourself in the same session.
 
 ## Format
 

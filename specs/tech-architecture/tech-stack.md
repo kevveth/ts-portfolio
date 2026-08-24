@@ -120,7 +120,8 @@ src/
 
 5. **No CI pipeline.** No GitHub Actions, no pre-commit hooks, no deployment automations defined.
 
-6. **CONVENTIONS.md missing.** Only CLAUDE.md exists; no structured agent convention file.
+6. **Historical snapshot.** This inventory predates the current repository
+   guidance. Use the root `AGENTS.md` for active agent conventions.
 
 ### Debt Hotspots
 1. **Single-project design.** The first project is the homepage editorial selection. Revisit that convention only when multiple projects need independent featured ordering.

@@ -1,167 +1,104 @@
-# Developer Portfolio — Specification
+# Developer Portfolio — Product Contract
 
-## Context
+Status: active
+Owner: Kenneth Rathbun
 
-Kenneth is a developer who just shipped a real client project (a custom booking site for **Chavo's Parlor**, a San Diego barber shop) built on the same modern stack as this repo — TanStack Start, React 19, Tailwind v4, Square SDK. He needs a portfolio to convert that work into career leverage.
+This document defines the product outcomes and durable constraints for the
+portfolio. It is not an implementation plan. Existing code, tests, and current
+framework behavior decide how those outcomes are achieved.
 
-The audience is **both recruiters/employers and freelance clients, weighted toward full-time hiring**. The portfolio must read first as proof of engineering skill (deep case study, clean technical aesthetic) while still being approachable to a small-business client. The core problem it solves: a strong project exists but there is no public artifact that showcases it credibly and is findable.
+## Purpose and audience
 
-The current repo is a fresh TanStack Start scaffold. It ships an unused "island/sea" CSS design system in `src/styles.css` — **that aesthetic is being discarded** in favor of a clean, minimal/technical look. Every route is still the default placeholder.
+The portfolio turns shipped work into credible evidence of Kenneth's
+engineering ability. Its primary audience is recruiters and engineering teams,
+with freelance clients as a secondary audience.
 
-## Goals
+The site should feel technically rigorous without reading like internal
+documentation. Claims must be understandable, specific, and supported by real
+work.
 
-- A polished, fast, recruiter-credible portfolio that launches with **one deep flagship case study** (Chavo's Parlor) and a data model that makes adding future projects trivial.
-- Distinctive but restrained "engineer" aesthetic — not a generic AI/template look.
-- Excellent first impression when a link is shared (OG cards) and findable via search (meta + sitemap).
-- Strong Lighthouse/accessibility scores that back up the technical positioning.
+## Product goals
 
-## Non-goals (v1)
+- Make a strong first impression when the site or a project page is opened or
+  shared.
+- Present Chavo's Parlor as a deep, honest case study of a production system.
+- Show ongoing engineering activity and relevant credentials without inflating
+  what they prove.
+- Stay fast, accessible, resilient, and easy to extend with future work.
+- Preserve a distinctive, restrained technical aesthetic in light and dark
+  themes.
 
-- No CMS/database — project content is hardcoded, typed TypeScript.
-- No contact form / email backend — direct links only.
-- No résumé PDF in v1 (rely on LinkedIn + the case study; add later).
-- No blog, no dedicated About page, no auth, no i18n.
-- No "coming soon" placeholder projects (ship one excellent case study; design for more).
+## Current experience
 
-## Positioning & decisions summary
+- `/` introduces Kenneth, features the primary case study, shows GitHub
+  activity and selected credentials, and provides direct contact paths.
+- `/projects` lists published case studies.
+- `/projects/$projectId` presents a project narrative, technical decisions,
+  outcomes, and supporting media. Unknown ids resolve to a real 404.
+- `/credentials` presents the complete credential collection and its evidence.
+- The document shell owns navigation, theme control, global metadata, and the
+  footer.
 
-| Decision | Choice |
-|---|---|
-| Audience | Both, recruiter-leaning |
-| Content model | Hardcoded typed TS in `src/content/` (mirrors the barber-shop repo's `src/content/` pattern) |
-| Project depth | Rich cards on an index + a moderate detail page per project |
-| Aesthetic | Fresh, minimal/technical (discard island/sea theme) |
-| Theme | System preference default + manual toggle, no-flash SSR |
-| Contact | Direct links (email, GitHub, LinkedIn); no form, no résumé v1 |
-| Project media | Curated screenshots gallery |
-| Images | Build-time optimization via `vite-imagetools` (responsive WebP/AVIF) |
-| SEO/analytics | Per-page meta + OG images, `sitemap.xml` + `robots.txt`, Vercel Analytics |
-| Deployment | Vercel |
+The route set can evolve when a new product need justifies it. Earlier v1
+non-goals are not permanent prohibitions.
 
-## Information architecture (routes)
+## Content principles
 
-File-based routes under `src/routes/`:
+- Evidence over adjectives. Prefer concrete constraints, decisions, and
+  outcomes to unsupported claims of quality or expertise.
+- Repository-owned content is typed TypeScript in `src/content/`. Runtime
+  validation belongs at untrusted boundaries, not around static literals by
+  default.
+- Chavo's Parlor claims must be checked against the real project or live site.
+  Do not invent performance, analytics, review, or business metrics.
+- Credentials keep issuer-supplied titles and evidence. Portfolio copy must not
+  imply a proficiency level the issuer did not award.
+- Contact remains direct and low-friction. A form, résumé, blog, or additional
+  project is allowed when deliberately scoped; none is required by this
+  contract.
 
-- `/` — **Home**: hero + one-line positioning, featured project (Chavo's Parlor) given hero treatment so the site never feels empty, a compact skills/stack strip, and a contact CTA footer.
-- `/projects` — **Projects index**: responsive grid of project cards (one card in v1). Each card: title, one-line blurb, stack tags, thumbnail, links to detail + live/repo.
-- `/projects/$projectId` — **Project detail**: the case study. `$projectId` resolves against the hardcoded projects data; unknown ids → 404 via router `notFoundComponent`.
-- Contact is a **section** on Home (and repeated in the global footer), not a separate route.
-- `__root.tsx` — document shell: header/nav (Home, Projects, Credentials, contact links), theme toggle, footer, global head/meta defaults, `<HeadContent>`, and `<Scripts>`.
+## Durable technical constraints
 
-## Content / data model
+- TanStack Start and Router provide the React application and file-based route
+  boundaries. Version-sensitive decisions must be verified against the
+  installed packages and current primary documentation.
+- Static content should stay directly importable. Add loaders or server
+  functions for genuine asynchronous, trust-boundary, or routing needs rather
+  than ceremony.
+- Source project imagery lives under `src/assets/<project-id>/` and is processed
+  at build time. Static passthrough assets live in `public/`.
+- Responsive images carry intrinsic dimensions. Above-the-fold media may load
+  eagerly; below-the-fold media should not compete with first paint.
+- Theme behavior follows the OS until the visitor chooses an override. A saved
+  choice must remain visually and metadata-consistent without a flash on load.
+- Per-route titles, descriptions, canonical URLs, and social metadata must
+  describe the page being shared. Social images should be intentionally sized
+  for that use rather than reusing an arbitrary display fallback.
+- The site deploys to Vercel and is prerendered where its data permits.
+- Package management is pnpm-only.
 
-New `src/content/` directory, hardcoded and typed (pattern proven in the barber-shop repo):
+## Accessibility and quality bar
 
-- `src/content/projects.ts` — readonly array of `Project` records with their optimized images imported directly. Core shape:
-  ```ts
-  type Project = {
-    projectId: string;
-    title: string;
-    tagline: string;            // one-line blurb for cards
-    cover: {
-      picture: ImagetoolsPicture;    // full-size hero
-      thumbnail: ImagetoolsPicture;  // card-sized variant
-      alt: string;
-    };
-    role: string;               // e.g. "Design & full-stack build"
-    year: string;
-    stack: readonly string[];   // tag chips
-    liveUrl?: string;           // omit/disable if not publicly linkable
-    summary: string;            // short intro paragraph
-    problem: string;
-    approach: string;           // narrative; may include tradeoffs
-    highlights: readonly { title: string; body: string }[];  // technical wins
-    outcomes: readonly string[];  // proof points
-    gallery: readonly { picture: ImagetoolsPicture; alt: string; caption?: string }[];
-  };
-  ```
-- `src/content/site.ts` — shared identity, headline, short bio, and social links.
+- Keyboard navigation, focus order, heading structure, landmarks, alternative
+  text, and reduced-motion behavior are product requirements.
+- UI and layout claims must be checked in a real rendered browser. Contrast on
+  translucent, gradient, blurred, or image-backed surfaces must be measured
+  from rendered pixels.
+- Graceful degraded states are preferable to blank sections or page-level
+  failures when optional external data is unavailable.
+- Relevant focused tests should protect content contracts, helpers, routing,
+  and rendered behavior.
+- Before landing a change, run `pnpm test`, `pnpm typecheck`, and `pnpm check`;
+  run `pnpm build` for changes that can affect production output or routing.
 
-Rendering: routes import the static `projects` collection directly; `getProject(projectId)` resolves the dynamic detail route. The first project is the homepage editorial selection. No server functions are needed, so pages can be prerendered.
+## Change policy
 
-## Flagship case study content — Chavo's Parlor
-
-Grounded in the real project at `/Users/kennethrathbun/Documents/projects/barber-shop`. **It is live in production** — a real, deployed client site for a real shop (the `SQUARE_ENV=sandbox` flag seen in the repo is a stale spec marker, not the live state). Frame it plainly as a shipped client project. Capture the **live production URL** for the `liveUrl` field so the detail page and card link to the real site (grab it from the client/Vercel dashboard during implementation).
-
-- **Title / role / year:** Chavo's Parlor — custom barber-shop booking site · Design & full-stack build · 2026.
-- **Tagline:** "A branded, faster booking experience that replaces a generic Square page — with Square kept as the source of truth."
-- **Stack tags:** TanStack Start, React 19, TypeScript, Tailwind v4, Square SDK, Zod, Vitest, Playwright, Vercel.
-- **Problem:** the shop relied on a generic hosted Square booking page — off-brand, slower, no control over UX or performance.
-- **Approach / narrative:** branded TanStack Start site with a strict server/client boundary (pure logic in `src/domain/`, all Square IO isolated in `src/server/`); Square remains system of record (no custom DB) to minimize operational risk; env-driven cutover (`SQUARE_ENV`, `BOOKING_MODE`) so hosted↔custom booking and sandbox↔production are config flips, not code changes.
-- **Technical highlights (the brag list):**
-  - **Idempotent booking saga** — deterministic v2 idempotency key derived from normalized contact info so double-taps/retries never double-book; slot-conflict detection by Square category+code.
-  - **Deposits saga** — authorize (hold) → book → capture; void on booking failure; capture failure never cancels the booking (emits reconciliation alert + seller note).
-  - **URL-as-state booking wizard** — entire 4-step flow lives in validated URL search params, so refresh/back/shared links stay consistent.
-  - **Resilience / fail-open** — live Square Catalog fetch falls back to a placeholder menu so the page never blanks; env is Zod-validated at server start.
-  - **Privacy & security** — PII sanitizer keeps email/phone out of logs; honeypot spam rejection; self-hosted static map (zero third-party requests / no tracking); strict security headers (HSTS, nosniff, X-Frame-Options DENY, Permissions-Policy).
-  - **Performance** — preloaded above-the-fold woff2 fonts, `fetchPriority="high"` hero, lazy gallery/map, WebP assets, `fontaine` fallback metrics to kill layout shift.
-  - **Accessibility** — automated axe-core gate, oklch colors tuned to WCAG AA/AAA, visible focus, `prefers-reduced-motion`.
-  - **Correctness** — availability rendered in shop timezone (America/Los_Angeles) across PST/PDT using only native `Intl`, no date lib.
-- **Outcomes / proof:** live in production for the shop; 5.0★ across 61 Google reviews (aggregate, captured 2026-06-30); testimonial quote available (e.g. "the best barber in San Diego County"); 37 test files (Vitest + Playwright + axe-core) as evidence of rigor. *(No Lighthouse/analytics numbers are wired yet — cite build quality and testing, not fabricated metrics.)*
-- **Gallery:** **fresh UI captures** of the running barber-shop app — hero, services menu, gallery section, and the booking wizard steps. (Chavo's real photo assets exist in the repo but v1 uses clean app screenshots for consistent framing.)
-
-## Design system (fresh, minimal/technical)
-
-Replace the island/sea theme in `src/styles.css`. Direction:
-
-- **Palette:** restrained neutral base (zinc/slate) with a single accent; oklch tokens (consistent with shadcn + the barber-shop approach). Both light and dark defined.
-- **Type:** a clean sans for body/UI and a mono accent for technical detail (labels, stack chips, section kickers) to signal "engineer." Self-host via `@fontsource` (as the barber shop does) rather than runtime Google Fonts import.
-- **Components:** install shadcn/ui primitives as needed (button, card, badge, separator, navigation-menu/sheet for mobile nav) via `pnpm dlx shadcn@latest add <x>` → lands in `src/components/ui/`. Custom composed components in `src/components/` (e.g. `project-card`, `hero`, `stack-strip`, `gallery`, `theme-toggle`, `site-header`, `site-footer`).
-- **Motion:** subtle only (fade/rise on scroll), fully gated behind `prefers-reduced-motion`.
-
-## Theme (system + toggle)
-
-- Provider that reads OS preference by default and allows manual light/dark override persisted to `localStorage`.
-- **No-flash SSR:** inline a tiny blocking script in `__root.tsx` `<head>` that sets the `.dark` class from stored/system preference before paint (the `@custom-variant dark (&:is(.dark *))` already exists in `styles.css`). Toggle control lives in the header.
-
-## Images
-
-- Add **`vite-imagetools`** to `vite.config.ts`. Author gallery/thumbnail images to generate responsive optimized WebP/AVIF at build with explicit width/height (prevents CLS) and lazy loading below the fold; eager + high priority for the Home hero.
-- Store source images under `src/assets/` (imagetools-processed) or `public/` for static passthrough; pick one convention and document it. Capture fresh barber-shop screenshots into that location.
-
-## SEO, social, analytics
-
-- **Per-route meta** via each route's `head()` (title + description); sensible defaults in `__root.tsx`. Reuse the barber-shop pattern.
-- **Open Graph + Twitter `summary_large_image`** tags; provide an OG image (site-level, plus per-project if feasible).
-- **`sitemap.xml` + `robots.txt`** generated for the known routes.
-- **Vercel Analytics** (`@vercel/analytics`) — one component, no cookie banner needed.
-
-## Dependencies to add
-
-- `vite-imagetools` (dev) + config.
-- shadcn/ui component packages (Radix primitives) as pulled in by the CLI.
-- `@fontsource/*` for the chosen fonts.
-- `@vercel/analytics`.
-- (Everything else — TanStack Start, Tailwind v4, biome, vitest — already present.)
-
-## Accessibility & performance targets
-
-- Keyboard-navigable, visible focus, semantic landmarks, alt text on all gallery images.
-- Respect `prefers-reduced-motion` and `prefers-color-scheme`.
-- Target Lighthouse ≥ 95 across Performance/Accessibility/Best-Practices/SEO on Home and a project detail page.
-- No layout shift on image/font load.
-
-## Deployment
-
-- **Vercel**, TanStack Start's Nitro Vercel preset. Static/prerendered where possible since content is hardcoded. Enable Vercel Analytics in project settings.
-
-## Out of scope / future
-
-- Additional projects (data model already supports them), résumé PDF, contact form + email provider, blog/writing, per-project OG image automation, live-site embeds, booking-funnel analytics.
-
-## Open items to confirm before/at implementation
-
-1. Grab the **live production URL** for Chavo's Parlor to populate `liveUrl`.
-2. Confirm the **testimonial quote + attribution** to display (owner/client permission).
-3. Final **accent color** and **font pairing** for the technical aesthetic (can be decided during implementation with a quick preview).
-4. GitHub/LinkedIn/email handles for `site.ts`.
-
-## Verification
-
-- `pnpm dev` — Home, `/projects`, `/projects/chavos-parlor` render; nav + theme toggle work; no hydration/theme flash.
-- Theme toggle persists across reload; respects OS default on first visit.
-- `pnpm build` succeeds; images emit optimized WebP/AVIF with dimensions.
-- View-source / social debugger shows correct per-page title, description, OG image; `sitemap.xml` + `robots.txt` served.
-- `pnpm check` (Biome) and `pnpm test` pass; add smoke tests for `getProject` and 404 on unknown slug.
-- Lighthouse run on Home + project detail meets targets.
-- Cross-check every barber-shop claim in the case study against the real repo; frame it as a live, shipped client project and confirm the live URL resolves.
+- This file describes what the product must accomplish, not the exact markup,
+  helper names, schemas, or component boundaries it must use.
+- A plan is actionable only when it is marked active and reflects a current
+  owner decision. Completed, superseded, archived, research, and handoff
+  documents are evidence and context, not standing instructions.
+- When a historical document conflicts with the current code, tests, this
+  contract, or a direct owner request, do not follow the historical document.
+- Record durable architectural decisions as ADRs. Keep temporary implementation
+  plans narrow and remove or archive them when the work is finished.
