@@ -6,6 +6,7 @@ import { Reveal } from "#/components/reveal";
 import { Section, SectionHeading } from "#/components/section";
 import { Surface } from "#/components/surface";
 import { SITE } from "#/content/site";
+import { resolveCssColorString } from "#/lib/resolve-css-color";
 import { useTheme } from "#/lib/theme";
 
 // ---------------------------------------------------------------------------
@@ -16,12 +17,8 @@ import { useTheme } from "#/lib/theme";
 //
 // react-activity-calendar's color interpolation runs in plain JS (not CSS),
 // so it can't resolve `var(--foo)` reference strings — it needs literal
-// colors it can parse. Reading `getComputedStyle(...).getPropertyValue`
-// for a custom property returns the raw authored token text (e.g. the
-// literal string "oklch(0.72 0.19 25)"), not a guaranteed-parseable value,
-// so instead we apply each token as a real `color` on a throwaway element
-// and read the browser's resolved `rgb(...)` serialization back off it —
-// that's guaranteed parseable by any JS color library.
+// colors it can parse. `resolveCssColorString` handles that (see its doc
+// comment for why the naive getPropertyValue read isn't enough).
 //
 // --brand-ink is used (not raw --brand) for the "peak activity" stop
 // because it's the token already tuned per-theme to read well as a small
@@ -37,17 +34,6 @@ const FALLBACK_THEME = {
 	dark: ["#29272d", "#f05a65"],
 };
 
-function resolveCssColor(varName: string): string | null {
-	if (typeof document === "undefined") return null;
-	const probe = document.createElement("span");
-	probe.style.color = `var(${varName})`;
-	probe.style.display = "none";
-	document.body.appendChild(probe);
-	const resolved = getComputedStyle(probe).color;
-	document.body.removeChild(probe);
-	return resolved || null;
-}
-
 /**
  * Resolves the current theme (see #/lib/theme's hydration-safe caveat) and,
  * alongside it, the contribution-calendar color pair read from the real
@@ -59,8 +45,8 @@ function useContributionTheme() {
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: colorScheme isn't read in the body, but it's the signal that the .dark class (and so the cascaded --border/--brand-ink values) just changed — exactly when this needs to re-run.
 	useEffect(() => {
-		const base = resolveCssColor("--border");
-		const peak = resolveCssColor("--brand-ink");
+		const base = resolveCssColorString("--border");
+		const peak = resolveCssColorString("--brand-ink");
 		if (!base || !peak) return;
 		// Only the array matching the active colorScheme is ever rendered, so
 		// both slots can safely hold the same freshly-read pair — the "other"

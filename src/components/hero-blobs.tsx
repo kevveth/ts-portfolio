@@ -7,6 +7,8 @@ import {
 	sampleField,
 	smoothFieldAlpha,
 } from "#/lib/hero-blobs";
+import type { ResolvedRgba } from "#/lib/resolve-css-color";
+import { resolveCssColorRgba } from "#/lib/resolve-css-color";
 import { subscribeToThemeChange } from "#/lib/theme";
 
 const BUFFER_WIDTH = 240;
@@ -16,32 +18,12 @@ const FIELD_THRESHOLD = 0.86;
 /** 30fps keeps the field fluid without spending a full animation frame on it. */
 const FRAME_INTERVAL_MS = 1000 / 30;
 
-type ResolvedColor = [r: number, g: number, b: number, a: number];
-
-/**
- * Resolves a CSS color (including color-mix()/oklab, which canvas fillStyle
- * can't be string-compared against) to concrete sRGB bytes via a 1x1 canvas
- * round-trip.
- */
-function resolveCssColor(colorString: string): ResolvedColor {
-	const probe = document.createElement("canvas");
-	probe.width = 1;
-	probe.height = 1;
-	const ctx = probe.getContext("2d");
-	if (!ctx) return [0, 0, 0, 0];
-	ctx.clearRect(0, 0, 1, 1);
-	ctx.fillStyle = colorString;
-	ctx.fillRect(0, 0, 1, 1);
-	const [r, g, b, a] = ctx.getImageData(0, 0, 1, 1).data;
-	return [r, g, b, a / 255];
-}
-
-function readBlobColors(): ResolvedColor[] {
+function readBlobColors(): ResolvedRgba[] {
 	const style = getComputedStyle(document.documentElement);
-	const colors: ResolvedColor[] = [];
+	const colors: ResolvedRgba[] = [];
 	for (let i = 1; i <= COLOR_COUNT; i++) {
 		colors.push(
-			resolveCssColor(style.getPropertyValue(`--hero-color-${i}`).trim()),
+			resolveCssColorRgba(style.getPropertyValue(`--hero-color-${i}`).trim()),
 		);
 	}
 	return colors;
@@ -53,7 +35,7 @@ function drawFrame(
 	height: number,
 	timeSeconds: number,
 	pointer: { x: number; y: number; active: boolean },
-	colors: readonly ResolvedColor[],
+	colors: readonly ResolvedRgba[],
 ) {
 	const centers = attractBlobCenters(
 		getBlobCenters(timeSeconds, width, height),
