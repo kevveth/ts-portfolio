@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Architecture Explorer</title>
+		<style>
+			:root {
+				color-scheme: dark;
+				font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+				--bg: #07111f;
+				--panel: #0b1727;
+				--panel-strong: #101e30;
+				--line: #26384d;
+				--line-strong: #3b526d;
+				--text: #f3f5f7;
+				--muted: #9cabbc;
+				--cyan: #67d8e5;
+				--cyan-dim: #173c48;
+				--amber: #e7b95f;
+				--danger: #ff8d87;
+			}
+
+			* { box-sizing: border-box; }
+			html, body { height: 100%; }
+			body { margin: 0; overflow: hidden; background: var(--bg); color: var(--text); }
+			button, input { font: inherit; }
+			button { color: inherit; }
+			button:focus-visible, input:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+
+			.app {
+				display: grid;
+				grid-template: 64px minmax(0, 1fr) / 240px minmax(460px, 1fr) 360px;
+				height: 100%;
+			}
+
+			.topbar {
+				grid-column: 1 / -1;
+				display: grid;
+				grid-template-columns: 220px minmax(260px, 640px) 1fr;
+				align-items: center;
+				gap: 20px;
+				padding: 0 20px;
+				border-bottom: 1px solid var(--line);
+				background: #091523;
+			}
+
+			.brand { margin: 0; font-size: 18px; font-weight: 650; letter-spacing: -0.02em; }
+			.search-wrap { position: relative; }
+			.search {
+				width: 100%;
+				height: 38px;
+				padding: 0 42px 0 38px;
+				border: 1px solid var(--line);
+				border-radius: 6px;
+				background: var(--panel-strong);
+				color: var(--text);
+			}
+			.search-icon { position: absolute; left: 13px; top: 10px; color: var(--muted); }
+			.shortcut { position: absolute; right: 10px; top: 8px; padding: 2px 6px; border: 1px solid var(--line); border-radius: 4px; color: var(--muted); font: 11px ui-monospace, monospace; }
+			.search-results {
+				position: absolute;
+				top: 44px;
+				left: 0;
+				right: 0;
+				z-index: 20;
+				max-height: 360px;
+				overflow: auto;
+				border: 1px solid var(--line-strong);
+				border-radius: 6px;
+				background: #0d1b2c;
+				box-shadow: 0 18px 50px rgb(0 0 0 / 45%);
+			}
+			.search-results:empty { display: none; }
+			.search-result { display: block; width: 100%; padding: 11px 13px; border: 0; border-bottom: 1px solid var(--line); background: transparent; text-align: left; cursor: pointer; }
+			.search-result:hover { background: var(--panel-strong); }
+			.search-result strong { display: block; font-size: 13px; }
+			.search-result span { display: block; margin-top: 3px; color: var(--muted); font: 11px ui-monospace, monospace; }
+			.top-actions { display: flex; justify-content: flex-end; gap: 8px; }
+			.text-button { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 10px; border: 0; border-radius: 5px; background: transparent; color: var(--muted); cursor: pointer; }
+			.text-button:hover { background: var(--panel-strong); color: var(--text); }
+
+			.sidebar, .inspector { min-height: 0; overflow: auto; background: var(--panel); }
+			.sidebar { border-right: 1px solid var(--line); padding: 18px 12px; }
+			.sidebar-title { margin: 0 10px 14px; color: var(--muted); font-size: 11px; font-weight: 650; letter-spacing: 0.1em; text-transform: uppercase; }
+			.area-button { display: grid; grid-template-columns: 12px 1fr auto; align-items: center; gap: 10px; width: 100%; min-height: 40px; padding: 8px 10px; border: 0; border-radius: 5px; background: transparent; text-align: left; cursor: pointer; }
+			.area-button:hover, .area-button[aria-current="true"] { background: var(--panel-strong); }
+			.area-button[aria-current="true"] { color: var(--cyan); }
+			.area-dot { width: 8px; height: 8px; border: 1px solid currentColor; border-radius: 2px; }
+			.area-count { color: var(--muted); font: 11px ui-monospace, monospace; }
+			.sidebar-note { margin: 24px 10px 0; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 11px; line-height: 1.55; }
+
+			.workspace { display: grid; grid-template-rows: 44px minmax(0, 1fr) 36px; min-width: 0; min-height: 0; background: var(--bg); }
+			.breadcrumbs { display: flex; align-items: center; gap: 8px; padding: 0 20px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+			.crumb { padding: 5px 2px; border: 0; background: transparent; color: inherit; cursor: pointer; }
+			.crumb:last-child { color: var(--cyan); }
+			.canvas { position: relative; min-height: 0; overflow: auto; padding: 48px; }
+			.graph { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, minmax(160px, 1fr)); gap: 72px 64px; min-width: 620px; }
+			.edges { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+			.module-node { position: relative; z-index: 2; min-height: 92px; padding: 14px; border: 1px solid var(--line-strong); border-radius: 5px; background: #0d1a2a; text-align: left; cursor: pointer; box-shadow: 0 8px 24px rgb(0 0 0 / 14%); }
+			.module-node:hover { border-color: var(--cyan); transform: translateY(-1px); }
+			.module-node.selected { border-color: var(--cyan); box-shadow: 0 0 0 1px var(--cyan-dim); }
+			.module-node.generated { border-color: #876a32; }
+			.node-heading { display: flex; align-items: center; gap: 8px; color: var(--cyan); font-size: 13px; font-weight: 620; }
+			.node-kind { margin-top: 9px; color: var(--muted); font: 10px ui-monospace, monospace; text-transform: uppercase; letter-spacing: 0.07em; }
+			.node-path { margin-top: 6px; overflow: hidden; color: #b7c2cf; font: 10px ui-monospace, monospace; text-overflow: ellipsis; white-space: nowrap; }
+			.empty-graph { grid-column: 1 / -1; color: var(--muted); text-align: center; }
+			.statusbar { display: flex; justify-content: space-between; align-items: center; padding: 0 16px; border-top: 1px solid var(--line); color: var(--muted); font: 10px ui-monospace, monospace; }
+
+			.inspector { border-left: 1px solid var(--line); }
+			.inspector-empty { padding: 28px 20px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+			.inspector-header { padding: 18px 18px 15px; border-bottom: 1px solid var(--line); }
+			.inspector-header h2 { margin: 0; color: var(--cyan); font-size: 17px; font-weight: 650; }
+			.inspector-path { margin-top: 7px; color: #c1cad5; font: 11px ui-monospace, monospace; overflow-wrap: anywhere; }
+			.inspector-description { margin: 12px 0 0; color: #cbd3dd; font-size: 12px; line-height: 1.55; }
+			.inspector-section { padding: 14px 18px; border-bottom: 1px solid var(--line); }
+			.inspector-section h3 { margin: 0 0 10px; color: var(--muted); font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; }
+			.facts { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin: 0; font-size: 12px; }
+			.facts dt { color: var(--muted); }
+			.facts dd { margin: 0; font-family: ui-monospace, monospace; }
+			.link-list { display: grid; gap: 5px; }
+			.module-link { padding: 3px 0; border: 0; background: transparent; color: var(--cyan); font: 11px ui-monospace, monospace; text-align: left; cursor: pointer; overflow-wrap: anywhere; }
+			.module-link:hover { text-decoration: underline; }
+			.muted { color: var(--muted); font-size: 11px; }
+			.export-list { display: flex; flex-wrap: wrap; gap: 5px 10px; color: #d6b4f0; font: 11px ui-monospace, monospace; }
+			.code { margin: 0; max-height: 360px; overflow: auto; color: #d7dee7; font: 10px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace; tab-size: 2; white-space: pre; }
+			.copy-button { width: 100%; min-height: 34px; border: 1px solid var(--line); border-radius: 5px; background: var(--panel-strong); cursor: pointer; }
+			.copy-button:hover { border-color: var(--cyan); }
+
+			@media (max-width: 1080px) {
+				.app { grid-template-columns: 200px minmax(460px, 1fr) 300px; }
+				.graph { grid-template-columns: repeat(2, minmax(170px, 1fr)); }
+			}
+
+			@media (max-width: 800px) {
+				body { overflow: auto; }
+				.app { display: grid; grid-template: auto auto minmax(620px, auto) auto / 1fr; height: auto; min-height: 100%; }
+				.topbar { position: sticky; top: 0; z-index: 30; grid-column: 1; grid-template-columns: 1fr auto; padding: 12px 16px; }
+				.search-wrap { grid-row: 2; grid-column: 1 / -1; }
+				.top-actions .text-button:first-child { display: none; }
+				.sidebar { display: block; overflow-x: auto; border-right: 0; border-bottom: 1px solid var(--line); padding: 10px; }
+				#area-list { display: flex; gap: 6px; width: max-content; }
+				.sidebar-title, .sidebar-note { display: none; }
+				.area-button { min-width: max-content; grid-template-columns: 8px 1fr auto; }
+				.workspace { min-height: 620px; }
+				.canvas { padding: 28px 20px; }
+				.graph { grid-template-columns: 1fr; min-width: 0; gap: 30px; }
+				.inspector { border-top: 1px solid var(--line); border-left: 0; }
+			}
+		</style>
+	</head>
+	<body>
+		<div class="app">
+			<header class="topbar">
+				<h1 class="brand">Architecture Explorer</h1>
+				<div class="search-wrap">
+					<span class="search-icon" aria-hidden="true">⌕</span>
+					<input class="search" id="search" type="search" placeholder="Search modules, paths, exports…" autocomplete="off" />
+					<span class="shortcut">⌘ K</span>
+					<div class="search-results" id="search-results"></div>
+				</div>
+				<div class="top-actions">
+					<button class="text-button" id="reload" type="button">↻ Reload map</button>
+					<button class="text-button" id="copy-selected" type="button">⧉ Copy path</button>
+				</div>
+			</header>
+
+			<nav class="sidebar" aria-label="Source areas">
+				<h2 class="sidebar-title">Source areas</h2>
+				<div id="area-list"></div>
+				<p class="sidebar-note">Areas are derived from folders. They describe the current code; they do not enforce a desired architecture.</p>
+			</nav>
+
+			<main class="workspace">
+				<nav class="breadcrumbs" id="breadcrumbs" aria-label="Architecture location"></nav>
+				<div class="canvas" id="canvas">
+					<svg class="edges" id="edges" aria-hidden="true"></svg>
+					<div class="graph" id="graph"></div>
+				</div>
+				<footer class="statusbar"><span id="status"></span><span>direct local imports →</span></footer>
+			</main>
+
+			<aside class="inspector" id="inspector" aria-live="polite"></aside>
+		</div>
+
+		<!--ARCHITECTURE_DATA-->
+		<script>
+			const data = window.ARCHITECTURE_DATA;
+			const modulesById = new Map(data.modules.map((module) => [module.id, module]));
+			const areasByName = new Map(data.areas.map((area) => [area.id.slice(5), area]));
+			const state = { scope: "overview", selectedId: null };
+			const elements = {
+				areaList: document.querySelector("#area-list"),
+				breadcrumbs: document.querySelector("#breadcrumbs"),
+				canvas: document.querySelector("#canvas"),
+				copySelected: document.querySelector("#copy-selected"),
+				edges: document.querySelector("#edges"),
+				graph: document.querySelector("#graph"),
+				inspector: document.querySelector("#inspector"),
+				search: document.querySelector("#search"),
+				searchResults: document.querySelector("#search-results"),
+				status: document.querySelector("#status"),
+			};
+
+			function escapeHtml(value) {
+				return String(value)
+					.replaceAll("&", "&amp;")
+					.replaceAll("<", "&lt;")
+					.replaceAll(">", "&gt;")
+					.replaceAll('"', "&quot;")
+					.replaceAll("'", "&#039;");
+			}
+
+			function areaForSelection() {
+				if (state.scope !== "overview") return state.scope;
+				if (state.selectedId?.startsWith("area:")) return state.selectedId.slice(5);
+				return null;
+			}
+
+			function renderSidebar() {
+				const currentArea = areaForSelection();
+				elements.areaList.innerHTML = data.areas.map((area) => {
+					const areaName = area.id.slice(5);
+					return `<button class="area-button" type="button" data-area="${escapeHtml(areaName)}" aria-current="${currentArea === areaName}">
+						<span class="area-dot" aria-hidden="true"></span>
+						<span>${escapeHtml(area.name)}</span>
+						<span class="area-count">${area.moduleCount}</span>
+					</button>`;
+				}).join("");
+			}
+
+			function renderBreadcrumbs() {
+				const parts = [{ label: data.repository, scope: "overview" }];
+				if (state.scope !== "overview") parts.push({ label: "src", scope: "overview" }, { label: state.scope, scope: state.scope });
+				elements.breadcrumbs.innerHTML = parts.map((part, index) =>
+					`${index ? '<span aria-hidden="true">›</span>' : ""}<button class="crumb" type="button" data-scope="${escapeHtml(part.scope)}">${escapeHtml(part.label)}</button>`,
+				).join("");
+			}
+
+			function nodesForScope() {
+				if (state.scope === "overview") {
+					return data.areas.map((area) => ({ ...area, kind: "source area", path: `src/${area.id.slice(5)}` }));
+				}
+				return data.modules.filter((module) => module.area === state.scope);
+			}
+
+			function edgesForScope(nodes) {
+				const visibleIds = new Set(nodes.map((node) => node.id));
+				if (state.scope === "overview") {
+					return data.areas.flatMap((area) => area.dependencies.map((dependency) => [area.id, `area:${dependency}`])).filter(([, target]) => visibleIds.has(target));
+				}
+				return nodes.flatMap((module) => module.dependencies.map((dependency) => [module.id, dependency])).filter(([, target]) => visibleIds.has(target));
+			}
+
+			function renderGraph() {
+				const nodes = nodesForScope();
+				elements.graph.innerHTML = nodes.length ? nodes.map((node) => {
+					const generated = node.generated ? " generated" : "";
+					const selected = state.selectedId === node.id ? " selected" : "";
+					const pathLabel = node.path ?? node.id;
+					return `<button class="module-node${generated}${selected}" type="button" data-node-id="${escapeHtml(node.id)}">
+						<span class="node-heading"><span aria-hidden="true">□</span>${escapeHtml(node.name)}</span>
+						<span class="node-kind">${escapeHtml(node.kind)}${node.moduleCount ? ` · ${node.moduleCount} modules` : ""}</span>
+						<span class="node-path">${escapeHtml(pathLabel)}</span>
+					</button>`;
+				}).join("") : '<p class="empty-graph">No source modules were found in this area.</p>';
+				elements.status.textContent = `${nodes.length} ${state.scope === "overview" ? "source areas" : "modules"} · generated ${new Date(data.generatedAt).toLocaleString()}`;
+				requestAnimationFrame(() => drawEdges(renderedNodeElements(), edgesForScope(nodes)));
+			}
+
+			function renderedNodeElements() {
+				return new Map([...elements.graph.querySelectorAll("[data-node-id]")].map((node) => [node.dataset.nodeId, node]));
+			}
+
+			function drawEdges(nodeElements, edges) {
+				const canvasRect = elements.canvas.getBoundingClientRect();
+				const width = Math.max(elements.canvas.scrollWidth, elements.canvas.clientWidth);
+				const height = Math.max(elements.canvas.scrollHeight, elements.canvas.clientHeight);
+				elements.edges.setAttribute("viewBox", `0 0 ${width} ${height}`);
+				elements.edges.innerHTML = `<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#657d97"></path></marker></defs>`;
+
+				for (const [sourceId, targetId] of edges) {
+					const source = nodeElements.get(sourceId);
+					const target = nodeElements.get(targetId);
+					if (!source || !target) continue;
+					const sourceRect = source.getBoundingClientRect();
+					const targetRect = target.getBoundingClientRect();
+					const startX = sourceRect.left - canvasRect.left + elements.canvas.scrollLeft + sourceRect.width / 2;
+					const startY = sourceRect.top - canvasRect.top + elements.canvas.scrollTop + sourceRect.height / 2;
+					const endX = targetRect.left - canvasRect.left + elements.canvas.scrollLeft + targetRect.width / 2;
+					const endY = targetRect.top - canvasRect.top + elements.canvas.scrollTop + targetRect.height / 2;
+					const midX = (startX + endX) / 2;
+					const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+					path.setAttribute("d", `M ${startX} ${startY} C ${midX} ${startY}, ${midX} ${endY}, ${endX} ${endY}`);
+					path.setAttribute("fill", "none");
+					path.setAttribute("stroke", "#657d97");
+					path.setAttribute("stroke-width", "1.1");
+					path.setAttribute("marker-end", "url(#arrow)");
+					elements.edges.append(path);
+				}
+			}
+
+			function moduleLinks(ids) {
+				if (!ids.length) return '<span class="muted">None</span>';
+				return `<div class="link-list">${ids.map((id) => `<button class="module-link" type="button" data-module-link="${escapeHtml(id)}">${escapeHtml(id)}</button>`).join("")}</div>`;
+			}
+
+			function renderAreaInspector(area) {
+				const areaName = area.id.slice(5);
+				const dependentAreas = data.areas.filter((candidate) => candidate.dependencies.includes(areaName));
+				elements.inspector.innerHTML = `
+					<div class="inspector-header">
+						<h2>${escapeHtml(area.name)}</h2>
+						<div class="inspector-path">src/${escapeHtml(areaName)}</div>
+						<p class="inspector-description">${escapeHtml(area.description)}</p>
+					</div>
+					<section class="inspector-section"><h3>Current shape</h3><dl class="facts"><dt>Modules</dt><dd>${area.moduleCount}</dd><dt>Depends on areas</dt><dd>${area.dependencies.length}</dd><dt>Used by areas</dt><dd>${dependentAreas.length}</dd></dl></section>
+					<section class="inspector-section"><h3>Dependencies</h3>${area.dependencies.length ? area.dependencies.map((item) => `<button class="module-link" type="button" data-area-link="${escapeHtml(item)}">src/${escapeHtml(item)}</button>`).join("<br>") : '<span class="muted">No cross-area local imports</span>'}</section>
+					<section class="inspector-section"><h3>Dependents</h3>${dependentAreas.length ? dependentAreas.map((item) => `<button class="module-link" type="button" data-area-link="${escapeHtml(item.id.slice(5))}">src/${escapeHtml(item.id.slice(5))}</button>`).join("<br>") : '<span class="muted">No cross-area dependents</span>'}</section>
+					<section class="inspector-section"><button class="copy-button" type="button" data-open-area="${escapeHtml(areaName)}">Explore ${escapeHtml(area.name)}</button></section>`;
+			}
+
+			function renderModuleInspector(module) {
+				elements.inspector.innerHTML = `
+					<div class="inspector-header">
+						<h2>${escapeHtml(module.name)}</h2>
+						<div class="inspector-path">${escapeHtml(module.id)}</div>
+						<p class="inspector-description">${escapeHtml(module.description)}</p>
+					</div>
+					<section class="inspector-section"><h3>Current shape</h3><dl class="facts"><dt>Kind</dt><dd>${escapeHtml(module.kind)}</dd><dt>Lines</dt><dd>${module.lineCount}</dd><dt>Local dependencies</dt><dd>${module.dependencies.length}</dd><dt>Dependents</dt><dd>${module.dependents.length}</dd></dl></section>
+					<section class="inspector-section"><h3>Public interface</h3><div class="export-list">${module.exports.length ? module.exports.map(escapeHtml).join("<br>") : '<span class="muted">No named exports detected</span>'}</div></section>
+					<section class="inspector-section"><h3>Dependencies</h3>${moduleLinks(module.dependencies)}${module.externalDependencies.length ? `<h3 style="margin-top:14px">External packages</h3><div class="muted">${module.externalDependencies.map(escapeHtml).join(" · ")}</div>` : ""}</section>
+					<section class="inspector-section"><h3>Dependents</h3>${moduleLinks(module.dependents)}</section>
+					<section class="inspector-section"><h3>Source</h3><pre class="code"><code>${escapeHtml(module.source)}</code></pre></section>`;
+			}
+
+			function renderInspector() {
+				if (!state.selectedId) {
+					elements.inspector.innerHTML = '<p class="inspector-empty">Select a source area or module to inspect its purpose, interface, dependencies, dependents, and code.</p>';
+					return;
+				}
+				if (state.selectedId.startsWith("area:")) renderAreaInspector(areasByName.get(state.selectedId.slice(5)));
+				else renderModuleInspector(modulesById.get(state.selectedId));
+			}
+
+			function render() {
+				renderSidebar();
+				renderBreadcrumbs();
+				renderGraph();
+				renderInspector();
+			}
+
+			function openArea(area) {
+				state.scope = area;
+				state.selectedId = null;
+				elements.canvas.scrollTo(0, 0);
+				render();
+			}
+
+			function selectModule(moduleId) {
+				const module = modulesById.get(moduleId);
+				if (!module) return;
+				state.scope = module.area;
+				state.selectedId = moduleId;
+				render();
+				requestAnimationFrame(() => {
+					const selectedNode = elements.graph.querySelector(`[data-node-id="${CSS.escape(moduleId)}"]`);
+					if (!selectedNode) return;
+					elements.canvas.scrollTo({
+						behavior: "smooth",
+						left: Math.max(0, selectedNode.offsetLeft - elements.canvas.clientWidth / 2 + selectedNode.clientWidth / 2),
+						top: Math.max(0, selectedNode.offsetTop - elements.canvas.clientHeight / 2 + selectedNode.clientHeight / 2),
+					});
+				});
+			}
+
+			document.addEventListener("click", (event) => {
+				const areaButton = event.target.closest("[data-area], [data-area-link], [data-open-area]");
+				if (areaButton) {
+					openArea(areaButton.dataset.area ?? areaButton.dataset.areaLink ?? areaButton.dataset.openArea);
+					return;
+				}
+				const crumb = event.target.closest("[data-scope]");
+				if (crumb) {
+					state.scope = crumb.dataset.scope;
+					state.selectedId = null;
+					render();
+					return;
+				}
+				const moduleLink = event.target.closest("[data-module-link]");
+				if (moduleLink) {
+					selectModule(moduleLink.dataset.moduleLink);
+					return;
+				}
+				const node = event.target.closest("[data-node-id]");
+				if (!node) return;
+				if (node.dataset.nodeId.startsWith("area:")) {
+					state.selectedId = node.dataset.nodeId;
+					render();
+				} else {
+					state.selectedId = node.dataset.nodeId;
+					render();
+				}
+			});
+
+			elements.search.addEventListener("input", () => {
+				const query = elements.search.value.trim().toLowerCase();
+				if (!query) {
+					elements.searchResults.innerHTML = "";
+					return;
+				}
+				const matches = data.modules.filter((module) =>
+					[module.id, module.name, module.kind, ...module.exports].some((value) => value.toLowerCase().includes(query)),
+				).slice(0, 12);
+				elements.searchResults.innerHTML = matches.length ? matches.map((module) => `<button class="search-result" type="button" data-search-result="${escapeHtml(module.id)}"><strong>${escapeHtml(module.name)}</strong><span>${escapeHtml(module.id)}</span></button>`).join("") : '<div class="search-result"><strong>No matching modules</strong></div>';
+			});
+
+			elements.searchResults.addEventListener("click", (event) => {
+				const result = event.target.closest("[data-search-result]");
+				if (!result) return;
+				selectModule(result.dataset.searchResult);
+				elements.search.value = "";
+				elements.searchResults.innerHTML = "";
+			});
+
+			document.querySelector("#reload").addEventListener("click", () => location.reload());
+			elements.copySelected.addEventListener("click", async () => {
+				const path = state.selectedId?.startsWith("area:") ? `src/${state.selectedId.slice(5)}` : state.selectedId;
+				if (!path) return;
+				try {
+					await navigator.clipboard.writeText(path);
+					elements.copySelected.textContent = "✓ Path copied";
+				} catch {
+					window.prompt("Copy source path", path);
+				}
+				setTimeout(() => { elements.copySelected.textContent = "⧉ Copy path"; }, 1400);
+			});
+
+			document.addEventListener("keydown", (event) => {
+				if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+					event.preventDefault();
+					elements.search.focus();
+				}
+			});
+
+			window.addEventListener("resize", () => requestAnimationFrame(() => drawEdges(renderedNodeElements(), edgesForScope(nodesForScope()))));
+			render();
+		</script>
+	</body>
+</html>
