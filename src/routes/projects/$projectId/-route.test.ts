@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { projects } from "#/content/projects";
 import { SITE_URL } from "#/content/site";
-import { Route } from "./projects.$projectId";
+import { Route } from "./route";
 
 describe("project route metadata", () => {
 	it("uses a dedicated social image instead of the display cover fallback", async () => {

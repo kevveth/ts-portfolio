@@ -10,34 +10,34 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ArchitectureRouteImport } from './routes/architecture'
-import { Route as CredentialsRouteImport } from './routes/credentials'
-import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
-import { Route as StyleRouteImport } from './routes/style'
-import { Route as ProjectsIndexRouteImport } from './routes/projects.index'
-import { Route as ProjectsProjectIdRouteImport } from './routes/projects.$projectId'
+import { Route as ArchitectureRouteRouteImport } from './routes/architecture/route'
+import { Route as CredentialsRouteRouteImport } from './routes/credentials/route'
+import { Route as RobotsDottxtRouteRouteImport } from './routes/robots[.]txt/route'
+import { Route as StyleRouteRouteImport } from './routes/style/route'
+import { Route as ProjectsIndexRouteImport } from './routes/projects/index'
+import { Route as ProjectsProjectIdRouteRouteImport } from './routes/projects/$projectId/route'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ArchitectureRoute = ArchitectureRouteImport.update({
+const ArchitectureRouteRoute = ArchitectureRouteRouteImport.update({
   id: '/architecture',
   path: '/architecture',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CredentialsRoute = CredentialsRouteImport.update({
+const CredentialsRouteRoute = CredentialsRouteRouteImport.update({
   id: '/credentials',
   path: '/credentials',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+const RobotsDottxtRouteRoute = RobotsDottxtRouteRouteImport.update({
   id: '/robots.txt',
   path: '/robots.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
-const StyleRoute = StyleRouteImport.update({
+const StyleRouteRoute = StyleRouteRouteImport.update({
   id: '/style',
   path: '/style',
   getParentRoute: () => rootRouteImport,
@@ -47,7 +47,7 @@ const ProjectsIndexRoute = ProjectsIndexRouteImport.update({
   path: '/projects/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProjectsProjectIdRoute = ProjectsProjectIdRouteImport.update({
+const ProjectsProjectIdRouteRoute = ProjectsProjectIdRouteRouteImport.update({
   id: '/projects/$projectId',
   path: '/projects/$projectId',
   getParentRoute: () => rootRouteImport,
@@ -55,30 +55,30 @@ const ProjectsProjectIdRoute = ProjectsProjectIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/architecture': typeof ArchitectureRoute
-  '/credentials': typeof CredentialsRoute
-  '/robots.txt': typeof RobotsDottxtRoute
-  '/style': typeof StyleRoute
-  '/projects/$projectId': typeof ProjectsProjectIdRoute
+  '/architecture': typeof ArchitectureRouteRoute
+  '/credentials': typeof CredentialsRouteRoute
+  '/robots.txt': typeof RobotsDottxtRouteRoute
+  '/style': typeof StyleRouteRoute
+  '/projects/$projectId': typeof ProjectsProjectIdRouteRoute
   '/projects/': typeof ProjectsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/architecture': typeof ArchitectureRoute
-  '/credentials': typeof CredentialsRoute
-  '/robots.txt': typeof RobotsDottxtRoute
-  '/style': typeof StyleRoute
-  '/projects/$projectId': typeof ProjectsProjectIdRoute
+  '/architecture': typeof ArchitectureRouteRoute
+  '/credentials': typeof CredentialsRouteRoute
+  '/robots.txt': typeof RobotsDottxtRouteRoute
+  '/style': typeof StyleRouteRoute
+  '/projects/$projectId': typeof ProjectsProjectIdRouteRoute
   '/projects': typeof ProjectsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/architecture': typeof ArchitectureRoute
-  '/credentials': typeof CredentialsRoute
-  '/robots.txt': typeof RobotsDottxtRoute
-  '/style': typeof StyleRoute
-  '/projects/$projectId': typeof ProjectsProjectIdRoute
+  '/architecture': typeof ArchitectureRouteRoute
+  '/credentials': typeof CredentialsRouteRoute
+  '/robots.txt': typeof RobotsDottxtRouteRoute
+  '/style': typeof StyleRouteRoute
+  '/projects/$projectId': typeof ProjectsProjectIdRouteRoute
   '/projects/': typeof ProjectsIndexRoute
 }
 export interface FileRouteTypes {
@@ -113,11 +113,11 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ArchitectureRoute: typeof ArchitectureRoute
-  CredentialsRoute: typeof CredentialsRoute
-  RobotsDottxtRoute: typeof RobotsDottxtRoute
-  StyleRoute: typeof StyleRoute
-  ProjectsProjectIdRoute: typeof ProjectsProjectIdRoute
+  ArchitectureRouteRoute: typeof ArchitectureRouteRoute
+  CredentialsRouteRoute: typeof CredentialsRouteRoute
+  RobotsDottxtRouteRoute: typeof RobotsDottxtRouteRoute
+  StyleRouteRoute: typeof StyleRouteRoute
+  ProjectsProjectIdRouteRoute: typeof ProjectsProjectIdRouteRoute
   ProjectsIndexRoute: typeof ProjectsIndexRoute
 }
 
@@ -134,28 +134,28 @@ declare module '@tanstack/react-router' {
       id: '/architecture'
       path: '/architecture'
       fullPath: '/architecture'
-      preLoaderRoute: typeof ArchitectureRouteImport
+      preLoaderRoute: typeof ArchitectureRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/credentials': {
       id: '/credentials'
       path: '/credentials'
       fullPath: '/credentials'
-      preLoaderRoute: typeof CredentialsRouteImport
+      preLoaderRoute: typeof CredentialsRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/robots.txt': {
       id: '/robots.txt'
       path: '/robots.txt'
       fullPath: '/robots.txt'
-      preLoaderRoute: typeof RobotsDottxtRouteImport
+      preLoaderRoute: typeof RobotsDottxtRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/style': {
       id: '/style'
       path: '/style'
       fullPath: '/style'
-      preLoaderRoute: typeof StyleRouteImport
+      preLoaderRoute: typeof StyleRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/projects/': {
@@ -169,7 +169,7 @@ declare module '@tanstack/react-router' {
       id: '/projects/$projectId'
       path: '/projects/$projectId'
       fullPath: '/projects/$projectId'
-      preLoaderRoute: typeof ProjectsProjectIdRouteImport
+      preLoaderRoute: typeof ProjectsProjectIdRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -177,11 +177,11 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ArchitectureRoute: ArchitectureRoute,
-  CredentialsRoute: CredentialsRoute,
-  RobotsDottxtRoute: RobotsDottxtRoute,
-  StyleRoute: StyleRoute,
-  ProjectsProjectIdRoute: ProjectsProjectIdRoute,
+  ArchitectureRouteRoute: ArchitectureRouteRoute,
+  CredentialsRouteRoute: CredentialsRouteRoute,
+  RobotsDottxtRouteRoute: RobotsDottxtRouteRoute,
+  StyleRouteRoute: StyleRouteRoute,
+  ProjectsProjectIdRouteRoute: ProjectsProjectIdRouteRoute,
   ProjectsIndexRoute: ProjectsIndexRoute,
 }
 export const routeTree = rootRouteImport
