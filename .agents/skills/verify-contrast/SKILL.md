@@ -1,6 +1,6 @@
 ---
 name: verify-contrast
-description: Measure real WCAG contrast for a component in ts-portfolio from an actual rendered screenshot (not computed CSS, not eyeballing). Use before shipping any change to translucent, gradient, backdrop-filter, or otherwise non-solid backgrounds — anywhere a plain "background-color vs. text-color" contrast calculator can't give a real number, e.g. glass/blur effects, gradients, or images behind text. Also use to check hover/active/focus states, not just rest.
+description: Measure real WCAG contrast for a component in ts-portfolio from an actual rendered screenshot (not computed CSS, not eyeballing). Use before shipping any change to translucent, gradient, backdrop-filter, or otherwise non-solid backgrounds — anywhere a plain "background-color vs. text-color" contrast calculator can't give a real number, e.g. blurred or translucent effects, gradients, or images behind text. Also use to check hover/active/focus states, not just rest.
 ---
 
 Why this exists: a background built from `backdrop-filter`, `color-mix()`,
@@ -11,9 +11,8 @@ Chromium via Playwright, finds the real text row inside the element (not a
 guessed padding fraction — matters for flex-centered, fixed-height buttons),
 and reads pixel data back with `sharp`.
 
-This is exactly the gap that bit the liquid-glass button work (see
-`docs/liquid-glass-technique.md`): a vivid translucent fill measured fine by
-eye but failed 4.5:1 in every state until checked this way.
+This is the gap the procedure is designed to catch: a vivid translucent fill
+can look fine by eye while failing 4.5:1 in every state when measured.
 
 ## Prerequisites
 
@@ -143,7 +142,6 @@ hover    rgb(21,108,221)     4.81:1   PASS            PASS
   native `::selection` highlight then tints every state captured afterward.
   The script clears it now. If you see a non-interactive element's "focus"
   state reading differently from "rest", suspect this before believing it.
-- A translucent fill's *rest* state is usually the tightest margin — hover
-  and active states in this project's glass buttons only increase fill
-  opacity, so if rest passes with margin the rest usually do too, but check
-  at least once per component rather than assuming.
+- An interactive translucent fill's *rest* state is often the tightest margin
+  when hover and active increase opacity, but check every state at least once
+  per component rather than assuming.

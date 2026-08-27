@@ -1,37 +1,27 @@
-# Domain Docs
+# Domain docs
 
-How engineering skills should consume this repository's domain and architecture documentation while exploring the codebase.
+Follow the authority routing in `docs/README.md`; never infer authority from a
+folder, filename, checklist, or workflow-shaped field.
 
-## Before exploring, read these
+Read `CONTEXT.md` when domain language is relevant to the task. Read only the
+directly relevant accepted ADRs or explicitly active plans. Do not read
+completed or superseded plans, reference notes, or archived material by default;
+consult them only when the current task specifically needs their history or
+evidence.
 
-- **`CONTEXT.md`** at the repository root, when it exists.
-- **Relevant records under `specs/` and `docs/`**, including product scope, technical architecture, and workflow documentation.
-- **Relevant ADRs under `docs/adr/`**, when that directory exists.
+If `CONTEXT.md` or `docs/adr/` does not exist, proceed silently. Do not propose
+empty placeholders. Do not create or update domain records or ADRs unless the
+task includes recording an explicitly confirmed domain or architecture
+decision.
 
-If `CONTEXT.md` or `docs/adr/` does not exist, proceed silently. Do not propose empty placeholders. The `domain-modeling` skill, reached through workflows such as `grill-with-docs` and `improve-codebase-architecture`, creates them lazily when terminology or decisions are actually resolved.
-
-## File structure
-
-This is a single-context repository:
-
-```text
-/
-├── CONTEXT.md              # domain glossary, created lazily
-├── docs/
-│   ├── adr/                 # architectural decisions, created lazily
-│   └── handoffs/            # established cross-agent handoffs
-├── specs/                 # product and architecture records
-└── src/
-```
-
-Do not introduce `CONTEXT-MAP.md` or per-folder context documents unless this repository later becomes a genuine multi-context monorepo.
+This is a single-context repository. Do not introduce `CONTEXT-MAP.md` or
+per-folder context documents unless it later becomes a genuine multi-context
+monorepo.
 
 ## Keep each record focused
 
 - Use `CONTEXT.md` only as a concise glossary of domain concepts. Do not turn it into a specification, scratchpad, or implementation guide.
 - Use `docs/adr/` for hard-to-reverse architecture decisions.
-- Keep product specifications and delivery state under `specs/`.
-- Keep cross-agent continuation records under `docs/handoffs/` and follow that directory's existing lifecycle.
 
 ## Use the glossary's vocabulary
 

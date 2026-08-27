@@ -5,12 +5,10 @@ import type * as React from "react";
 import { cn } from "#/lib/utils";
 
 /**
- * Vendored from `ui-library`'s Button (see docs/handoffs/ for the removal
- * rationale): that dependency shipped an unlayered `:root` block that
- * silently outranked this app's own `@theme` tokens, plus a `glass` variant
- * built on an abandoned feTurbulence/SVG-filter effect (see
- * docs/liquid-glass-technique.md). Both are gone here — this file owns the
- * full variant surface against this app's real tokens.
+ * Vendored from `ui-library`'s Button because that dependency shipped an
+ * unlayered `:root` block that silently outranked this app's own `@theme`
+ * tokens. Keeping the component local makes ownership explicit: this file
+ * owns the full variant surface against this app's real tokens.
  *
  * `default` and `brand-link` reference `.portfolio-primary` / `.portfolio-link`
  * (src/styles.css) for the hover-lift shadow and the gradient-sweep
