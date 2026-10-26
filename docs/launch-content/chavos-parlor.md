@@ -1,7 +1,7 @@
 # Chavo’s Parlor — case study for editorial review
 
 Draft for Ken’s review. The simplified architecture and regular-hours sync are live;
-the barber repository’s October 23 release record records actual Production acceptance
+the barber repository’s October 26 release record records actual Production acceptance
 and limits. On October 26, 2026, Ken confirmed that Chavo has already approved
 the photos and reviews discussed for the site and portfolio. This draft remains
 subject to Ken's editorial review.
@@ -49,14 +49,7 @@ hosted fallback. It did not submit an appointment or payment.
 
 ### Delivery status
 
-The simplified integration launched October 21, 2026 at
-[chavosparlor.com](https://chavosparlor.com/). The latest accepted application,
-`b91afe2`, added regular location-hours sync on October 23.
-On October 26, the canonical domain still resolved to that accepted deployment.
-Follow-up stale-hours and service-grouping fixes are merged at `8e2fbd7`; their
-staged candidate passed focused health, browser and recovery checks on October 26, but public promotion and canonical acceptance remain pending.
-The custom booking/payment experiment is retired in Git history at `b96f939`,
-not maintained behind a feature flag.
+The simplified integration launched October 21, 2026 at [chavosparlor.com](https://chavosparlor.com/). Regular location-hours sync was accepted October 23. Latest accepted application `8e2fbd7` released the stale-hours and service-grouping fixes October 26 after staged recovery and canonical acceptance passed. The custom booking/payment experiment is retired in Git history at `b96f939`, not maintained behind a feature flag.
 
 The real catalog, private snapshot, isolated recovery rehearsal, widget/fallback,
 and Production health checks passed. The project demonstrates a
@@ -65,9 +58,9 @@ it does not yet establish an increase in bookings, revenue, or conversion rate.
 
 ## Screenshot and evidence notes for the revamp
 
-Use `src/assets/chavos-parlor/production-desktop.png` for the cover and `production-mobile.png` for a phone view. Both are real accepted Production captures from October 21, 2026, before regular-hours sync. Keep that date visible in captions; the cover may show a crop, and a full screenshot should remain inspectable. The asset README records exact source, revision and consent limits.
+Use `src/assets/chavos-parlor/production-desktop.png` for the cover and `production-mobile.png` for a phone view. Both are real accepted Production captures from October 26, 2026, after the latest release. Keep that date visible in captions; the cover may show a crop, and a full screenshot should remain inspectable. The asset README records exact source, revision and consent limits.
 
-Canonical supporting records live in `/Users/kennethrathbun/Documents/projects/barber-shop/docs/`: `release-2026-10-21.md`, `release-2026-10-23.md`, `client-handoff.md`, `production-rollout.md`, and `release-plan-2026-10-26.md`. Those records separate tests with documented stand-ins from actual deployed acceptance. The October 26 candidate record adds focused staged evidence; no public release acceptance is asserted here.
+Canonical supporting records live in `/Users/kennethrathbun/Documents/projects/barber-shop/docs/`: `release-2026-10-21.md`, `release-2026-10-23.md`, `client-handoff.md`, `production-rollout.md`, `release-plan-2026-10-26.md`, and `release-2026-10-26.md`. Those records separate tests with documented stand-ins from actual deployed acceptance. The October 26 public release record documents the completed canonical acceptance.
 
 ## How this supports a freelance offering
 
