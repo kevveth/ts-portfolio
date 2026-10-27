@@ -1,22 +1,21 @@
-import { Moon, Sun } from "lucide-react";
-import { Button } from "#/components/ui/button";
-import { getCurrentTheme, setTheme } from "#/lib/theme";
+import { useEffect } from "react";
+import { getCurrentTheme, setTheme, syncThemeColor } from "#/lib/theme";
 
-/**
- * Icons swap via the `dark:` variant instead of client state, so SSR output
- * matches the class the pre-paint theme script applied — no hydration
- * mismatch, no flash of the wrong icon.
- */
+/** CSS follows the pre-paint theme, keeping the label hydration-safe. */
 export function ThemeToggle() {
+	// React can hoist an additional theme-color tag during hydration. Sync
+	// the final head without turning the OS preference into a saved override.
+	useEffect(() => syncThemeColor(getCurrentTheme()), []);
 	return (
-		<Button
-			variant="ghost"
-			size="icon"
-			aria-label="Toggle theme"
+		<button
+			type="button"
+			className="theme-toggle"
 			onClick={() => setTheme(getCurrentTheme() === "dark" ? "light" : "dark")}
 		>
-			<Sun aria-hidden className="dark:hidden" />
-			<Moon aria-hidden className="hidden dark:block" />
-		</Button>
+			<span className="sr-only">Switch to </span>
+			<span className="dark:hidden">dark</span>
+			<span className="hidden dark:inline">light</span>
+			<span className="sr-only"> theme</span>
+		</button>
 	);
 }

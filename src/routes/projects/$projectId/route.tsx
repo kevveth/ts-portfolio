@@ -1,15 +1,11 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { Gallery } from "#/components/gallery";
+import desktopCapture from "#/assets/chavos-parlor/production-desktop.png?url";
+import phoneCapture from "#/assets/chavos-parlor/production-mobile.png?url";
 import { Picture } from "#/components/picture";
-import {
-	ProjectActions,
-	ProjectMeta,
-	TechStack,
-} from "#/components/project-patterns";
-import { PageIntro, Section, SectionHeading } from "#/components/section";
-import { Surface } from "#/components/surface";
+import { ProjectActions } from "#/components/project-patterns";
+import { PageIntro, Section } from "#/components/section";
 import { Button } from "#/components/ui/button";
-import { getProject, type ProjectHighlight } from "#/content/projects";
+import { getProject } from "#/content/projects";
 import { SITE, SITE_URL } from "#/content/site";
 
 export const Route = createFileRoute("/projects/$projectId")({
@@ -36,7 +32,14 @@ export const Route = createFileRoute("/projects/$projectId")({
 				{ property: "og:image:type", content: "image/jpeg" },
 				{ property: "og:image:width", content: "1200" },
 				{ property: "og:image:height", content: "630" },
-				{ property: "og:image:alt", content: loaderData.cover.alt },
+				{ property: "og:image:alt", content: loaderData.socialImageAlt },
+				{ name: "twitter:title", content: title },
+				{ name: "twitter:description", content: loaderData.tagline },
+				{
+					name: "twitter:image",
+					content: `${SITE_URL}${loaderData.socialImage}`,
+				},
+				{ name: "twitter:image:alt", content: loaderData.socialImageAlt },
 			],
 			links: [{ rel: "canonical", href: url }],
 		};
@@ -47,145 +50,61 @@ export const Route = createFileRoute("/projects/$projectId")({
 
 function ProjectDetail() {
 	const project = Route.useLoaderData();
-	const { cover, gallery } = project;
-
 	return (
-		<article>
-			<Section className="pb-8 sm:pb-10">
-				<PageIntro
-					kicker="case study"
-					title={project.title}
-					description={project.tagline}
+		<article className="site-frame project-story">
+			<Link to="/" hash="work" className="text-link">
+				← work
+			</Link>
+			<header>
+				<h1>{project.title}</h1>
+				<p className="story-lede">{project.tagline}</p>
+				<ProjectActions project={project} />
+			</header>
+			<figure>
+				<a
+					href={desktopCapture}
+					aria-label="Open full desktop production capture"
+					className="work-preview"
 				>
-					<ProjectMeta project={project} />
-					<TechStack stack={project.stack} className="pt-1" />
-					<ProjectActions project={project} className="pt-2" />
-				</PageIntro>
-			</Section>
-
-			<Section spacing="flush">
-				<Surface as="figure" variant="raised" className="overflow-hidden">
 					<Picture
-						picture={cover.picture}
-						alt={cover.alt}
-						sizes="(min-width: 1024px) 1024px, 100vw"
+						picture={project.cover.picture}
+						alt={project.cover.alt}
+						sizes="(min-width: 660px) 620px, calc(100vw - 40px)"
 						loading="eager"
 						fetchPriority="high"
+						imgClassName="work-preview-image"
 					/>
-				</Surface>
-			</Section>
-
-			<Section width="reading" className="space-y-12">
-				<div className="space-y-3">
-					<SectionHeading kicker="overview" spacing="none" />
-					<p className="leading-relaxed">{project.summary}</p>
-				</div>
-				<div className="space-y-3">
-					<SectionHeading kicker="the problem" spacing="none" />
-					<p className="leading-relaxed text-muted-foreground">
-						{project.problem}
-					</p>
-				</div>
-				{project.productionConstraint ? (
-					<div className="space-y-3">
-						<SectionHeading kicker="the production constraint" spacing="none" />
-						<p className="leading-relaxed text-muted-foreground">
-							{project.productionConstraint}
-						</p>
-					</div>
-				) : null}
-				<div className="space-y-3">
-					<SectionHeading kicker="what I shipped" spacing="none" />
-					<p className="leading-relaxed text-muted-foreground">
-						{project.approach}
-					</p>
-				</div>
-			</Section>
-
-			<Section spacing="continued">
-				<SectionHeading kicker="production highlights" />
-				<HighlightList highlights={project.highlights} />
-			</Section>
-
-			<Section spacing="continued">
-				<SectionHeading kicker="outcomes" />
-				<ul className="max-w-3xl space-y-2.5">
-					{project.outcomes.map((outcome) => (
-						<li key={outcome} className="flex gap-3 leading-relaxed">
-							<span aria-hidden className="font-mono text-brand">
-								▸
-							</span>
-							{outcome}
-						</li>
-					))}
-				</ul>
-			</Section>
-
-			{gallery.length > 0 ? (
-				<Section spacing="continued">
-					<SectionHeading kicker="production" title="Live site" />
-					<Gallery items={gallery} />
-				</Section>
-			) : null}
-
-			{project.customFlow ? (
-				<>
-					<Section width="reading" spacing="continued">
-						<SectionHeading
-							kicker="future path"
-							title="The custom booking flow"
-						/>
-						<p className="leading-relaxed text-muted-foreground">
-							{project.customFlow.summary}
-						</p>
-					</Section>
-					<Section spacing="continued">
-						<SectionHeading kicker="custom flow engineering" />
-						<HighlightList highlights={project.customFlow.highlights} />
-					</Section>
-					<Section spacing="continued">
-						<SectionHeading kicker="sandbox only" title="Custom flow screens" />
-						<Gallery items={project.customFlow.gallery} />
-					</Section>
-				</>
-			) : null}
-
-			<Section divided>
-				<div className="flex flex-wrap items-center gap-3">
-					<ProjectActions project={project} contact />
-					<Link
-						to="/projects"
-						className="px-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
-					>
-						← All projects
-					</Link>
-				</div>
-			</Section>
-		</article>
-	);
-}
-
-function HighlightList({
-	highlights,
-}: {
-	highlights: readonly ProjectHighlight[];
-}) {
-	return (
-		<dl className="grid gap-x-8 gap-y-7 sm:grid-cols-2">
-			{highlights.map((highlight) => (
-				<div key={highlight.title} className="space-y-1.5">
-					<dt className="font-semibold">
-						<span aria-hidden className="mr-2 font-mono text-xs text-brand">
-							▸
-						</span>
-						{highlight.title}
-					</dt>
-					<dd className="text-sm leading-relaxed text-muted-foreground">
-						{highlight.body}
-					</dd>
-				</div>
+				</a>
+				<figcaption className="capture-note">
+					Live website · October 26, 2026 ·{" "}
+					<a href={desktopCapture} className="text-link">
+						full desktop image ↗
+					</a>{" "}
+					/{" "}
+					<a href={phoneCapture} className="text-link">
+						phone image ↗
+					</a>
+				</figcaption>
+			</figure>
+			<section aria-labelledby="story-overview">
+				<h2 id="story-overview">Overview</h2>
+				<p>{project.summary}</p>
+			</section>
+			<section aria-labelledby="story-implementation">
+				<h2 id="story-implementation">Design and implementation</h2>
+				<p>{project.implementation}</p>
+			</section>
+			<section aria-labelledby="story-workflow">
+				<h2 id="story-workflow">Square integration</h2>
+				<p>{project.approach}</p>
+			</section>
+			{project.highlights.map((highlight) => (
+				<section key={highlight.title}>
+					<h2>{highlight.title}</h2>
+					<p>{highlight.body}</p>
+				</section>
 			))}
-		</dl>
+		</article>
 	);
 }
 
@@ -198,7 +117,7 @@ function ProjectNotFound() {
 				description="It may have been renamed, or the link is stale."
 			/>
 			<Button asChild variant="outline" className="mt-6">
-				<Link to="/projects">Browse all projects</Link>
+				<Link to="/">Back home</Link>
 			</Button>
 		</Section>
 	);

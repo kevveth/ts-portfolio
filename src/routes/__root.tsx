@@ -14,7 +14,7 @@ import { SITE, SITE_URL } from "#/content/site";
 import { THEME_COLORS, THEME_INIT_SCRIPT } from "#/lib/theme";
 import appCss from "../styles.css?url";
 
-const DEFAULT_TITLE = `${SITE.name} | ${SITE.role}`;
+const DEFAULT_TITLE = SITE.name;
 
 // Variable fonts: one file per subset covers the whole weight range, so only
 // the latin subset needs preloading for above-the-fold text (hero h1 + the
@@ -33,6 +33,20 @@ export const Route = createRootRoute({
 			{ property: "og:title", content: DEFAULT_TITLE },
 			{ property: "og:description", content: SITE.metaDescription },
 			{ property: "og:image", content: `${SITE_URL}/og.png` },
+			{ property: "og:image:type", content: "image/png" },
+			{ property: "og:image:width", content: "1200" },
+			{ property: "og:image:height", content: "630" },
+			{
+				property: "og:image:alt",
+				content:
+					"Kenneth Rathbun in an emerald green name block. Developer, skateboarder, barista. Work, about, contact.",
+			},
+			{ name: "twitter:image", content: `${SITE_URL}/og.png` },
+			{
+				name: "twitter:image:alt",
+				content:
+					"Kenneth Rathbun in an emerald green name block. Developer, skateboarder, barista. Work, about, contact.",
+			},
 			{ name: "twitter:card", content: "summary_large_image" },
 		],
 		links: [

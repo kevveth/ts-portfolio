@@ -7,8 +7,8 @@ describe("setTheme", () => {
 	beforeEach(() => {
 		document.documentElement.className = "";
 		document.head.innerHTML = `
-			<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f8f8f9">
-			<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a0a0c">
+			<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f5f5f2">
+			<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#161616">
 		`;
 		localStorage.clear();
 	});
@@ -26,6 +26,6 @@ describe("setTheme", () => {
 			Array.from(document.querySelectorAll('meta[name="theme-color"]')).map(
 				(meta) => meta.getAttribute("content"),
 			),
-		).toEqual(["#0a0a0c", "#0a0a0c"]);
+		).toEqual(["#161616", "#161616"]);
 	});
 });

@@ -62,13 +62,16 @@ const config = defineConfig({
 		tailwindcss(),
 		tanstackStart({
 			sitemap: { enabled: true, outputPath: "sitemap.xml", host: siteUrl },
-			prerender: { enabled: true, crawlLinks: true, failOnError: true },
+			// Routes are discovered automatically; enumerate the single dynamic page.
+			// Link crawling would also publish in-page anchors and image URLs.
+			prerender: { enabled: true, crawlLinks: false, failOnError: true },
 			// The crawler reaches the projects index as both /projects and
 			// /projects/; keep only the canonical form in the sitemap.
 			// /style is the internal style guide — it sets `noindex` in its own
 			// head, so listing it here too would hand crawlers contradictory
 			// signals (Search Console flags "submitted URL marked noindex").
 			pages: [
+				{ path: "/projects/chavos-parlor" },
 				{ path: "/projects/", sitemap: { exclude: true } },
 				{ path: "/style", sitemap: { exclude: true } },
 			],

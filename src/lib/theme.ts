@@ -1,13 +1,11 @@
-import { useEffect, useState } from "react";
-
 export const THEME_STORAGE_KEY = "theme";
 
 export type Theme = "light" | "dark";
 
 /** Literal resolutions of the `--background` tokens in `src/styles.css`. */
 export const THEME_COLORS = {
-	light: "#f8f8f9",
-	dark: "#0a0a0c",
+	light: "#f5f5f2",
+	dark: "#161616",
 } as const satisfies Record<Theme, string>;
 
 export function resolveInitialTheme(
@@ -19,7 +17,7 @@ export function resolveInitialTheme(
 		: "light";
 }
 
-function syncThemeColor(theme: Theme): void {
+export function syncThemeColor(theme: Theme): void {
 	for (const meta of document.querySelectorAll<HTMLMetaElement>(
 		'meta[name="theme-color"]',
 	)) {
@@ -37,27 +35,6 @@ export const THEME_INIT_SCRIPT = `(function(){var d=document.documentElement;d.c
 
 export function getCurrentTheme(): Theme {
 	return document.documentElement.classList.contains("dark") ? "dark" : "light";
-}
-
-export function subscribeToThemeChange(
-	callback: (theme: Theme) => void,
-): () => void {
-	const observer = new MutationObserver(() => callback(getCurrentTheme()));
-	observer.observe(document.documentElement, {
-		attributes: true,
-		attributeFilter: ["class"],
-	});
-	return () => observer.disconnect();
-}
-
-/** Hydration-safe theme state: SSR starts light, then resolves after mount. */
-export function useTheme(): Theme {
-	const [theme, setThemeState] = useState<Theme>("light");
-	useEffect(() => {
-		setThemeState(getCurrentTheme());
-		return subscribeToThemeChange(setThemeState);
-	}, []);
-	return theme;
 }
 
 /** Applies the theme to <html> and persists the explicit choice. */
