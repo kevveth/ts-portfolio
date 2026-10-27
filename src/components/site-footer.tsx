@@ -7,8 +7,8 @@ export function SiteFooter() {
 			<nav aria-label="Contact">
 				<address>
 					{CONTACT_CHANNELS.map((channel) => (
-						<a key={channel.label} href={channel.href} className="text-link">
-							{channel.label.toLowerCase()} <span aria-hidden>↗</span>
+						<a key={channel.label} href={channel.href} className="detail-link">
+							{channel.label.toLowerCase()}
 						</a>
 					))}
 				</address>

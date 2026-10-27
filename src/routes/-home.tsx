@@ -37,9 +37,9 @@ export function Home() {
 					<Link
 						to="/projects/$projectId"
 						params={{ projectId: project.projectId }}
-						className="text-link"
+						className="detail-link"
 					>
-						view project <span aria-hidden>↗</span>
+						view project
 					</Link>
 				</div>
 				<p className="capture-note">
