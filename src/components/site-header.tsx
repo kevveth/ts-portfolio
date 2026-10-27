@@ -11,9 +11,15 @@ export function SiteHeader() {
 			<LocalTime />
 			<div className="personal-navigation">
 				<nav aria-label="Main">
-					<a href="/#work">work</a>
-					<a href="/#about">about</a>
-					<a href="/#contact">contact</a>
+					<a href="/#work">
+						<span className="navigation-label">work</span>
+					</a>
+					<a href="/#about">
+						<span className="navigation-label">about</span>
+					</a>
+					<a href="/#contact">
+						<span className="navigation-label">contact</span>
+					</a>
 				</nav>
 				<ThemeToggle />
 			</div>

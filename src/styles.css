@@ -313,9 +313,11 @@ html.js .reveal.is-visible {
 .personal-navigation { font-size: var(--type-support); display: flex; justify-content: space-between; gap: 20px; margin-top: 24px; }
 .personal-navigation nav, .personal-footer address { display: flex; flex-wrap: wrap; column-gap: 28px; }
 .personal-navigation a, .theme-toggle { display: inline-flex; align-items: center; min-height: 44px; }
-.personal-navigation a, .theme-toggle { padding-inline: 2px; margin-inline: -2px; }
-.personal-navigation a:hover, .theme-toggle:hover, .personal-navigation a:focus-visible, .theme-toggle:focus-visible { background: var(--brand); color: #fff; text-decoration: none; }
-.personal-navigation a:focus-visible, .theme-toggle:focus-visible { outline: 2px solid var(--brand-ink); outline-offset: 2px; }
+.personal-navigation a, .theme-toggle { margin-inline: -2px; }
+.navigation-label { display: inline-flex; align-items: center; min-height: 28px; padding: 2px; line-height: 1.25; }
+.personal-navigation a:is(:hover, :focus-visible) .navigation-label, .theme-toggle:is(:hover, :focus-visible) .navigation-label { background: var(--brand); color: #fff; }
+.personal-navigation a:focus-visible, .theme-toggle:focus-visible { outline: none; }
+.personal-navigation a:focus-visible .navigation-label, .theme-toggle:focus-visible .navigation-label { outline: 2px solid var(--brand-ink); outline-offset: 2px; }
 .theme-toggle { cursor: pointer; }
 .index-label, .project-story section h2 { font-family: var(--font-mono); font-size: var(--type-support); line-height: 1.7; font-weight: 600; margin-bottom: 12px; }
 .work-preview { display: block; overflow: hidden; aspect-ratio: 8 / 5; background: #111110; border: 1px solid var(--border); }
