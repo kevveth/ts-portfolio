@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { LocalTime } from "#/components/local-time";
 import { ThemeToggle } from "#/components/theme-toggle";
 
 export function SiteHeader() {
@@ -7,7 +8,7 @@ export function SiteHeader() {
 			<Link to="/" className="site-name">
 				kenneth rathbun
 			</Link>
-			<p className="site-byline">developer / skateboarder / barista</p>
+			<LocalTime />
 			<div className="personal-navigation">
 				<nav aria-label="Main">
 					<a href="/#work">work</a>
