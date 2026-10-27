@@ -2,9 +2,6 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import desktopCapture from "#/assets/chavos-parlor/production-desktop.png?url";
 import phoneCapture from "#/assets/chavos-parlor/production-mobile.png?url";
 import { Picture } from "#/components/picture";
-import { ProjectActions } from "#/components/project-patterns";
-import { PageIntro, Section } from "#/components/section";
-import { Button } from "#/components/ui/button";
 import { getProject } from "#/content/projects";
 import { SITE, SITE_URL } from "#/content/site";
 
@@ -52,13 +49,25 @@ function ProjectDetail() {
 	const project = Route.useLoaderData();
 	return (
 		<article className="site-frame project-story">
-			<Link to="/" hash="work" className="text-link">
-				← work
+			<Link to="/" hash="work" className="detail-link">
+				back to work
 			</Link>
 			<header>
-				<h1>{project.title}</h1>
+				<h1 className="page-title">{project.title}</h1>
 				<p className="story-lede">{project.tagline}</p>
-				<ProjectActions project={project} />
+				{project.liveUrl ? (
+					<div className="story-actions">
+						<a
+							href={project.liveUrl}
+							target="_blank"
+							rel="noreferrer"
+							className="detail-link"
+							aria-label={`Visit ${project.title} live site (opens in a new tab)`}
+						>
+							visit live site
+						</a>
+					</div>
+				) : null}
 			</header>
 			<figure>
 				<a
@@ -77,12 +86,12 @@ function ProjectDetail() {
 				</a>
 				<figcaption className="capture-note">
 					Live website · October 26, 2026 ·{" "}
-					<a href={desktopCapture} className="text-link">
-						full desktop image ↗
+					<a href={desktopCapture} className="detail-link">
+						full desktop image
 					</a>{" "}
 					/{" "}
-					<a href={phoneCapture} className="text-link">
-						phone image ↗
+					<a href={phoneCapture} className="detail-link">
+						phone image
 					</a>
 				</figcaption>
 			</figure>
@@ -110,15 +119,15 @@ function ProjectDetail() {
 
 function ProjectNotFound() {
 	return (
-		<Section spacing="default" width="reading">
-			<PageIntro
-				kicker="404 — not found"
-				title="No project with that name."
-				description="It may have been renamed, or the link is stale."
-			/>
-			<Button asChild variant="outline" className="mt-6">
-				<Link to="/">Back home</Link>
-			</Button>
-		</Section>
+		<div className="site-frame">
+			<p className="index-label">404 — not found</p>
+			<h1 className="page-title">No project with that name.</h1>
+			<p className="story-lede">
+				It may have been renamed, or the link is stale.
+			</p>
+			<Link to="/" className="detail-link story-actions">
+				back home
+			</Link>
+		</div>
 	);
 }

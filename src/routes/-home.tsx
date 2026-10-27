@@ -1,5 +1,4 @@
-import { Link } from "@tanstack/react-router";
-import { Picture } from "#/components/picture";
+import { ProjectPreview } from "#/components/project-preview";
 import { featuredProject } from "#/content/projects";
 import { SITE } from "#/content/site";
 
@@ -13,39 +12,13 @@ export function Home() {
 				<h2 id="work-heading" className="index-label">
 					work
 				</h2>
-				<Link
-					to="/projects/$projectId"
-					params={{ projectId: project.projectId }}
-					className="work-preview"
-					aria-label={`View ${project.title} project`}
+				<ProjectPreview
+					project={project}
+					description="A website for my longtime barber."
 				>
-					<Picture
-						picture={project.cover.picture}
-						alt={project.cover.alt}
-						sizes="(min-width: 660px) 620px, calc(100vw - 40px)"
-						loading="eager"
-						fetchPriority="high"
-						className="block"
-						imgClassName="work-preview-image"
-					/>
-				</Link>
-				<div className="work-caption">
-					<div>
-						<h3>{project.title}</h3>
-						<p>A website for my longtime barber.</p>
-					</div>
-					<Link
-						to="/projects/$projectId"
-						params={{ projectId: project.projectId }}
-						className="detail-link"
-					>
-						view project
-					</Link>
-				</div>
-				<p className="capture-note">
 					Production capture ·{" "}
 					<time dateTime="2026-10-26">October 26, 2026</time>
-				</p>
+				</ProjectPreview>
 			</section>
 			<section
 				id="about"
