@@ -1,18 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ProjectCard } from "#/components/project-card";
-import { Reveal } from "#/components/reveal";
-import { PageIntro, Section } from "#/components/section";
+import { ProjectPreview } from "#/components/project-preview";
 import { projects } from "#/content/projects";
 import { SITE, SITE_URL } from "#/content/site";
-import { cn } from "#/lib/utils";
 
 const TITLE = `Projects | ${SITE.name}`;
 const DESCRIPTION =
 	"Selected projects and case studies: production web apps designed and built end to end.";
 const VISIBLE_DESCRIPTION =
 	"A closer look at products I’ve designed, built, and shipped.";
-const SINGLE_PROJECT_IMAGE_SIZES = "(min-width: 768px) 768px, 100vw";
-const GRID_IMAGE_SIZES = "(min-width: 768px) 50vw, 100vw";
 
 export const Route = createFileRoute("/projects/")({
 	head: () => ({
@@ -29,39 +24,21 @@ export const Route = createFileRoute("/projects/")({
 });
 
 function ProjectsIndex() {
-	// Static, compile-time content — a loader would only park it in the eager
-	// route bundle and dehydrate a second copy into the HTML.
-	const isSingleProject = projects.length === 1;
-
 	return (
-		<Section>
-			<PageIntro
-				kicker="projects"
-				title="Selected work"
-				description={VISIBLE_DESCRIPTION}
-				className="mb-10"
-			/>
-			<Reveal>
-				<ul
-					className={cn(
-						"grid gap-6",
-						isSingleProject ? "max-w-3xl" : "md:grid-cols-2",
-					)}
-				>
-					{projects.map((project) => (
-						<li key={project.projectId}>
-							<ProjectCard
-								project={project}
-								imageSizes={
-									isSingleProject
-										? SINGLE_PROJECT_IMAGE_SIZES
-										: GRID_IMAGE_SIZES
-								}
-							/>
-						</li>
-					))}
-				</ul>
-			</Reveal>
-		</Section>
+		<div className="site-frame project-index">
+			<header className="project-index-intro">
+				<h1 className="page-title">Selected work</h1>
+				<p className="story-lede">{VISIBLE_DESCRIPTION}</p>
+			</header>
+			<div className="project-list">
+				{projects.map((project) => (
+					<ProjectPreview
+						key={project.projectId}
+						project={project}
+						headingAs="h2"
+					/>
+				))}
+			</div>
+		</div>
 	);
 }
