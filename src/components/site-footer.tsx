@@ -1,5 +1,4 @@
 import { CONTACT_CHANNELS } from "#/components/contact-links";
-import { SITE } from "#/content/site";
 
 export function SiteFooter() {
 	return (
@@ -13,10 +12,6 @@ export function SiteFooter() {
 					))}
 				</address>
 			</nav>
-			<p>
-				© <time dateTime={SITE.copyrightYear}>{SITE.copyrightYear}</time>{" "}
-				{SITE.name}
-			</p>
 		</footer>
 	);
 }
