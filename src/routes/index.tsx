@@ -9,6 +9,8 @@ export const Route = createFileRoute("/")({
 			{ name: "description", content: SITE.metaDescription },
 			{ property: "og:title", content: SITE.name },
 			{ property: "og:description", content: SITE.metaDescription },
+			{ name: "twitter:title", content: SITE.name },
+			{ name: "twitter:description", content: SITE.metaDescription },
 			{ property: "og:url", content: `${SITE_URL}/` },
 		],
 		links: [{ rel: "canonical", href: `${SITE_URL}/` }],

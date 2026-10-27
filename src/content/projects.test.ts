@@ -5,12 +5,17 @@ describe("projects", () => {
 	it("describes the maintained Square integration and keeps dated evidence", () => {
 		const project = getProject("chavos-parlor");
 		expect(project?.approach).toContain(
-			"Square owns scheduling, customer records, and payments",
+			"Square manages scheduling, customer records, and payments",
 		);
-		expect(project?.highlights[0]?.body).toContain("retired in Git history");
 		expect(project?.cover.alt).toContain("October 26, 2026");
-		expect(project?.outcomes.join(" ")).toContain(
-			"No increase in bookings, revenue, or conversion rate has been established",
+		expect(project?.implementation).toContain(
+			"TypeScript, React, TanStack Start, and Tailwind",
+		);
+		expect(project?.highlights[0]?.body).toContain(
+			"the Square form’s labels, keyboard navigation, and focus behavior",
+		);
+		expect(JSON.stringify(project)).not.toMatch(
+			/Git history|b96f939|unpaid project/,
 		);
 	});
 	it("finds each project by its route id", () => {

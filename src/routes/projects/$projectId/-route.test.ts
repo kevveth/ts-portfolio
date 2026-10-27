@@ -18,6 +18,9 @@ describe("project route metadata", () => {
 		});
 		expect(metadata.meta).toEqual(
 			expect.arrayContaining([
+				{ property: "og:image:alt", content: projects[0].socialImageAlt },
+				{ name: "twitter:image", content: `${SITE_URL}/og/chavos-parlor.jpg` },
+				{ name: "twitter:image:alt", content: projects[0].socialImageAlt },
 				{ property: "og:image:type", content: "image/jpeg" },
 				{ property: "og:image:width", content: "1200" },
 				{ property: "og:image:height", content: "630" },

@@ -32,7 +32,14 @@ export const Route = createFileRoute("/projects/$projectId")({
 				{ property: "og:image:type", content: "image/jpeg" },
 				{ property: "og:image:width", content: "1200" },
 				{ property: "og:image:height", content: "630" },
-				{ property: "og:image:alt", content: loaderData.cover.alt },
+				{ property: "og:image:alt", content: loaderData.socialImageAlt },
+				{ name: "twitter:title", content: title },
+				{ name: "twitter:description", content: loaderData.tagline },
+				{
+					name: "twitter:image",
+					content: `${SITE_URL}${loaderData.socialImage}`,
+				},
+				{ name: "twitter:image:alt", content: loaderData.socialImageAlt },
 			],
 			links: [{ rel: "canonical", href: url }],
 		};
@@ -69,7 +76,7 @@ function ProjectDetail() {
 					/>
 				</a>
 				<figcaption className="capture-note">
-					Real Production capture · October 26, 2026 ·{" "}
+					Live website · October 26, 2026 ·{" "}
 					<a href={desktopCapture} className="text-link">
 						full desktop image ↗
 					</a>{" "}
@@ -80,12 +87,15 @@ function ProjectDetail() {
 				</figcaption>
 			</figure>
 			<section aria-labelledby="story-overview">
-				<h2 id="story-overview">The project</h2>
+				<h2 id="story-overview">Overview</h2>
 				<p>{project.summary}</p>
-				<p>{project.problem}</p>
+			</section>
+			<section aria-labelledby="story-implementation">
+				<h2 id="story-implementation">Design and implementation</h2>
+				<p>{project.implementation}</p>
 			</section>
 			<section aria-labelledby="story-workflow">
-				<h2 id="story-workflow">Keep the barber’s workflow familiar</h2>
+				<h2 id="story-workflow">Square integration</h2>
 				<p>{project.approach}</p>
 			</section>
 			{project.highlights.map((highlight) => (
@@ -94,12 +104,6 @@ function ProjectDetail() {
 					<p>{highlight.body}</p>
 				</section>
 			))}
-			<section aria-labelledby="story-delivery">
-				<h2 id="story-delivery">Delivery</h2>
-				{project.outcomes.map((outcome) => (
-					<p key={outcome}>{outcome}</p>
-				))}
-			</section>
 		</article>
 	);
 }

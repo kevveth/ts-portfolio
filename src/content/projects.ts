@@ -23,17 +23,17 @@ export type Project = {
 		alt: string;
 	};
 	socialImage: string;
+	socialImageAlt: string;
 	role: string;
 	year: string;
 	status: ProjectStatus;
 	stack: readonly string[];
 	liveUrl?: string;
 	summary: string;
-	problem: string;
+	implementation: string;
 	productionConstraint?: string;
 	approach: string;
 	highlights: readonly ProjectHighlight[];
-	outcomes: readonly string[];
 	gallery: readonly GalleryImage[];
 };
 
@@ -41,13 +41,16 @@ export const projects = [
 	{
 		projectId: "chavos-parlor",
 		title: "Chavo’s Parlor",
-		tagline: "A distinctive website around an existing booking workflow.",
+		tagline:
+			"A responsive barber-shop website integrated with Square’s service catalog, location hours, and booking widget.",
 		cover: {
 			picture: chavosDesktop,
 			thumbnail: chavosThumbnail,
 			alt: "Chavo’s Parlor production website, captured October 26, 2026",
 		},
 		socialImage: "/og/chavos-parlor.jpg",
+		socialImageAlt:
+			"Chavo’s Parlor case study by Kenneth Rathbun, with a crop of the October 26, 2026 production website capture",
 		role: "Design & development",
 		year: "2026",
 		status: "live",
@@ -63,33 +66,16 @@ export const projects = [
 		],
 		liveUrl: "https://chavosparlor.com/",
 		summary:
-			"Chavo’s Parlor is a neighborhood barber shop in San Diego. I built a branded, mobile-first marketing website for my longtime barber, without payment. It helps customers understand the shop, browse its services, and reach its existing Square booking experience.",
-		problem:
-			"The shop needed a distinctive public home without another system to maintain. Services, reviews, hours, location, and arrival instructions now sit together, with bold typography, a dark background, a rust accent, and approved photography of the barber’s work.",
+			"I designed and developed a responsive website for my longtime barber, Chavo’s Parlor in San Diego. It brings services, reviews, hours, and location information together and connects customers to Square booking. The site launched in October 2026.",
+		implementation:
+			"I built the site with TypeScript, React, TanStack Start, and Tailwind. The design combines bold typography, a dark background, a rust accent, and photography of the barber’s work. On mobile, a persistent booking control keeps booking accessible while customers browse.",
 		approach:
-			"Square owns scheduling, customer records, and payments. The website reads the service catalog and regular location hours, so the barber does not maintain a second price list or weekly schedule. Booking opens Square’s official widget, with a hosted-page fallback. Native booking links also work without JavaScript. Staff availability and holiday exceptions remain outside the hours sync.",
+			"The website uses the shop’s existing Square account for service prices, regular hours, and booking. This avoids maintaining a separate price list or scheduling system. Square manages scheduling, customer records, and payments. Booking opens Square’s official widget, with a hosted booking page as a fallback. Native booking links also work without JavaScript.",
 		highlights: [
 			{
-				title: "Keep the workflow familiar",
-				body: "I explored a custom booking/payment flow, then simplified the maintained application around the service the barber already uses. The experiment is retired in Git history, rather than maintained behind a feature flag.",
+				title: "Testing and reliability",
+				body: "The catalog integration validates responses and can display a saved menu with a notice during temporary outages. Menus are removed once they exceed the configured age limit. Testing covered mobile layouts, keyboard navigation, contrast, page structure, booking controls, and the hosted booking fallback. Separate checks on the live site covered the Square form’s labels, keyboard navigation, and focus behavior.",
 			},
-			{
-				title: "Handle an unavailable menu honestly",
-				body: "The integration validates Square’s catalog and stores a private snapshot of a complete public menu. It can label an older menu during a temporary outage and stop displaying it after a defined age. It never substitutes invented services or prices.",
-			},
-			{
-				title: "Keep testing separate from the shop",
-				body: "Development and Preview use Square sandbox configuration and a local booking stub. Automated browser tests exercise the compiled application, including native links, redirects, metadata, and booking-modal fallback.",
-			},
-			{
-				title: "Check the delivered experience",
-				body: "Accessibility checks cover mobile reflow, keyboard focus, booking controls, contrast, and page structure. Separate deployed checks exercised the real Square form’s keyboard entry, labels, Close/focus restoration, and hosted fallback, without submitting an appointment or payment.",
-			},
-		],
-		outcomes: [
-			"The simplified integration launched October 21, 2026; regular location-hours sync was accepted October 23.",
-			"The October 26 release passed real catalog, private snapshot, isolated recovery, widget/fallback, and Production health checks.",
-			"This demonstrates a delivered local-business website. No increase in bookings, revenue, or conversion rate has been established.",
 		],
 		gallery: [
 			{

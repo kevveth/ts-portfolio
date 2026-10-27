@@ -10,15 +10,9 @@ export function SiteHeader() {
 			<p className="site-byline">developer / skateboarder / barista</p>
 			<div className="personal-navigation">
 				<nav aria-label="Main">
-					<Link to="/" hash="work">
-						work
-					</Link>
-					<Link to="/" hash="about">
-						about
-					</Link>
-					<Link to="/" hash="contact">
-						contact
-					</Link>
+					<a href="/#work">work</a>
+					<a href="/#about">about</a>
+					<a href="/#contact">contact</a>
 				</nav>
 				<ThemeToggle />
 			</div>

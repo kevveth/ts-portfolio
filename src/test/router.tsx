@@ -14,11 +14,11 @@ import type { ReactNode } from "react";
  * resolve an href. `to` values are still type-checked against the real router
  * via the `Register` declaration in src/router.tsx.
  */
-export async function renderWithRouter(ui: ReactNode) {
+export async function renderWithRouter(ui: ReactNode, initialEntry = "/") {
 	const rootRoute = createRootRoute({ component: () => ui });
 	const router = createRouter({
 		routeTree: rootRoute,
-		history: createMemoryHistory({ initialEntries: ["/"] }),
+		history: createMemoryHistory({ initialEntries: [initialEntry] }),
 	});
 
 	// Without this the first paint is the router's pending state, not `ui`.

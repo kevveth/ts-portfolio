@@ -1,10 +1,10 @@
 // @vitest-environment jsdom
 
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
-import { CredentialList, FeaturedCredentials } from "#/components/credentials";
+import { CredentialCollection } from "#/components/credential-collection";
+import { CredentialList } from "#/components/credentials";
 import type { Credential } from "#/content/credentials";
-import { renderWithRouter } from "#/test/router";
 
 beforeAll(() => {
 	Object.defineProperty(window, "matchMedia", {
@@ -118,7 +118,9 @@ describe("CredentialList", () => {
 			/>,
 		);
 
-		const links = screen.getAllByRole("link", { name: /Verify credential/ });
+		const links = screen.getAllByRole("link", {
+			name: /^Verify .* credential/,
+		});
 		expect(links).toHaveLength(1);
 		expect(links[0]).toHaveAttribute(
 			"href",
@@ -152,20 +154,38 @@ describe("CredentialList", () => {
 		).toBeVisible();
 		expect(screen.getByText(longCopyCredential.description)).toBeVisible();
 	});
-});
 
-describe("FeaturedCredentials", () => {
-	it("wraps the list with section chrome and a link to the full collection", async () => {
-		await renderWithRouter(
-			<FeaturedCredentials
+	it("renders complete collection evidence with modal certificate previews", () => {
+		const { container } = render(
+			<CredentialCollection
 				credentials={[certificateCredential, verifiedCredential]}
 			/>,
 		);
 
-		expect(screen.getByRole("heading", { name: "Credentials" })).toBeVisible();
-		expect(screen.getAllByRole("heading", { level: 3 })).toHaveLength(2);
+		expect(screen.getAllByRole("heading", { level: 2 })).toHaveLength(2);
+		expect(screen.getByText(certificateCredential.description)).toBeVisible();
+		expect(screen.getByText(verifiedCredential.description)).toBeVisible();
+		expect(screen.getByText("January 10, 2026")).toHaveAttribute(
+			"datetime",
+			"2026-01-10",
+		);
+		expect(screen.getByRole("link", { name: /^Verify/ })).toHaveAttribute(
+			"href",
+			verifiedCredential.verificationUrl,
+		);
+		expect(container.querySelector("details")).not.toBeInTheDocument();
+
+		fireEvent.click(screen.getAllByRole("button", { name: "Certificate" })[0]);
+
 		expect(
-			screen.getByRole("link", { name: "View all credentials" }),
-		).toHaveAttribute("href", "/credentials");
+			screen.getByRole("dialog", {
+				name: "Example Certificate Credential certificate",
+			}),
+		).toBeVisible();
+		expect(
+			screen.getByRole("img", {
+				name: "Example Certificate Credential certificate issued to Kenneth Rathbun by Example Institute",
+			}),
+		).toBeVisible();
 	});
 });

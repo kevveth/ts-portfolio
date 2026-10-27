@@ -27,16 +27,16 @@ const project: Project = {
 		alt: "Example project cover",
 	},
 	socialImage: "/og/example.jpg",
+	socialImageAlt: "Example project social card",
 	role: "Design and build",
 	year: "2026",
 	status: "live",
 	stack: ["React", "TypeScript"],
 	liveUrl: "https://example.com",
 	summary: "Summary",
-	problem: "Problem",
+	implementation: "Implementation",
 	approach: "Approach",
 	highlights: [],
-	outcomes: [],
 	gallery: [],
 };
 

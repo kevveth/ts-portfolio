@@ -16,7 +16,7 @@ export const SITE = {
 	name: "Kenneth Rathbun",
 	role: "Full-stack developer",
 	headline: "Developer, skateboarder, barista.",
-	bio: "I’m Ken. I build websites, skate, and make coffee. Currently working toward my degree.",
+	bio: "I’m Ken. I build websites, work as a barista, and skateboard.",
 	metaDescription:
 		"Kenneth Rathbun — developer, skateboarder, and barista. Selected work and a little about me.",
 	email: "dev.kenrathbun@gmail.com",

@@ -7,3 +7,11 @@ Origin: https://chavosparlor.com/; October 26, 2026 approximately 20:46 UTC / 13
 Kenneth confirmed October 26 that Chavo approved the photos/reviews discussed for the site and portfolio. Kenneth's editorial and publication approval remains separate.
 
 Older hero/services/gallery/booking-widget and wizard images are retained as existing assets but must not imply that retired custom booking/payment features are active. No business-result or testimonial claim follows from a capture.
+
+The project sharing card `public/og/chavos-parlor.jpg` combines a labeled crop of
+the first 1280 × 880 pixels of the documented desktop capture with Kenneth’s
+portfolio identity. It is an editorial card, not an unmodified screenshot. The
+home sharing card `public/og.png` uses the accepted emerald green identity. Both
+are 1200 × 630; regenerate them with `node scripts/generate-social-images.mjs`
+(using Sharp from the existing Vite image pipeline). Full source captures above
+remain unchanged and inspectable from the case study.

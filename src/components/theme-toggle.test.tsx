@@ -27,8 +27,12 @@ describe("theme toggle", () => {
 
 	it("saves an explicit toggle and updates the document and browser chrome", () => {
 		render(<ThemeToggle />);
-		fireEvent.click(screen.getByRole("button", { name: "Toggle theme" }));
+		fireEvent.click(screen.getByRole("button"));
 		expect(document.documentElement).not.toHaveClass("dark");
+		expect(screen.getByRole("button")).not.toHaveAttribute("aria-label");
+		expect(screen.getByRole("button")).toHaveTextContent(
+			"Switch to darklight theme",
+		);
 		expect(localStorage.getItem("theme")).toBe("light");
 		expect(document.querySelector('meta[name="theme-color"]')).toHaveAttribute(
 			"content",

@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Picture } from "#/components/picture";
 import { featuredProject } from "#/content/projects";
+import { SITE } from "#/content/site";
 
 /** Static content stays readable before hydration and without external services. */
 export function Home() {
@@ -54,13 +55,11 @@ export function Home() {
 				<h2 id="about-heading" className="index-label">
 					about
 				</h2>
+				<p>{SITE.bio}</p>
 				<p>
-					I’m Ken. I build websites, skate, and make coffee. Currently working
-					toward my degree.
+					I work primarily with TypeScript, React, and TanStack Start, including
+					integrations with services like Square.
 				</p>
-				<Link to="/credentials" className="text-link">
-					credentials <span aria-hidden>↗</span>
-				</Link>
 			</section>
 		</div>
 	);

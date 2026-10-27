@@ -33,6 +33,20 @@ export const Route = createRootRoute({
 			{ property: "og:title", content: DEFAULT_TITLE },
 			{ property: "og:description", content: SITE.metaDescription },
 			{ property: "og:image", content: `${SITE_URL}/og.png` },
+			{ property: "og:image:type", content: "image/png" },
+			{ property: "og:image:width", content: "1200" },
+			{ property: "og:image:height", content: "630" },
+			{
+				property: "og:image:alt",
+				content:
+					"Kenneth Rathbun in an emerald green name block. Developer, skateboarder, barista. Work, about, contact.",
+			},
+			{ name: "twitter:image", content: `${SITE_URL}/og.png` },
+			{
+				name: "twitter:image:alt",
+				content:
+					"Kenneth Rathbun in an emerald green name block. Developer, skateboarder, barista. Work, about, contact.",
+			},
 			{ name: "twitter:card", content: "summary_large_image" },
 		],
 		links: [

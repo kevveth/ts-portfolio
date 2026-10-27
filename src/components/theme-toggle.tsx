@@ -10,11 +10,12 @@ export function ThemeToggle() {
 		<button
 			type="button"
 			className="theme-toggle"
-			aria-label="Toggle theme"
 			onClick={() => setTheme(getCurrentTheme() === "dark" ? "light" : "dark")}
 		>
+			<span className="sr-only">Switch to </span>
 			<span className="dark:hidden">dark</span>
 			<span className="hidden dark:inline">light</span>
+			<span className="sr-only"> theme</span>
 		</button>
 	);
 }
