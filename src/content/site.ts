@@ -15,10 +15,10 @@ export const SITE_URL =
 export const SITE = {
 	name: "Kenneth Rathbun",
 	role: "Full-stack developer",
-	headline: "I design and ship production web apps, end to end.",
-	bio: "Most recently: a production site for a working barber shop — brand, UI, live Square services, and an embedded booking flow shaped around the account's real constraints. I care about strict boundaries, failure modes, and the details that make software feel fast.",
+	headline: "Developer, skateboarder, barista.",
+	bio: "I’m Ken. I build websites, skate, and make coffee. Currently working toward my degree.",
 	metaDescription:
-		"Full-stack developer building production web apps end to end — most recently a Square-connected site for a working barber shop.",
+		"Kenneth Rathbun — developer, skateboarder, and barista. Selected work and a little about me.",
 	email: "dev.kenrathbun@gmail.com",
 	github: "https://github.com/kevveth",
 	siteRepo: "https://github.com/kevveth/ts-portfolio",

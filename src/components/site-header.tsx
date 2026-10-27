@@ -1,131 +1,26 @@
-import { Link, linkOptions } from "@tanstack/react-router";
-import { Github, Menu } from "lucide-react";
-import { useState } from "react";
-import { CONTACT_CHANNELS } from "#/components/contact-links";
+import { Link } from "@tanstack/react-router";
 import { ThemeToggle } from "#/components/theme-toggle";
-import { Button } from "#/components/ui/button";
-import { Separator } from "#/components/ui/separator";
-import {
-	Sheet,
-	SheetContent,
-	SheetDescription,
-	SheetHeader,
-	SheetTitle,
-	SheetTrigger,
-} from "#/components/ui/sheet";
-import { SITE } from "#/content/site";
-
-const NAV_ITEMS = linkOptions([
-	{ label: "Home", to: "/" },
-	{ label: "Projects", to: "/projects" },
-	{ label: "Credentials", to: "/credentials" },
-]);
 
 export function SiteHeader() {
-	const [open, setOpen] = useState(false);
-
 	return (
-		<header className="site-header sticky top-0 z-40 border-b border-border bg-background">
-			<div className="mx-auto flex h-14 w-full max-w-5xl items-center justify-between px-4 sm:px-6">
-				<Link
-					to="/"
-					className="font-mono text-sm font-medium tracking-tight text-foreground"
-				>
-					<span aria-hidden className="text-brand">
-						~/
-					</span>
-					kenneth-rathbun
-				</Link>
-				<div className="flex items-center gap-0.5 sm:gap-1">
-					<nav aria-label="Main" className="desktop-nav items-center gap-1">
-						{NAV_ITEMS.map((item) => (
-							<Link
-								key={item.to}
-								to={item.to}
-								className="rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-								activeProps={{
-									className:
-										"bg-accent text-foreground shadow-[inset_0_-2px_0_var(--brand)]",
-								}}
-								activeOptions={{ exact: item.to === "/" }}
-							>
-								{item.label}
-							</Link>
-						))}
-						<Button variant="ghost" size="icon" asChild>
-							<a
-								href={SITE.github}
-								target="_blank"
-								rel="noreferrer"
-								aria-label="GitHub profile"
-							>
-								<Github aria-hidden />
-							</a>
-						</Button>
-					</nav>
-					<Sheet open={open} onOpenChange={setOpen}>
-						<SheetTrigger asChild>
-							<Button
-								variant="ghost"
-								size="icon"
-								className="mobile-menu-trigger"
-								aria-label="Open menu"
-							>
-								<Menu aria-hidden />
-							</Button>
-						</SheetTrigger>
-						<SheetContent side="right" className="gap-0">
-							<SheetHeader>
-								<SheetTitle className="sr-only">Navigation</SheetTitle>
-								<SheetDescription className="sr-only">
-									Site navigation and contact links.
-								</SheetDescription>
-							</SheetHeader>
-							<nav aria-label="Main" className="flex flex-col gap-0.5 px-2">
-								{NAV_ITEMS.map((item) => (
-									<Link
-										key={item.to}
-										to={item.to}
-										onClick={() => setOpen(false)}
-										className="rounded-md px-4 py-3 text-base text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-										activeProps={{
-											className:
-												"bg-accent text-foreground shadow-[inset_3px_0_0_var(--brand)]",
-										}}
-										activeOptions={{ exact: item.to === "/" }}
-									>
-										{item.label}
-									</Link>
-								))}
-							</nav>
-							<Separator className="my-2" />
-							<nav
-								aria-label="Contact"
-								className="flex flex-col gap-0.5 px-2 pb-4"
-							>
-								<p className="px-4 pb-1 text-xs font-medium tracking-wide text-muted-foreground uppercase">
-									Contact
-								</p>
-								{CONTACT_CHANNELS.map((channel) => (
-									<a
-										key={channel.label}
-										href={channel.href}
-										aria-label={channel.label}
-										onClick={() => setOpen(false)}
-										className="flex items-center gap-3 rounded-md px-4 py-3 text-base text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-										{...(channel.external
-											? { target: "_blank", rel: "noreferrer" }
-											: {})}
-									>
-										<channel.Icon aria-hidden className="size-4" />
-										{channel.label}
-									</a>
-								))}
-							</nav>
-						</SheetContent>
-					</Sheet>
-					<ThemeToggle />
-				</div>
+		<header className="site-frame personal-header">
+			<Link to="/" className="site-name">
+				kenneth rathbun
+			</Link>
+			<p className="site-byline">developer / skateboarder / barista</p>
+			<div className="personal-navigation">
+				<nav aria-label="Main">
+					<Link to="/" hash="work">
+						work
+					</Link>
+					<Link to="/" hash="about">
+						about
+					</Link>
+					<Link to="/" hash="contact">
+						contact
+					</Link>
+				</nav>
+				<ThemeToggle />
 			</div>
 		</header>
 	);

@@ -1,46 +1,27 @@
-/** Static, typed project case studies and their build-optimized images. */
-
-import chavosBookingWidget from "#/assets/chavos-parlor/booking-widget.png?gallery";
-import chavosGallery from "#/assets/chavos-parlor/gallery.png?gallery";
-import chavosHero from "#/assets/chavos-parlor/hero.png?hero";
-import chavosHeroThumbnail from "#/assets/chavos-parlor/hero.png?thumb";
-import chavosServices from "#/assets/chavos-parlor/services.png?gallery";
-import chavosWizardDetails from "#/assets/chavos-parlor/wizard-details.png?gallery";
-import chavosWizardService from "#/assets/chavos-parlor/wizard-service.png?gallery";
-import chavosWizardTime from "#/assets/chavos-parlor/wizard-time.png?gallery";
+/**
+ * Adapted from barber-shop/docs/portfolio-case-study.md, October 26, 2026.
+ * Media provenance: src/assets/chavos-parlor/README.md.
+ */
+import chavosDesktop from "#/assets/chavos-parlor/production-desktop.png?hero";
+import chavosThumbnail from "#/assets/chavos-parlor/production-desktop.png?thumb";
+import chavosPhone from "#/assets/chavos-parlor/production-mobile.png?gallery";
 
 export type ProjectStatus = "live" | "prototype" | "private";
-
 export type GalleryImage = {
 	picture: ImagetoolsPicture;
 	alt: string;
 	caption?: string;
 };
-
-export type ProjectHighlight = {
-	title: string;
-	body: string;
-};
-
-type ProjectCover = {
-	picture: ImagetoolsPicture;
-	thumbnail: ImagetoolsPicture;
-	alt: string;
-};
-
-type CustomFlow = {
-	summary: string;
-	highlights: readonly ProjectHighlight[];
-	gallery: readonly [GalleryImage, ...GalleryImage[]];
-};
-
+export type ProjectHighlight = { title: string; body: string };
 export type Project = {
-	/** Stable lowercase, kebab-case identity used as the route parameter. */
 	projectId: string;
 	title: string;
 	tagline: string;
-	cover: ProjectCover;
-	/** Dedicated 1200×630 image for Open Graph and large social cards. */
+	cover: {
+		picture: ImagetoolsPicture;
+		thumbnail: ImagetoolsPicture;
+		alt: string;
+	};
 	socialImage: string;
 	role: string;
 	year: string;
@@ -54,134 +35,73 @@ export type Project = {
 	highlights: readonly ProjectHighlight[];
 	outcomes: readonly string[];
 	gallery: readonly GalleryImage[];
-	customFlow?: CustomFlow;
 };
 
 export const projects = [
 	{
 		projectId: "chavos-parlor",
-		title: "Chavo's Parlor",
-		tagline:
-			"A branded home for a working barber shop, with live Square services and an embedded booking flow.",
+		title: "Chavo’s Parlor",
+		tagline: "A distinctive website around an existing booking workflow.",
 		cover: {
-			picture: chavosHero,
-			thumbnail: chavosHeroThumbnail,
-			alt: "Chavo's Parlor landing page hero with the shop wordmark and Book Now call to action",
+			picture: chavosDesktop,
+			thumbnail: chavosThumbnail,
+			alt: "Chavo’s Parlor production website, captured October 26, 2026",
 		},
 		socialImage: "/og/chavos-parlor.jpg",
-		role: "Design & full-stack build",
+		role: "Design & development",
 		year: "2026",
 		status: "live",
 		stack: [
-			"TanStack Start",
-			"React 19",
 			"TypeScript",
-			"Tailwind v4",
+			"React",
+			"TanStack Start",
+			"Tailwind",
 			"Square SDK",
-			"Zod",
+			"Vercel",
 			"Vitest",
 			"Playwright",
-			"Vercel",
 		],
-		liveUrl: "https://www.chavosparlor.com",
+		liveUrl: "https://chavosparlor.com/",
 		summary:
-			"I designed and built Chavo's public site end to end: brand, UI, live services, and a Square-hosted booking flow that opens without sending customers away. A custom API flow is also designed and tested behind a feature flag, ready if the shop's plan changes.",
+			"Chavo’s Parlor is a neighborhood barber shop in San Diego. I built a branded, mobile-first marketing website for my longtime barber, without payment. It helps customers understand the shop, browse its services, and reach its existing Square booking experience.",
 		problem:
-			"Square handled appointments, but its hosted page did not tell Chavo's story. Customers had no branded place to see the work, scan the full service menu, read reviews, or get the practical details before booking. The goal was to own that experience without giving the shop another system to run.",
-		productionConstraint:
-			"The custom flow worked end to end in Square's sandbox. At production cutover, Chavo's Free Appointments plan rejected every Bookings API write. Rather than add a monthly bill just to unlock my custom UI, I kept the shop on Free and shipped Square's supported widget inside the site.",
+			"The shop needed a distinctive public home without another system to maintain. Services, reviews, hours, location, and arrival instructions now sit together, with bold typography, a dark background, a rust accent, and approved photography of the barber’s work.",
 		approach:
-			"I kept the branded experience and the booking boundary separate. Services come from the live Square Catalog, the supported widget opens in a modal, and Square remains the system of record. An environment switch controls which booking path is active, so a future plan change is configuration—not a rewrite.",
+			"Square owns scheduling, customer records, and payments. The website reads the service catalog and regular location hours, so the barber does not maintain a second price list or weekly schedule. Booking opens Square’s official widget, with a hosted-page fallback. Native booking links also work without JavaScript. Staff availability and holiday exceptions remain outside the hours sync.",
 		highlights: [
 			{
-				title: "Tier-aware booking rollout",
-				body: "Plain clicks open Square's supported widget in a branded modal; modified clicks and no-JavaScript visits keep a real hosted-booking link. If the embed ever regresses, customers still have an explicit escape hatch to Square.",
+				title: "Keep the workflow familiar",
+				body: "I explored a custom booking/payment flow, then simplified the maintained application around the service the barber already uses. The experiment is retired in Git history, rather than maintained behind a feature flag.",
 			},
 			{
-				title: "Live catalog, watched in production",
-				body: "The service menu reads from Chavo's Square Catalog and fails open if Square is unavailable. A scheduled health check catches stale credentials or placeholder data and opens a GitHub issue instead of letting a quiet catalog failure linger.",
+				title: "Handle an unavailable menu honestly",
+				body: "The integration validates Square’s catalog and stores a private snapshot of a complete public menu. It can label an older menu during a temporary outage and stop displaying it after a defined age. It never substitutes invented services or prices.",
 			},
 			{
-				title: "Privacy and performance",
-				body: "The map is self-hosted, logs strip customer PII, and strict security headers ship on every response. Fonts are preloaded, imagery is WebP, below-the-fold media lazy-loads, and metric-matched fallbacks keep the first paint steady.",
+				title: "Keep testing separate from the shop",
+				body: "Development and Preview use Square sandbox configuration and a local booking stub. Automated browser tests exercise the compiled application, including native links, redirects, metadata, and booking-modal fallback.",
 			},
 			{
-				title: "Quality gates",
-				body: "Thirty-nine test files cover the shipped and feature-gated paths across Vitest and Playwright. Axe-core runs with the suite, focus stays visible, controls meet touch-target minimums, and motion respects reduced-motion preferences.",
+				title: "Check the delivered experience",
+				body: "Accessibility checks cover mobile reflow, keyboard focus, booking controls, contrast, and page structure. Separate deployed checks exercised the real Square form’s keyboard entry, labels, Close/focus restoration, and hosted fallback, without submitting an appointment or payment.",
 			},
 		],
 		outcomes: [
-			"Live in production as the shop's public site at chavosparlor.com",
-			"Kept Chavo on the Free tier instead of adding a monthly bill just to unlock a custom UI",
-			"Square remains the system of record — no data migration and no second dashboard for the shop",
+			"The simplified integration launched October 21, 2026; regular location-hours sync was accepted October 23.",
+			"The October 26 release passed real catalog, private snapshot, isolated recovery, widget/fallback, and Production health checks.",
+			"This demonstrates a delivered local-business website. No increase in bookings, revenue, or conversion rate has been established.",
 		],
 		gallery: [
 			{
-				picture: chavosServices,
-				alt: "Services menu listing haircuts and prices loaded live from the Square catalog",
-				caption:
-					"Service menu, fed live from Square Catalog with a fail-open fallback.",
-			},
-			{
-				picture: chavosGallery,
-				alt: "Photo gallery section of the Chavo's Parlor site",
-				caption:
-					"Work samples stay fast with responsive, lazy-loaded WebP images.",
-			},
-			{
-				picture: chavosBookingWidget,
-				alt: "Square's service picker open inside the Chavo's Parlor booking modal",
-				caption:
-					"Live booking — Square's supported widget, kept inside the branded site.",
+				picture: chavosPhone,
+				alt: "Full Chavo’s Parlor phone production capture from October 26, 2026",
+				caption: "Real Production capture · October 26, 2026 · phone",
 			},
 		],
-		customFlow: {
-			summary:
-				"Before cutover, I built the internal flow end to end against Square's sandbox: service selection, live availability, customer details, booking, and a $15 card deposit. When the plan blocked production writes, I left the flow behind the environment switch instead of pushing Chavo into an upgrade. If he moves to Square Plus later, the path is already designed and tested.",
-			highlights: [
-				{
-					title: "URL-as-state wizard",
-					body: "The four-step flow lives in Zod-validated search params, so refresh, back, and shared links always resolve to a canonical state.",
-				},
-				{
-					title: "Idempotent booking",
-					body: "A deterministic key derived from normalized contact info protects double-taps and retries, while Square error codes—not HTTP guesses—identify slot conflicts.",
-				},
-				{
-					title: "Safe deposit saga",
-					body: "Card deposits authorize before booking and capture after it. Failed bookings void the hold; failed captures never erase a confirmed appointment and instead raise a reconciliation alert.",
-				},
-				{
-					title: "Timezone-correct availability",
-					body: "Slots render in America/Los_Angeles across PST and PDT using native Intl.DateTimeFormat, with no date library added to the bundle.",
-				},
-			],
-			gallery: [
-				{
-					picture: chavosWizardService,
-					alt: "Sandbox custom booking wizard step one: choosing a service",
-					caption: "Sandbox build — service selection backed by URL state.",
-				},
-				{
-					picture: chavosWizardTime,
-					alt: "Sandbox custom booking wizard step two: picking an appointment time",
-					caption:
-						"Sandbox build — live availability rendered in the shop's timezone.",
-				},
-				{
-					picture: chavosWizardDetails,
-					alt: "Sandbox custom booking wizard step three: entering contact details",
-					caption:
-						"Sandbox build — contact inputs feed the idempotency boundary.",
-				},
-			],
-		},
 	},
 ] as const satisfies readonly Project[];
 
-/** The first project is the homepage's editorial selection. */
 export const featuredProject: Project = projects[0];
-
 export function getProject(projectId: string): Project | undefined {
 	return projects.find((project) => project.projectId === projectId);
 }
