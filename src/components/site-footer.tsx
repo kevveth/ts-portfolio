@@ -9,7 +9,7 @@ export function SiteFooter() {
 				<address>
 					{CONTACT_CHANNELS.map((channel) => (
 						<a key={channel.label} href={channel.href} className="detail-link">
-							{channel.label.toLowerCase()}
+							<span className="link-label">{channel.label.toLowerCase()}</span>
 						</a>
 					))}
 				</address>

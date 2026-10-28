@@ -1,9 +1,8 @@
 import { ProjectPreview } from "#/components/project-preview";
-import { featuredProject } from "#/content/projects";
+import { projects } from "#/content/projects";
 
 /** Static content stays readable before hydration and without external services. */
 export function Home() {
-	const project = featuredProject;
 	return (
 		<div className="site-frame personal-home">
 			<h1 className="sr-only">Kenneth Rathbun — personal site</h1>
@@ -11,10 +10,11 @@ export function Home() {
 				<h2 id="work-heading" className="sr-only">
 					work
 				</h2>
-				<ProjectPreview
-					project={project}
-					description="A website for my longtime barber."
-				/>
+				<div className="project-gallery">
+					{projects.map((project) => (
+						<ProjectPreview key={project.projectId} project={project} />
+					))}
+				</div>
 			</section>
 		</div>
 	);

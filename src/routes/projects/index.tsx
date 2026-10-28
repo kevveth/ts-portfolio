@@ -30,7 +30,7 @@ function ProjectsIndex() {
 				<h1 className="page-title">Selected work</h1>
 				<p className="story-lede">{VISIBLE_DESCRIPTION}</p>
 			</header>
-			<div className="project-list">
+			<div className="project-gallery">
 				{projects.map((project) => (
 					<ProjectPreview
 						key={project.projectId}
