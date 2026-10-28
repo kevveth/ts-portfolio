@@ -11,7 +11,7 @@ import { Route } from "./index";
 
 describe("personal homepage", () => {
 	afterEach(cleanup);
-	it("offers direct project and contact paths with a concise experience summary", async () => {
+	it("offers direct project, About page and contact paths", async () => {
 		await renderWithRouter(
 			<>
 				<SiteHeader />
@@ -30,9 +30,7 @@ describe("personal homepage", () => {
 		expect(
 			screen.queryByRole("link", { name: "credentials" }),
 		).not.toBeInTheDocument();
-		expect(document.getElementById("about")).toHaveTextContent(
-			"I work primarily with TypeScript, React, and TanStack Start, including integrations with services like Square.",
-		);
+		expect(document.getElementById("about")).not.toBeInTheDocument();
 		expect(screen.getByRole("link", { name: "email" })).toHaveAttribute(
 			"href",
 			`mailto:${SITE.email}`,
@@ -43,7 +41,7 @@ describe("personal homepage", () => {
 		);
 		expect(screen.getByRole("link", { name: "about" })).toHaveAttribute(
 			"href",
-			"/#about",
+			"/about",
 		);
 		expect(screen.getByRole("link", { name: "contact" })).toHaveAttribute(
 			"href",
@@ -55,18 +53,16 @@ describe("personal homepage", () => {
 			);
 		}
 		expect(document.getElementById("work")).toBeInTheDocument();
-		expect(document.getElementById("about")).toHaveTextContent(
-			"I’m Ken. I build websites, work as a barista, and skateboard.",
-		);
+
 		expect(document.getElementById("contact")).toBeInTheDocument();
 	});
 
 	it.each([
 		"/",
-		"/#about",
+		"/about",
 	])("keeps section anchors distinct from current pages at %s", async (initialEntry) => {
 		await renderWithRouter(<SiteHeader />, initialEntry);
-		for (const name of ["work", "about", "contact"]) {
+		for (const name of ["work", "contact"]) {
 			const link = screen.getByRole("link", { name });
 			expect(link).toHaveAttribute("href", `/#${name}`);
 			expect(link).not.toHaveAttribute("aria-current");

@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteRouteImport } from './routes/about/route'
 import { Route as ArchitectureRouteRouteImport } from './routes/architecture/route'
 import { Route as RobotsDottxtRouteRouteImport } from './routes/robots[.]txt/route'
 import { Route as StyleRouteRouteImport } from './routes/style/route'
@@ -19,6 +20,11 @@ import { Route as ProjectsProjectIdRouteRouteImport } from './routes/projects/$p
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRouteRoute = AboutRouteRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ArchitectureRouteRoute = ArchitectureRouteRouteImport.update({
@@ -49,6 +55,7 @@ const ProjectsProjectIdRouteRoute = ProjectsProjectIdRouteRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRouteRoute
   '/architecture': typeof ArchitectureRouteRoute
   '/robots.txt': typeof RobotsDottxtRouteRoute
   '/style': typeof StyleRouteRoute
@@ -57,6 +64,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRouteRoute
   '/architecture': typeof ArchitectureRouteRoute
   '/robots.txt': typeof RobotsDottxtRouteRoute
   '/style': typeof StyleRouteRoute
@@ -66,6 +74,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRouteRoute
   '/architecture': typeof ArchitectureRouteRoute
   '/robots.txt': typeof RobotsDottxtRouteRoute
   '/style': typeof StyleRouteRoute
@@ -76,6 +85,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
     | '/architecture'
     | '/robots.txt'
     | '/style'
@@ -84,6 +94,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
     | '/architecture'
     | '/robots.txt'
     | '/style'
@@ -92,6 +103,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/about'
     | '/architecture'
     | '/robots.txt'
     | '/style'
@@ -101,6 +113,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRouteRoute: typeof AboutRouteRoute
   ArchitectureRouteRoute: typeof ArchitectureRouteRoute
   RobotsDottxtRouteRoute: typeof RobotsDottxtRouteRoute
   StyleRouteRoute: typeof StyleRouteRoute
@@ -115,6 +128,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/architecture': {
@@ -157,6 +177,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRouteRoute: AboutRouteRoute,
   ArchitectureRouteRoute: ArchitectureRouteRoute,
   RobotsDottxtRouteRoute: RobotsDottxtRouteRoute,
   StyleRouteRoute: StyleRouteRoute,

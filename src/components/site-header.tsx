@@ -14,9 +14,9 @@ export function SiteHeader() {
 					<a href="/#work">
 						<span className="navigation-label">work</span>
 					</a>
-					<a href="/#about">
+					<Link to="/about">
 						<span className="navigation-label">about</span>
-					</a>
+					</Link>
 					<a href="/#contact">
 						<span className="navigation-label">contact</span>
 					</a>
