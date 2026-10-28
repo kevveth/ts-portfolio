@@ -4,10 +4,13 @@
  */
 import chavosDesktop from "#/assets/chavos-parlor/production-desktop.png?hero";
 import chavosThumbnail from "#/assets/chavos-parlor/production-desktop.png?thumb";
+import chavosDesktopFull from "#/assets/chavos-parlor/production-desktop.png?url";
 import chavosPhone from "#/assets/chavos-parlor/production-mobile.png?gallery";
+import chavosPhoneFull from "#/assets/chavos-parlor/production-mobile.png?url";
 
 export type ProjectStatus = "live" | "prototype" | "private";
 export type GalleryImage = {
+	fullSrc: string;
 	picture: ImagetoolsPicture;
 	alt: string;
 	caption?: string;
@@ -18,6 +21,7 @@ export type Project = {
 	title: string;
 	tagline: string;
 	cover: {
+		fullSrc: string;
 		picture: ImagetoolsPicture;
 		thumbnail: ImagetoolsPicture;
 		alt: string;
@@ -29,6 +33,8 @@ export type Project = {
 	status: ProjectStatus;
 	stack: readonly string[];
 	liveUrl?: string;
+	publication: { dateTime: string; label: string };
+	story: readonly string[];
 	summary: string;
 	implementation: string;
 	productionConstraint?: string;
@@ -44,6 +50,7 @@ export const projects = [
 		tagline:
 			"A responsive barber-shop website integrated with Square’s service catalog, location hours, and booking widget.",
 		cover: {
+			fullSrc: chavosDesktopFull,
 			picture: chavosDesktop,
 			thumbnail: chavosThumbnail,
 			alt: "Chavo’s Parlor production website, captured October 26, 2026",
@@ -65,6 +72,12 @@ export const projects = [
 			"Playwright",
 		],
 		liveUrl: "https://chavosparlor.com/",
+		publication: { dateTime: "2026-10", label: "October 2026" },
+		story: [
+			"I designed and built a website for my longtime barber, Chavo’s Parlor in San Diego, bringing services, reviews, hours, location, and Square booking together.",
+			"Built with TypeScript, React, TanStack Start, and Tailwind, it reads prices and regular hours from Square. Square handles appointments and payments, with a hosted booking page as a fallback.",
+			"The catalog validates responses and can show a saved menu during outages. Testing covered mobile layouts, keyboard navigation, contrast, booking controls, and the live Square form.",
+		],
 		summary:
 			"I designed and developed a responsive website for my longtime barber, Chavo’s Parlor in San Diego. It brings services, reviews, hours, and location information together and connects customers to Square booking. The site launched in October 2026.",
 		implementation:
@@ -79,6 +92,7 @@ export const projects = [
 		],
 		gallery: [
 			{
+				fullSrc: chavosPhoneFull,
 				picture: chavosPhone,
 				alt: "Full Chavo’s Parlor phone production capture from October 26, 2026",
 				caption: "Real Production capture · October 26, 2026 · phone",
