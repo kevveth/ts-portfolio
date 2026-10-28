@@ -78,9 +78,6 @@ function ProjectDetail() {
 							<span className="link-label">visit live site</span>
 						</a>
 					) : null}
-					<Link to="/" hash="work" className="detail-link">
-						<span className="link-label">back to work</span>
-					</Link>
 				</div>
 			</div>
 		</article>

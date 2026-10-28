@@ -341,7 +341,7 @@ html.js .reveal.is-visible {
 .project-news { width: min(560px, calc(100% - 40px)); margin-inline: auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; align-items: start; font-family: var(--font-mono); font-size: 12px; line-height: 1.4; }
 .news-gallery-frame { display: block; aspect-ratio: 3 / 4; overflow: hidden; background: #111110; border: 1px solid var(--border); }
 .news-gallery-frame:focus-visible { outline: 2px solid var(--brand-ink); outline-offset: 3px; }
-.news-gallery-image { height: 100%; object-fit: cover; object-position: center top; }
+.news-gallery-image { height: 100%; object-fit: cover; object-position: var(--gallery-image-position, center top); }
 .news-gallery-controls { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 8px; font-size: 11px; }
 .news-gallery-controls .detail-link { font-size: inherit; cursor: pointer; min-width: 28px; justify-content: center; }
 .news-gallery-controls .detail-link:disabled { opacity: 0.4; cursor: default; }

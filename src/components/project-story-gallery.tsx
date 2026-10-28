@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { type CSSProperties, useState } from "react";
 import { Picture } from "#/components/picture";
 import type { GalleryImage } from "#/content/projects";
 
@@ -18,6 +18,9 @@ export function ProjectStoryGallery({
 			<a
 				href={slide.fullSrc}
 				className="news-gallery-frame"
+				style={
+					{ "--gallery-image-position": slide.previewPosition } as CSSProperties
+				}
 				aria-label={`Open full image ${index + 1} of ${slides.length}: ${slide.alt}`}
 			>
 				<Picture
