@@ -332,7 +332,9 @@ html.js .reveal.is-visible {
 .detail-link:hover, .detail-link:focus-visible { background: var(--brand); color: #fff; }
 .detail-link:focus-visible { outline: 2px solid var(--brand-ink); outline-offset: 2px; }
 .capture-note { margin-top: 12px; font-size: var(--type-support); color: var(--muted-foreground); }
-.about-page p { max-width: 580px; font-family: var(--font-sans); font-size: var(--type-body); line-height: var(--leading-body); margin-bottom: 12px; }
+.about-page { font-family: var(--font-mono); font-size: var(--type-support); line-height: 1.4; }
+.about-page .index-label { margin-bottom: 8px; line-height: inherit; }
+.about-page p + p { margin-top: 8px; }
 .personal-footer { padding-top: 48px; padding-bottom: 48px; text-align: left; }
 .personal-footer address { font-style: normal; justify-content: flex-start; column-gap: 16px; }
 .project-story > header { margin-block: 32px; }
