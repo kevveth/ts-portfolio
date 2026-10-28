@@ -1,5 +1,4 @@
 import { Link } from "@tanstack/react-router";
-import type { ReactNode } from "react";
 import { Picture } from "#/components/picture";
 import type { Project } from "#/content/projects";
 
@@ -7,12 +6,10 @@ export function ProjectPreview({
 	project,
 	description = project.tagline,
 	headingAs: Heading = "h3",
-	children,
 }: {
 	project: Project;
 	description?: string;
 	headingAs?: "h2" | "h3";
-	children?: ReactNode;
 }) {
 	return (
 		<article className="project-preview">
@@ -46,9 +43,6 @@ export function ProjectPreview({
 						imgClassName="work-preview-image"
 					/>
 				</Link>
-				{children ? (
-					<figcaption className="capture-note">{children}</figcaption>
-				) : null}
 			</figure>
 		</article>
 	);

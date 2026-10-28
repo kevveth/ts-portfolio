@@ -4,6 +4,7 @@ import { cleanup, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 import { SiteFooter } from "#/components/site-footer";
 import { SiteHeader } from "#/components/site-header";
+import { SiteNavigation } from "#/components/site-navigation";
 import { SITE } from "#/content/site";
 import { renderWithRouter } from "#/test/router";
 import { Home } from "./-home";
@@ -61,7 +62,7 @@ describe("personal homepage", () => {
 		"/",
 		"/about",
 	])("keeps section anchors distinct from current pages at %s", async (initialEntry) => {
-		await renderWithRouter(<SiteHeader />, initialEntry);
+		await renderWithRouter(<SiteNavigation />, initialEntry);
 		for (const name of ["work", "contact"]) {
 			const link = screen.getByRole("link", { name });
 			expect(link).toHaveAttribute("href", `/#${name}`);
@@ -69,7 +70,7 @@ describe("personal homepage", () => {
 		}
 	});
 
-	it("provides the real dated production preview with explicit dimensions", async () => {
+	it("provides the real production preview with explicit dimensions", async () => {
 		await renderWithRouter(<Home />);
 		const image = screen.getByRole("img", {
 			name: /production website, captured October 26, 2026/,
@@ -78,10 +79,6 @@ describe("personal homepage", () => {
 		expect(image).toHaveAttribute("fetchpriority", "high");
 		expect(image).toHaveAttribute("width");
 		expect(image).toHaveAttribute("height");
-		expect(screen.getByText("October 26, 2026")).toHaveAttribute(
-			"datetime",
-			"2026-10-26",
-		);
 		expect(screen.queryByText("GitHub contributions")).not.toBeInTheDocument();
 	});
 });
