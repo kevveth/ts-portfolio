@@ -332,8 +332,7 @@ html.js .reveal.is-visible {
 .detail-link:hover, .detail-link:focus-visible { background: var(--brand); color: #fff; }
 .detail-link:focus-visible { outline: 2px solid var(--brand-ink); outline-offset: 2px; }
 .capture-note { margin-top: 12px; font-size: var(--type-support); color: var(--muted-foreground); }
-.personal-about { margin-top: 48px; scroll-margin-top: 24px; }
-.personal-about p { max-width: 580px; font-family: var(--font-sans); font-size: var(--type-body); line-height: var(--leading-body); margin-bottom: 12px; }
+.about-page p { max-width: 580px; font-family: var(--font-sans); font-size: var(--type-body); line-height: var(--leading-body); margin-bottom: 12px; }
 .personal-footer { padding-top: 48px; padding-bottom: 48px; text-align: left; }
 .personal-footer address { font-style: normal; justify-content: flex-start; column-gap: 16px; }
 .project-story > header { margin-block: 32px; }
@@ -349,6 +348,5 @@ html.js .reveal.is-visible {
     .personal-header { padding-top: 48px; padding-bottom: 40px; }
     .site-name { font-size: 1.625rem; }
     .work-caption { flex-direction: column; gap: 10px; }
-    .personal-about { margin-top: 40px; }
     .personal-footer { padding-top: 48px; }
 }

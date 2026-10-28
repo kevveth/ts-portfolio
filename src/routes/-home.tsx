@@ -1,6 +1,5 @@
 import { ProjectPreview } from "#/components/project-preview";
 import { featuredProject } from "#/content/projects";
-import { SITE } from "#/content/site";
 
 /** Static content stays readable before hydration and without external services. */
 export function Home() {
@@ -19,20 +18,6 @@ export function Home() {
 					Production capture ·{" "}
 					<time dateTime="2026-10-26">October 26, 2026</time>
 				</ProjectPreview>
-			</section>
-			<section
-				id="about"
-				aria-labelledby="about-heading"
-				className="personal-about"
-			>
-				<h2 id="about-heading" className="index-label">
-					about
-				</h2>
-				<p>{SITE.bio}</p>
-				<p>
-					I work primarily with TypeScript, React, and TanStack Start, including
-					integrations with services like Square.
-				</p>
 			</section>
 		</div>
 	);
