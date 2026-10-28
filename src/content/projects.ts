@@ -2,11 +2,12 @@
  * Adapted from barber-shop/docs/portfolio-case-study.md, October 26, 2026.
  * Media provenance: src/assets/chavos-parlor/README.md.
  */
+
+import chavosDesignSheet from "#/assets/chavos-parlor/design-sheet.png?gallery";
+import chavosDesignSheetFull from "#/assets/chavos-parlor/design-sheet.png?url";
 import chavosDesktop from "#/assets/chavos-parlor/production-desktop.png?hero";
 import chavosThumbnail from "#/assets/chavos-parlor/production-desktop.png?thumb";
 import chavosDesktopFull from "#/assets/chavos-parlor/production-desktop.png?url";
-import chavosPhone from "#/assets/chavos-parlor/production-mobile.png?gallery";
-import chavosPhoneFull from "#/assets/chavos-parlor/production-mobile.png?url";
 
 export type ProjectStatus = "live" | "prototype" | "private";
 export type GalleryImage = {
@@ -93,11 +94,10 @@ export const projects = [
 		],
 		gallery: [
 			{
-				fullSrc: chavosPhoneFull,
-				picture: chavosPhone,
-				alt: "Chavo’s Parlor mobile service menu from the October 26, 2026 production capture",
-				previewPosition: "center 15%",
-				caption: "Real Production capture · October 26, 2026 · phone",
+				fullSrc: chavosDesignSheetFull,
+				picture: chavosDesignSheet,
+				alt: "Chavo’s Parlor design sheet: ink #111110, bone #ECE7DC, rust #C9622C; Oswald 600 and Karla 400; desktop/mobile hero 104/60px, headings 48/40px, body 17px; 6px button corners",
+				caption: "Design system · palette, typography, and interface details",
 			},
 		],
 	},
