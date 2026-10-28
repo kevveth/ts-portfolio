@@ -24,10 +24,9 @@ describe("personal homepage", () => {
 		expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
 			"Kenneth Rathbun",
 		);
-		expect(screen.getByRole("link", { name: "view project" })).toHaveAttribute(
-			"href",
-			"/projects/chavos-parlor",
-		);
+		expect(
+			screen.getByRole("link", { name: "View Chavo’s Parlor project" }),
+		).toHaveAttribute("href", "/projects/chavos-parlor");
 		expect(
 			screen.queryByRole("link", { name: "credentials" }),
 		).not.toBeInTheDocument();

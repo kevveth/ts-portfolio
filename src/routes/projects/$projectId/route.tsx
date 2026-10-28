@@ -50,7 +50,7 @@ function ProjectDetail() {
 	return (
 		<article className="site-frame project-story">
 			<Link to="/" hash="work" className="detail-link">
-				back to work
+				<span className="link-label">back to work</span>
 			</Link>
 			<header>
 				<h1 className="page-title">{project.title}</h1>
@@ -64,7 +64,7 @@ function ProjectDetail() {
 							className="detail-link"
 							aria-label={`Visit ${project.title} live site (opens in a new tab)`}
 						>
-							visit live site
+							<span className="link-label">visit live site</span>
 						</a>
 					</div>
 				) : null}
@@ -87,11 +87,11 @@ function ProjectDetail() {
 				<figcaption className="capture-note">
 					Live website · October 26, 2026 ·{" "}
 					<a href={desktopCapture} className="detail-link">
-						full desktop image
+						<span className="link-label">full desktop image</span>
 					</a>{" "}
 					/{" "}
 					<a href={phoneCapture} className="detail-link">
-						phone image
+						<span className="link-label">phone image</span>
 					</a>
 				</figcaption>
 			</figure>
@@ -126,7 +126,7 @@ function ProjectNotFound() {
 				It may have been renamed, or the link is stale.
 			</p>
 			<Link to="/" className="detail-link story-actions">
-				back home
+				<span className="link-label">back home</span>
 			</Link>
 		</div>
 	);
