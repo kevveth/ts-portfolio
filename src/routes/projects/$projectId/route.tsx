@@ -1,7 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import desktopCapture from "#/assets/chavos-parlor/production-desktop.png?url";
-import phoneCapture from "#/assets/chavos-parlor/production-mobile.png?url";
-import { Picture } from "#/components/picture";
+import { ProjectStoryGallery } from "#/components/project-story-gallery";
 import { getProject } from "#/content/projects";
 import { SITE, SITE_URL } from "#/content/site";
 
@@ -48,15 +46,28 @@ export const Route = createFileRoute("/projects/$projectId")({
 function ProjectDetail() {
 	const project = Route.useLoaderData();
 	return (
-		<article className="site-frame project-story">
-			<Link to="/" hash="work" className="detail-link">
-				<span className="link-label">back to work</span>
-			</Link>
-			<header>
-				<h1 className="page-title">{project.title}</h1>
-				<p className="story-lede">{project.tagline}</p>
-				{project.liveUrl ? (
-					<div className="story-actions">
+		<article className="project-news">
+			<ProjectStoryGallery
+				key={project.projectId}
+				slides={[project.cover, ...project.gallery]}
+				title={project.title}
+			/>
+			<div className="news-copy">
+				<header>
+					<p className="news-date">
+						<time dateTime={project.publication.dateTime}>
+							{project.publication.label}
+						</time>
+					</p>
+					<h1 className="news-title">{project.title}</h1>
+				</header>
+				<div className="news-body">
+					{project.story.map((paragraph) => (
+						<p key={paragraph}>{paragraph}</p>
+					))}
+				</div>
+				<div className="news-actions">
+					{project.liveUrl ? (
 						<a
 							href={project.liveUrl}
 							target="_blank"
@@ -66,53 +77,12 @@ function ProjectDetail() {
 						>
 							<span className="link-label">visit live site</span>
 						</a>
-					</div>
-				) : null}
-			</header>
-			<figure>
-				<a
-					href={desktopCapture}
-					aria-label="Open full desktop production capture"
-					className="work-preview"
-				>
-					<Picture
-						picture={project.cover.picture}
-						alt={project.cover.alt}
-						sizes="(min-width: 660px) 620px, calc(100vw - 40px)"
-						loading="eager"
-						fetchPriority="high"
-						imgClassName="work-preview-image"
-					/>
-				</a>
-				<figcaption className="capture-note">
-					Live website · October 26, 2026 ·{" "}
-					<a href={desktopCapture} className="detail-link">
-						<span className="link-label">full desktop image</span>
-					</a>{" "}
-					/{" "}
-					<a href={phoneCapture} className="detail-link">
-						<span className="link-label">phone image</span>
-					</a>
-				</figcaption>
-			</figure>
-			<section aria-labelledby="story-overview">
-				<h2 id="story-overview">Overview</h2>
-				<p>{project.summary}</p>
-			</section>
-			<section aria-labelledby="story-implementation">
-				<h2 id="story-implementation">Design and implementation</h2>
-				<p>{project.implementation}</p>
-			</section>
-			<section aria-labelledby="story-workflow">
-				<h2 id="story-workflow">Square integration</h2>
-				<p>{project.approach}</p>
-			</section>
-			{project.highlights.map((highlight) => (
-				<section key={highlight.title}>
-					<h2>{highlight.title}</h2>
-					<p>{highlight.body}</p>
-				</section>
-			))}
+					) : null}
+					<Link to="/" hash="work" className="detail-link">
+						<span className="link-label">back to work</span>
+					</Link>
+				</div>
+			</div>
 		</article>
 	);
 }

@@ -22,6 +22,7 @@ const project: Project = {
 	title: "Example project",
 	tagline: "A useful example",
 	cover: {
+		fullSrc: "/example.png",
 		picture: projectPicture,
 		thumbnail: projectPicture,
 		alt: "Example project cover",
@@ -33,6 +34,8 @@ const project: Project = {
 	status: "live",
 	stack: ["React", "TypeScript"],
 	liveUrl: "https://example.com",
+	publication: { dateTime: "2026-10", label: "October 2026" },
+	story: ["Summary"],
 	summary: "Summary",
 	implementation: "Implementation",
 	approach: "Approach",
