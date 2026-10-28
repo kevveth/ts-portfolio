@@ -14,6 +14,7 @@ export type GalleryImage = {
 	picture: ImagetoolsPicture;
 	alt: string;
 	caption?: string;
+	previewPosition?: string;
 };
 export type ProjectHighlight = { title: string; body: string };
 export type Project = {
@@ -72,7 +73,7 @@ export const projects = [
 			"Playwright",
 		],
 		liveUrl: "https://chavosparlor.com/",
-		publication: { dateTime: "2026-10", label: "October 2026" },
+		publication: { dateTime: "2026-10", label: "10/2026" },
 		story: [
 			"I designed and built a website for my longtime barber, Chavo’s Parlor in San Diego, bringing services, reviews, hours, location, and Square booking together.",
 			"Built with TypeScript, React, TanStack Start, and Tailwind, it reads prices and regular hours from Square. Square handles appointments and payments, with a hosted booking page as a fallback.",
@@ -94,7 +95,8 @@ export const projects = [
 			{
 				fullSrc: chavosPhoneFull,
 				picture: chavosPhone,
-				alt: "Full Chavo’s Parlor phone production capture from October 26, 2026",
+				alt: "Chavo’s Parlor mobile service menu from the October 26, 2026 production capture",
+				previewPosition: "center 15%",
 				caption: "Real Production capture · October 26, 2026 · phone",
 			},
 		],
