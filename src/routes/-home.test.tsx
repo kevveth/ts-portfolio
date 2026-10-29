@@ -35,7 +35,7 @@ describe("personal homepage", () => {
 			"href",
 			`mailto:${SITE.email}`,
 		);
-		expect(screen.getByRole("link", { name: "work" })).toHaveAttribute(
+		expect(screen.getAllByRole("link", { name: "work" })[0]).toHaveAttribute(
 			"href",
 			"/#work",
 		);
@@ -45,27 +45,50 @@ describe("personal homepage", () => {
 		);
 		expect(screen.getByRole("link", { name: "contact" })).toHaveAttribute(
 			"href",
-			"/#contact",
+			"/contact",
 		);
-		for (const name of ["work", "about", "contact"]) {
+		expect(screen.getAllByRole("link", { name: "work" })[0]).toHaveAttribute(
+			"aria-current",
+			"page",
+		);
+		for (const name of ["about", "contact"]) {
 			expect(screen.getByRole("link", { name })).not.toHaveAttribute(
 				"aria-current",
 			);
 		}
+		expect(screen.getAllByRole("link", { name: "work" })[1]).toHaveAttribute(
+			"href",
+			"/projects",
+		);
 		expect(document.getElementById("work")).toBeInTheDocument();
 
 		expect(document.getElementById("contact")).toBeInTheDocument();
 	});
 
 	it.each([
-		"/",
-		"/about",
-	])("keeps section anchors distinct from current pages at %s", async (initialEntry) => {
+		["/", "work"],
+		["/#work", "work"],
+		["/about", "about"],
+		["/contact", "contact"],
+		["/projects", "work"],
+		["/projects/chavos-parlor", "work"],
+	])("marks the current navigation section at %s", async (initialEntry, current) => {
 		await renderWithRouter(<SiteNavigation />, initialEntry);
-		for (const name of ["work", "contact"]) {
-			const link = screen.getByRole("link", { name });
-			expect(link).toHaveAttribute("href", `/#${name}`);
-			expect(link).not.toHaveAttribute("aria-current");
+		expect(screen.getAllByRole("link", { name: "work" })[0]).toHaveAttribute(
+			"href",
+			"/#work",
+		);
+		expect(screen.getByRole("link", { name: "contact" })).toHaveAttribute(
+			"href",
+			"/contact",
+		);
+		for (const name of ["work", "about", "contact"]) {
+			const links = screen.getAllByRole("link", { name });
+			for (const link of links) {
+				if (name === current)
+					expect(link).toHaveAttribute("aria-current", "page");
+				else expect(link).not.toHaveAttribute("aria-current");
+			}
 		}
 	});
 
