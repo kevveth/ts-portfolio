@@ -6,8 +6,6 @@ import { SITE, SITE_URL } from "#/content/site";
 const TITLE = `Projects | ${SITE.name}`;
 const DESCRIPTION =
 	"Selected projects and case studies: production web apps designed and built end to end.";
-const VISIBLE_DESCRIPTION =
-	"A closer look at products I’ve designed, built, and shipped.";
 
 export const Route = createFileRoute("/projects/")({
 	head: () => ({
@@ -28,7 +26,6 @@ function ProjectsIndex() {
 		<div className="site-frame project-index">
 			<header className="project-index-intro">
 				<h1 className="page-title">Selected work</h1>
-				<p className="story-lede">{VISIBLE_DESCRIPTION}</p>
 			</header>
 			<div className="project-gallery">
 				{projects.map((project) => (
