@@ -12,8 +12,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteRouteImport } from './routes/about/route'
 import { Route as ArchitectureRouteRouteImport } from './routes/architecture/route'
+import { Route as ContactRouteRouteImport } from './routes/contact/route'
 import { Route as RobotsDottxtRouteRouteImport } from './routes/robots[.]txt/route'
 import { Route as StyleRouteRouteImport } from './routes/style/route'
+import { Route as ApiContactRouteRouteImport } from './routes/api/contact/route'
 import { Route as ProjectsIndexRouteImport } from './routes/projects/index'
 import { Route as ProjectsProjectIdRouteRouteImport } from './routes/projects/$projectId/route'
 
@@ -32,6 +34,11 @@ const ArchitectureRouteRoute = ArchitectureRouteRouteImport.update({
   path: '/architecture',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContactRouteRoute = ContactRouteRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RobotsDottxtRouteRoute = RobotsDottxtRouteRouteImport.update({
   id: '/robots.txt',
   path: '/robots.txt',
@@ -40,6 +47,11 @@ const RobotsDottxtRouteRoute = RobotsDottxtRouteRouteImport.update({
 const StyleRouteRoute = StyleRouteRouteImport.update({
   id: '/style',
   path: '/style',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiContactRouteRoute = ApiContactRouteRouteImport.update({
+  id: '/api/contact',
+  path: '/api/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProjectsIndexRoute = ProjectsIndexRouteImport.update({
@@ -57,8 +69,10 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRouteRoute
   '/architecture': typeof ArchitectureRouteRoute
+  '/contact': typeof ContactRouteRoute
   '/robots.txt': typeof RobotsDottxtRouteRoute
   '/style': typeof StyleRouteRoute
+  '/api/contact': typeof ApiContactRouteRoute
   '/projects/$projectId': typeof ProjectsProjectIdRouteRoute
   '/projects/': typeof ProjectsIndexRoute
 }
@@ -66,8 +80,10 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRouteRoute
   '/architecture': typeof ArchitectureRouteRoute
+  '/contact': typeof ContactRouteRoute
   '/robots.txt': typeof RobotsDottxtRouteRoute
   '/style': typeof StyleRouteRoute
+  '/api/contact': typeof ApiContactRouteRoute
   '/projects/$projectId': typeof ProjectsProjectIdRouteRoute
   '/projects': typeof ProjectsIndexRoute
 }
@@ -76,8 +92,10 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRouteRoute
   '/architecture': typeof ArchitectureRouteRoute
+  '/contact': typeof ContactRouteRoute
   '/robots.txt': typeof RobotsDottxtRouteRoute
   '/style': typeof StyleRouteRoute
+  '/api/contact': typeof ApiContactRouteRoute
   '/projects/$projectId': typeof ProjectsProjectIdRouteRoute
   '/projects/': typeof ProjectsIndexRoute
 }
@@ -87,8 +105,10 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/architecture'
+    | '/contact'
     | '/robots.txt'
     | '/style'
+    | '/api/contact'
     | '/projects/$projectId'
     | '/projects/'
   fileRoutesByTo: FileRoutesByTo
@@ -96,8 +116,10 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/architecture'
+    | '/contact'
     | '/robots.txt'
     | '/style'
+    | '/api/contact'
     | '/projects/$projectId'
     | '/projects'
   id:
@@ -105,8 +127,10 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/architecture'
+    | '/contact'
     | '/robots.txt'
     | '/style'
+    | '/api/contact'
     | '/projects/$projectId'
     | '/projects/'
   fileRoutesById: FileRoutesById
@@ -115,8 +139,10 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRouteRoute: typeof AboutRouteRoute
   ArchitectureRouteRoute: typeof ArchitectureRouteRoute
+  ContactRouteRoute: typeof ContactRouteRoute
   RobotsDottxtRouteRoute: typeof RobotsDottxtRouteRoute
   StyleRouteRoute: typeof StyleRouteRoute
+  ApiContactRouteRoute: typeof ApiContactRouteRoute
   ProjectsProjectIdRouteRoute: typeof ProjectsProjectIdRouteRoute
   ProjectsIndexRoute: typeof ProjectsIndexRoute
 }
@@ -144,6 +170,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArchitectureRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/robots.txt': {
       id: '/robots.txt'
       path: '/robots.txt'
@@ -156,6 +189,13 @@ declare module '@tanstack/react-router' {
       path: '/style'
       fullPath: '/style'
       preLoaderRoute: typeof StyleRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/contact': {
+      id: '/api/contact'
+      path: '/api/contact'
+      fullPath: '/api/contact'
+      preLoaderRoute: typeof ApiContactRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/projects/': {
@@ -179,8 +219,10 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRouteRoute: AboutRouteRoute,
   ArchitectureRouteRoute: ArchitectureRouteRoute,
+  ContactRouteRoute: ContactRouteRoute,
   RobotsDottxtRouteRoute: RobotsDottxtRouteRoute,
   StyleRouteRoute: StyleRouteRoute,
+  ApiContactRouteRoute: ApiContactRouteRoute,
   ProjectsProjectIdRouteRoute: ProjectsProjectIdRouteRoute,
   ProjectsIndexRoute: ProjectsIndexRoute,
 }
