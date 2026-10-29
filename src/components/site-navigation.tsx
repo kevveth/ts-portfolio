@@ -5,24 +5,22 @@ export function SiteNavigation() {
 	const pathname = useLocation({
 		select: (location) => location.pathname.replace(/\/$/, "") || "/",
 	});
-	const isWork =
-		pathname === "/" ||
-		pathname === "/projects" ||
-		pathname.startsWith("/projects/");
+	const isProject =
+		pathname === "/projects" || pathname.startsWith("/projects/");
 	return (
 		<div className="personal-navigation">
 			<nav aria-label="Main">
 				<a
 					href="/#work"
 					className="desktop-work-link"
-					aria-current={isWork ? "page" : undefined}
+					aria-current={pathname === "/" || isProject ? "page" : undefined}
 				>
 					<span className="navigation-label">work</span>
 				</a>
 				<a
 					href="/projects"
 					className="mobile-work-link"
-					aria-current={isWork ? "page" : undefined}
+					aria-current={isProject ? "page" : undefined}
 				>
 					<span className="navigation-label">work</span>
 				</a>

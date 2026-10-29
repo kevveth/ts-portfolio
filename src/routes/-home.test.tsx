@@ -60,6 +60,9 @@ describe("personal homepage", () => {
 			"href",
 			"/projects",
 		);
+		expect(
+			screen.getAllByRole("link", { name: "work" })[1],
+		).not.toHaveAttribute("aria-current");
 		expect(document.getElementById("work")).toBeInTheDocument();
 
 		expect(document.getElementById("contact")).toBeInTheDocument();
@@ -85,7 +88,11 @@ describe("personal homepage", () => {
 		for (const name of ["work", "about", "contact"]) {
 			const links = screen.getAllByRole("link", { name });
 			for (const link of links) {
-				if (name === current)
+				const isMobileHomeWork =
+					name === "work" &&
+					(initialEntry === "/" || initialEntry === "/#work") &&
+					link.classList.contains("mobile-work-link");
+				if (name === current && !isMobileHomeWork)
 					expect(link).toHaveAttribute("aria-current", "page");
 				else expect(link).not.toHaveAttribute("aria-current");
 			}
