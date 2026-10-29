@@ -36,7 +36,7 @@ function retryMessage(value: string | null) {
 		: FEEDBACK.limited;
 }
 
-export function ContactForm() {
+export function ContactForm({ enabled = false }: { enabled?: boolean }) {
 	const [feedback, setFeedback] = useState("");
 	const attempt = useRef<{ payload: string; id: string } | null>(null);
 	const formRef = useRef<HTMLFormElement>(null);
@@ -129,7 +129,7 @@ export function ContactForm() {
 			noValidate
 			onSubmit={(event) => {
 				event.preventDefault();
-				if (!form.state.isSubmitting) void form.handleSubmit();
+				if (enabled && !form.state.isSubmitting) void form.handleSubmit();
 			}}
 		>
 			<fieldset disabled={pending} aria-busy={pending}>
@@ -217,9 +217,19 @@ export function ContactForm() {
 						</div>
 					)}
 				</form.Field>
-				<button className="contact-send" type="submit">
+				<button
+					className="contact-send"
+					type="submit"
+					disabled={!enabled}
+					aria-describedby={!enabled ? "contact-coming-soon" : undefined}
+				>
 					<span>{pending ? "sending…" : "send"}</span>
 				</button>
+				{!enabled ? (
+					<p id="contact-coming-soon" className="contact-coming-soon">
+						coming soon — use email below
+					</p>
+				) : null}
 			</fieldset>
 			<output
 				className="contact-feedback"

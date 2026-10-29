@@ -569,7 +569,20 @@ html:not(.js) .contact-form {
 }
 
 .contact-send:disabled {
+	cursor: not-allowed;
+}
+
+.contact-send:disabled span {
+	opacity: 0.5;
+}
+
+.contact-form fieldset[aria-busy="true"] .contact-send {
 	cursor: wait;
+}
+
+.contact-coming-soon {
+	margin-top: 8px;
+	color: var(--muted-foreground);
 }
 
 .contact-feedback {

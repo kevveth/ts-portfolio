@@ -32,7 +32,7 @@ function submit() {
 }
 
 it("focuses a labelled validation error without sending", async () => {
-	render(<ContactForm />);
+	render(<ContactForm enabled />);
 	const form = screen.getByRole("button", { name: "send" }).closest("form");
 	expect(form).toHaveAttribute("method", "post");
 	expect(form).toHaveAttribute("action", "/api/contact");
@@ -54,7 +54,7 @@ it("focuses a labelled validation error without sending", async () => {
 
 it("allows a corrected form to submit after an empty attempt", async () => {
 	transport.mockResolvedValueOnce(Response.json({ code: "accepted" }));
-	render(<ContactForm />);
+	render(<ContactForm enabled />);
 	submit();
 	await screen.findByText("Enter a message.");
 	fillForm();
@@ -70,7 +70,7 @@ it("announces pending, prevents duplicates, and clears inquiry fields after acce
 			resolve = done;
 		}),
 	);
-	render(<ContactForm />);
+	render(<ContactForm enabled />);
 	fillForm();
 	fireEvent.change(screen.getByLabelText("subject (optional)"), {
 		target: { value: "Project inquiry" },
@@ -98,7 +98,7 @@ it("keeps content and submission ID on retry, then renews the ID after an edit",
 	transport.mockImplementation(async () =>
 		Response.json({ code: "failed" }, { status: 502 }),
 	);
-	render(<ContactForm />);
+	render(<ContactForm enabled />);
 	fillForm();
 	fireEvent.change(screen.getByLabelText("subject (optional)"), {
 		target: { value: "Project inquiry" },
@@ -160,7 +160,7 @@ it.each([
 	],
 ])("preserves the message for unavailable, limited and uncertain failures", async (implementation, text) => {
 	transport.mockImplementationOnce(implementation);
-	render(<ContactForm />);
+	render(<ContactForm enabled />);
 	fillForm();
 	submit();
 	await screen.findByText(text);
@@ -177,7 +177,7 @@ it("focuses server field errors after re-enabling the controls", async () => {
 			{ status: 400 },
 		),
 	);
-	render(<ContactForm />);
+	render(<ContactForm enabled />);
 	fillForm();
 	submit();
 	await screen.findByText("Check this address.");
@@ -188,4 +188,14 @@ it("focuses server field errors after re-enabling the controls", async () => {
 	});
 	submit();
 	await screen.findByText("Thanks—your message has been submitted.");
+});
+
+it("keeps the published form disabled and blocks submission until enabled", () => {
+	render(<ContactForm />);
+	const button = screen.getByRole("button", { name: "send" });
+	expect(button).toBeDisabled();
+	expect(button).toHaveAccessibleDescription("coming soon — use email below");
+	fillForm();
+	fireEvent.submit(button.closest("form") as HTMLFormElement);
+	expect(transport).not.toHaveBeenCalled();
 });

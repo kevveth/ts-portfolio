@@ -4,6 +4,12 @@ The form and endpoint are implemented locally. Live delivery is disabled by
 default. No mailbox, domain, sending account, or firewall configuration is
 provisioned by this code.
 
+The published form currently keeps its send button disabled and displays
+“coming soon — use email below.” `ContactForm` defaults to `enabled={false}`
+and ignores form submission events while disabled. Enabling live sending later
+requires deliberately enabling this frontend as well as completing the server
+configuration and operational checks below.
+
 The frontend uses TanStack Form with the shared Zod validation rules. It shows
 field errors after a submit attempt, retains values on failed delivery, and
 resets the message and optional subject after confirmed provider acceptance.
