@@ -113,7 +113,7 @@ switch, and rendering/prerender/build do not invoke the sending API.
 - `RESEND_API_KEY` is a Production-only Secret, entered by Kenneth. A
   sending-only replacement was created and the former Full access key removed.
   Never read back or print this value during verification.
-- Sender, destination, allowed origin, and disabled delivery flag are saved for
+- Sender, destination, allowed origin, and delivery flag are saved for
   Production. Configuration changes require a new deployment.
 - WAF rule `rule_portfolio_contact_limit_preview_UfQNYQ` was tested in Preview:
   five empty POSTs returned 503 (delivery disabled), then two returned 429.
@@ -126,8 +126,15 @@ switch, and rendering/prerender/build do not invoke the sending API.
   as `dpl_42SyHQoVvH1QJej18qP5CBCzLSij` with server delivery enabled; its existing
   frontend remains hard-disabled. The endpoint returned 200 / `accepted` once.
   Resend email `01a1a0de-0a5d-763e-a705-d62c289bb114` reports Delivered, and its
-  sender and Reply-To were inspected. Actual inbox placement and the reply target
-  still need Kenneth's confirmation before publishing the enabled frontend.
+  sender and Reply-To were inspected. Kenneth confirmed receipt in Updates and
+  the correct reply target, but Mail displayed a sender-verification warning.
+- Added TXT `_dmarc.mail.kenrathbun.dev` = `v=DMARC1; p=none;` (TTL 60),
+  scoped to the Resend sending subdomain. Public DNS returned the record.
+  Kenneth authorized one follow-up test; submission
+  `49809d5f-8f58-4a76-aaa9-9882a48e25b7` returned 200 / `accepted`.
+  Resend email `01a1a0e8-1247-7af4-8b00-3b095f0db296` reports Delivered,
+  and its Insights now marks DMARC valid with no attention items. Kenneth confirmed the sender-verification warning is gone on this fresh
+  message. Delivery verification is complete. No additional messages were sent.
 
 References: [Resend domain setup](https://resend.com/docs/dashboard/domains/introduction),
 [send API](https://resend.com/docs/api-reference/emails/send-email),
