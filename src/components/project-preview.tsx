@@ -5,9 +5,11 @@ import type { Project } from "#/content/projects";
 export function ProjectPreview({
 	project,
 	headingAs: Heading = "h3",
+	imageMedia,
 }: {
 	project: Project;
 	headingAs?: "h2" | "h3";
+	imageMedia?: string;
 }) {
 	return (
 		<article className="project-preview">
@@ -22,6 +24,7 @@ export function ProjectPreview({
 				<Picture
 					picture={project.cover.picture}
 					alt={project.cover.alt}
+					media={imageMedia}
 					sizes="(min-width: 660px) 620px, calc(100vw - 40px)"
 					loading="eager"
 					fetchPriority="high"

@@ -68,6 +68,19 @@ describe("personal homepage", () => {
 		expect(document.getElementById("contact")).toBeInTheDocument();
 	});
 
+	it("places the theme toggle after the footer contact and privacy links", async () => {
+		await renderWithRouter(<SiteFooter />);
+		const footer = screen.getByRole("contentinfo");
+		const lastFooterLink = screen.getByRole("link", { name: "privacy" });
+		const themeToggle = footer.querySelector(".theme-toggle");
+
+		expect(themeToggle).not.toBeNull();
+		expect(
+			lastFooterLink.compareDocumentPosition(themeToggle as Node) &
+				Node.DOCUMENT_POSITION_FOLLOWING,
+		).toBeTruthy();
+	});
+
 	it.each([
 		["/", "work"],
 		["/#work", "work"],

@@ -38,17 +38,6 @@
 	--media-background: #111110;
 	--ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 
-	/*
-	 * Status accents — project lifecycle indicators (STATUS_META in
-	 * src/components/status-badge.tsx). Each has a vivid variant (dot, border,
-	 * background tint, all via opacity modifiers) and a text-tuned "-ink"
-	 * variant, mirroring the brand/brand-ink split above.
-	 */
-	--success: oklch(0.6 0.17 149);
-	--success-ink: oklch(0.44 0.14 152);
-	--notice: oklch(0.55 0.22 293);
-	--notice-ink: oklch(0.49 0.24 293);
-
 	--background: #f5f5f2;
 	--foreground: #161616;
 	--card: oklch(1 0 0);
@@ -76,11 +65,6 @@
 	--brand-ink: #78d7a7;
 	--signal: var(--brand-ink);
 
-	--success: oklch(0.75 0.19 150);
-	--success-ink: oklch(0.8 0.19 152);
-	--notice: oklch(0.72 0.18 293);
-	--notice-ink: oklch(0.75 0.18 293);
-
 	--background: #161616;
 	--foreground: #f5f5f2;
 	--card: oklch(0.185 0.005 285.9);
@@ -107,10 +91,6 @@
 	--font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 	--color-brand: var(--brand-ink);
 	--color-signal: var(--signal);
-	--color-success: var(--success);
-	--color-success-ink: var(--success-ink);
-	--color-notice: var(--notice);
-	--color-notice-ink: var(--notice-ink);
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
 	--color-card: var(--card);
@@ -195,12 +175,6 @@ body {
 	line-height: 1.4;
 	color: var(--muted-foreground);
 }
-.project-image {
-	transition: transform 500ms var(--ease-out);
-}
-.group:hover .project-image {
-	transform: scale(1.02);
-}
 
 /*
  * Owned by the Button component (src/components/ui/button.tsx), baked into
@@ -255,45 +229,8 @@ body {
 	transform: scaleX(1);
 }
 
-.accent-surface {
-	position: relative;
-}
-.accent-surface::before {
-	position: absolute;
-	top: 0;
-	right: 0;
-	left: 0;
-	height: 2px;
-	pointer-events: none;
-	content: "";
-	background: linear-gradient(90deg, var(--brand), var(--signal), transparent 72%);
-	opacity: 0.62;
-}
-
-/*
- * Scroll reveal. Content is visible by default; the hidden initial state only
- * applies once the pre-paint init script has stamped `js` on <html>, so
- * no-JS visitors (and crawlers) always see everything.
- */
-html.js .reveal {
-	opacity: 0;
-	transform: translateY(14px);
-	transition:
-		opacity 600ms var(--ease-out),
-		transform 600ms var(--ease-out);
-}
-html.js .reveal.is-visible {
-	opacity: 1;
-	transform: none;
-}
-
 /* Suppress animation when the user prefers reduced motion. */
 @media (prefers-reduced-motion: reduce) {
-	html.js .reveal {
-		opacity: 1;
-		transform: none;
-		transition: none;
-	}
 	*,
 	*::before,
 	*::after {
@@ -332,7 +269,6 @@ html.js .reveal.is-visible {
 .site-byline,
 .personal-navigation,
 .index-label,
-.capture-note,
 .personal-footer {
 	font-family: var(--font-mono);
 	font-size: var(--type-support);
@@ -446,11 +382,6 @@ html.js .reveal.is-visible {
 .detail-link:focus-visible .link-label {
 	outline: 2px solid var(--brand-ink);
 	outline-offset: 2px;
-}
-
-.capture-note {
-	margin-top: 12px;
-	color: var(--muted-foreground);
 }
 
 .about-page {
@@ -634,11 +565,22 @@ html:not(.js) .contact-form {
 
 .personal-footer > .personal-navigation {
 	grid-column: 1 / -1;
+	grid-row: 1;
+}
+
+.personal-footer > .theme-toggle {
+	grid-column: 1 / -1;
+	grid-row: 1;
+	justify-self: end;
 }
 
 .footer-contact {
 	margin-top: 32px;
 	font-size: var(--type-fine);
+}
+
+.footer-secondary {
+	display: contents;
 }
 
 .footer-privacy {
@@ -666,12 +608,6 @@ html:not(.js) .contact-form {
 	font-style: normal;
 	justify-content: start;
 	column-gap: 40px;
-}
-
-.story-lede {
-	margin-top: 12px;
-	font-size: var(--type-body);
-	line-height: var(--leading-body);
 }
 
 .story-actions {
@@ -774,6 +710,10 @@ html:not(.js) .contact-form {
 	margin-bottom: 32px;
 }
 
+.project-name-list {
+	display: none;
+}
+
 .project-gallery {
 	display: grid;
 	grid-auto-flow: column;
@@ -810,7 +750,7 @@ html:not(.js) .contact-form {
 	scroll-margin-top: 24px;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 599px) {
 	.personal-header {
 		padding-top: 48px;
 		padding-bottom: 40px;
@@ -821,12 +761,51 @@ html:not(.js) .contact-form {
 	}
 }
 
-/* The phone homepage is a compact directory; work opens the project index. */
+/* Phone navigation keeps a direct path to the project index. */
 .personal-navigation .mobile-work-link {
 	display: none;
 }
 
 @media (max-width: 599px) {
+	.project-index-intro {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+	}
+
+	.project-index .project-gallery {
+		display: none;
+	}
+
+	.project-name-list {
+		--project-list-border: color-mix(in srgb, var(--foreground) 18%, var(--background));
+		display: block;
+		margin-inline: calc(var(--page-inset) / -2);
+		border-top: 1px solid var(--project-list-border);
+		font-family: var(--font-mono);
+		font-size: 13px;
+		line-height: 1.08;
+		text-transform: lowercase;
+	}
+
+	.project-name-list a {
+		display: flex;
+		align-items: center;
+		min-height: 48px;
+		padding: 16px;
+		border-bottom: 1px solid var(--project-list-border);
+	}
+
+	.project-name-list a:focus-visible {
+		outline: 2px solid var(--brand-ink);
+		outline-offset: -2px;
+	}
+
 	body:has(.personal-home) .personal-header {
 		padding-top: clamp(64px, 14svh, 120px);
 		padding-bottom: 56px;
@@ -836,28 +815,27 @@ html:not(.js) .contact-form {
 		flex: none;
 	}
 
-	.personal-home #work {
-		display: none;
+	.personal-footer {
+		grid-template-columns: minmax(0, 1fr);
+		justify-items: center;
+		padding-top: 32px;
+		padding-bottom: 40px;
+		text-align: center;
 	}
 
-	body:has(.personal-home) .personal-footer {
-		width: min(208px, calc(100% - var(--page-inset)));
-		padding-top: 0;
+	.personal-footer > .personal-navigation {
+		display: contents;
 	}
 
-	body:has(.personal-home) .personal-navigation,
-	body:has(.personal-home) .personal-navigation nav {
-		flex-direction: column;
-		align-items: center;
-		gap: 0;
-	}
-
-	body:has(.personal-home) .personal-navigation {
+	.personal-footer .personal-navigation nav {
+		justify-content: center;
+		column-gap: 24px;
 		font-size: var(--type-compact);
 	}
 
-	body:has(.personal-home) .personal-navigation a {
-		min-height: 30px;
+	.personal-footer .personal-navigation a,
+	.personal-footer .detail-link {
+		min-height: var(--control-size);
 	}
 
 	.personal-navigation .desktop-work-link {
@@ -868,17 +846,32 @@ html:not(.js) .contact-form {
 		display: inline-flex;
 	}
 
-	body:has(.personal-home) .theme-toggle {
-		margin-top: 16px;
+	.personal-footer .theme-toggle {
+		grid-column: auto;
+		grid-row: auto;
+		justify-self: center;
+		margin-top: 24px;
+		font-size: var(--type-compact);
 	}
 
-	body:has(.personal-home) .footer-contact address {
+	.personal-footer address {
+		display: flex;
+		flex-wrap: wrap;
 		justify-content: center;
-		justify-items: center;
+		column-gap: 16px;
 	}
 
-	body:has(.personal-home) .footer-contact,
-	body:has(.personal-home) .footer-privacy {
+	.footer-secondary {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		column-gap: 16px;
 		margin-top: 16px;
+	}
+
+	.footer-contact,
+	.footer-privacy {
+		margin-top: 0;
+		font-size: var(--type-compact);
 	}
 }

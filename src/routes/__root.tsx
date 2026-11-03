@@ -9,7 +9,6 @@ import type { ReactNode } from "react";
 
 import { SiteFooter } from "#/components/site-footer";
 import { SiteHeader } from "#/components/site-header";
-import { Button } from "#/components/ui/button";
 import { SITE, SITE_URL } from "#/content/site";
 import { THEME_COLORS, THEME_INIT_SCRIPT } from "#/lib/theme";
 import appCss from "../styles.css?url";
@@ -17,8 +16,8 @@ import appCss from "../styles.css?url";
 const DEFAULT_TITLE = SITE.name;
 
 // Variable fonts: one file per subset covers the whole weight range, so only
-// the latin subset needs preloading for above-the-fold text (hero h1 + the
-// mono `.kicker` line). latin-ext loads lazily if extended-Latin text shows up.
+// the latin subset needs preloading for page copy and monospace labels.
+// latin-ext loads lazily if extended-Latin text shows up.
 const PRELOADED_FONTS = ["space-grotesk-latin", "jetbrains-mono-latin"];
 
 export const Route = createRootRoute({
@@ -95,8 +94,7 @@ function RootDocument({ children }: { children: ReactNode }) {
 				<HeadContent />
 			</head>
 			<body className="flex min-h-svh flex-col">
-				{/* The sticky header would otherwise walk keyboard users through
-				    the whole nav on every page. */}
+				{/* Let keyboard users reach each page's main content directly. */}
 				<a
 					href="#main-content"
 					className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-md focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:ring-2 focus:ring-brand"
@@ -117,15 +115,13 @@ function RootDocument({ children }: { children: ReactNode }) {
 
 function NotFound() {
 	return (
-		<div className="mx-auto flex w-full max-w-5xl flex-col items-start gap-4 px-4 py-24 sm:px-6">
-			<p className="kicker">404 — not found</p>
-			<h1 className="page-title">This page doesn't exist.</h1>
-			<p className="text-muted-foreground">
-				The address may be mistyped, or the page may have moved.
-			</p>
-			<Button asChild variant="outline">
-				<Link to="/">Back home</Link>
-			</Button>
-		</div>
+		<article className="site-frame about-page">
+			<p className="index-label">404 — not found</p>
+			<h1 className="index-label">This page doesn't exist.</h1>
+			<p>The address may be mistyped, or the page may have moved.</p>
+			<Link to="/" className="detail-link story-actions">
+				<span className="link-label">back home</span>
+			</Link>
+		</article>
 	);
 }

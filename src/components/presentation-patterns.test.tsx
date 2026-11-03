@@ -2,46 +2,8 @@
 
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { ContentState } from "#/components/content-state";
-import {
-	ProjectActions,
-	ProjectMeta,
-	TechStack,
-} from "#/components/project-patterns";
 import { PageIntro, Section } from "#/components/section";
 import { Surface } from "#/components/surface";
-import type { Project } from "#/content/projects";
-
-const projectPicture: ImagetoolsPicture = {
-	sources: { webp: "/example.webp 1200w" },
-	img: { src: "/example.png", w: 1200, h: 800 },
-};
-
-const project: Project = {
-	projectId: "example",
-	title: "Example project",
-	tagline: "A useful example",
-	cover: {
-		fullSrc: "/example.png",
-		picture: projectPicture,
-		thumbnail: projectPicture,
-		alt: "Example project cover",
-	},
-	socialImage: "/og/example.jpg",
-	socialImageAlt: "Example project social card",
-	role: "Design and build",
-	year: "2026",
-	status: "live",
-	stack: ["React", "TypeScript"],
-	liveUrl: "https://example.com",
-	publication: { dateTime: "2026-10", label: "October 2026" },
-	story: ["Summary"],
-	summary: "Summary",
-	implementation: "Implementation",
-	approach: "Approach",
-	highlights: [],
-	gallery: [],
-};
 
 describe("presentation patterns", () => {
 	it("applies explicit section layout variants", () => {
@@ -87,41 +49,5 @@ describe("presentation patterns", () => {
 		expect(
 			container.querySelector("figure[data-slot='surface']"),
 		).toHaveTextContent("Media");
-	});
-
-	it("renders project metadata and a labeled technology list", () => {
-		render(
-			<>
-				<ProjectMeta project={project} />
-				<TechStack stack={project.stack} />
-			</>,
-		);
-		expect(screen.getByText("Design and build")).toBeInTheDocument();
-		const year = screen.getByText("2026");
-		expect(year.tagName).toBe("TIME");
-		expect(year).toHaveAttribute("datetime", "2026");
-		// Terms are present but sr-only, so the rendered line is unchanged.
-		expect(screen.getByText("Role")).toHaveClass("sr-only");
-		expect(
-			screen.getByRole("list", { name: "Technology stack" }),
-		).toHaveTextContent("ReactTypeScript");
-	});
-
-	it("renders live and contact actions only when requested", () => {
-		render(<ProjectActions project={project} contact />);
-		expect(
-			screen.getByRole("link", { name: /visit example project live site/i }),
-		).toHaveAttribute("target", "_blank");
-		expect(screen.getByRole("link", { name: "Get in touch" })).toHaveAttribute(
-			"href",
-			expect.stringMatching(/^mailto:/),
-		);
-	});
-
-	it("renders empty-state copy without a misleading live region", () => {
-		const { container } = render(<ContentState>Nothing to show.</ContentState>);
-		expect(screen.getByText("Nothing to show.")).toBeInTheDocument();
-		// Static SSR content that never updates must not announce itself.
-		expect(container.querySelector('[role="status"]')).toBeNull();
 	});
 });

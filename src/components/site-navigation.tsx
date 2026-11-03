@@ -1,5 +1,4 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { ThemeToggle } from "#/components/theme-toggle";
 
 export function SiteNavigation() {
 	const pathname = useLocation({
@@ -37,7 +36,6 @@ export function SiteNavigation() {
 					<span className="navigation-label">contact</span>
 				</Link>
 			</nav>
-			<ThemeToggle />
 		</div>
 	);
 }
