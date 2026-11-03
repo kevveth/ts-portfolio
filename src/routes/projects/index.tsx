@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { ProjectPreview } from "#/components/project-preview";
 import { projects } from "#/content/projects";
 import { SITE, SITE_URL } from "#/content/site";
@@ -27,12 +27,25 @@ function ProjectsIndex() {
 			<header className="project-index-intro">
 				<h1 className="page-title">Selected work</h1>
 			</header>
+			<ul className="project-name-list" aria-label="Projects">
+				{projects.map((project) => (
+					<li key={project.projectId}>
+						<Link
+							to="/projects/$projectId"
+							params={{ projectId: project.projectId }}
+						>
+							{project.title}
+						</Link>
+					</li>
+				))}
+			</ul>
 			<div className="project-gallery">
 				{projects.map((project) => (
 					<ProjectPreview
 						key={project.projectId}
 						project={project}
 						headingAs="h2"
+						imageMedia="(min-width: 600px)"
 					/>
 				))}
 			</div>

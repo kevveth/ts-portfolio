@@ -86,15 +86,13 @@ function ProjectDetail() {
 
 function ProjectNotFound() {
 	return (
-		<div className="site-frame">
+		<article className="site-frame about-page">
 			<p className="index-label">404 — not found</p>
-			<h1 className="page-title">No project with that name.</h1>
-			<p className="story-lede">
-				It may have been renamed, or the link is stale.
-			</p>
+			<h1 className="index-label">No project with that name.</h1>
+			<p>It may have been renamed, or the link is stale.</p>
 			<Link to="/" className="detail-link story-actions">
 				<span className="link-label">back home</span>
 			</Link>
-		</div>
+		</article>
 	);
 }

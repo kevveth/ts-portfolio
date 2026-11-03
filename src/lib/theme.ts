@@ -28,8 +28,8 @@ export function syncThemeColor(theme: Theme): void {
 /**
  * Inline pre-paint script for the document <head>. Applies the stored theme
  * (falling back to the OS preference) before first paint so SSR'd pages never
- * flash the wrong theme, and stamps `js` on <html> so progressive-enhancement
- * CSS (e.g. .reveal) only hides content when scripting is actually available.
+ * flash the wrong theme, and stamps `js` on <html> so the contact form only
+ * appears when scripting is available.
  */
 export const THEME_INIT_SCRIPT = `(function(){var d=document.documentElement;d.classList.add("js");var t;try{t=localStorage.getItem("${THEME_STORAGE_KEY}")}catch(e){}var dark=t==="dark"||(t!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches);d.classList.toggle("dark",dark);document.querySelectorAll('meta[name="theme-color"]').forEach(function(m){m.content=dark?"${THEME_COLORS.dark}":"${THEME_COLORS.light}"})})()`;
 
