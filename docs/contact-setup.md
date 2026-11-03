@@ -121,7 +121,13 @@ switch, and rendering/prerender/build do not invoke the sending API.
   five attempts per IP, 429 response, exact `/api/contact` path and POST method.
   Active configuration version 3 was verified. This is a regional per-IP
   control, not a global quota or bot identity check.
-- Real inbox delivery and the final enabled release still need verification.
+- Kenneth authorized one test inquiry to `hello@kenrathbun.dev`, Reply-To
+  `dev.kenrathbun@gmail.com`. Existing Production commit `3366067` was redeployed
+  as `dpl_42SyHQoVvH1QJej18qP5CBCzLSij` with server delivery enabled; its existing
+  frontend remains hard-disabled. The endpoint returned 200 / `accepted` once.
+  Resend email `01a1a0de-0a5d-763e-a705-d62c289bb114` reports Delivered, and its
+  sender and Reply-To were inspected. Actual inbox placement and the reply target
+  still need Kenneth's confirmation before publishing the enabled frontend.
 
 References: [Resend domain setup](https://resend.com/docs/dashboard/domains/introduction),
 [send API](https://resend.com/docs/api-reference/emails/send-email),
