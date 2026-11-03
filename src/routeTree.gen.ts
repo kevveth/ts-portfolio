@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteRouteImport } from './routes/about/route'
 import { Route as ArchitectureRouteRouteImport } from './routes/architecture/route'
 import { Route as ContactRouteRouteImport } from './routes/contact/route'
+import { Route as PrivacyRouteRouteImport } from './routes/privacy/route'
 import { Route as RobotsDottxtRouteRouteImport } from './routes/robots[.]txt/route'
 import { Route as StyleRouteRouteImport } from './routes/style/route'
 import { Route as ApiContactRouteRouteImport } from './routes/api/contact/route'
@@ -37,6 +38,11 @@ const ArchitectureRouteRoute = ArchitectureRouteRouteImport.update({
 const ContactRouteRoute = ContactRouteRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRouteRoute = PrivacyRouteRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RobotsDottxtRouteRoute = RobotsDottxtRouteRouteImport.update({
@@ -70,6 +76,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRouteRoute
   '/architecture': typeof ArchitectureRouteRoute
   '/contact': typeof ContactRouteRoute
+  '/privacy': typeof PrivacyRouteRoute
   '/robots.txt': typeof RobotsDottxtRouteRoute
   '/style': typeof StyleRouteRoute
   '/api/contact': typeof ApiContactRouteRoute
@@ -81,6 +88,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRouteRoute
   '/architecture': typeof ArchitectureRouteRoute
   '/contact': typeof ContactRouteRoute
+  '/privacy': typeof PrivacyRouteRoute
   '/robots.txt': typeof RobotsDottxtRouteRoute
   '/style': typeof StyleRouteRoute
   '/api/contact': typeof ApiContactRouteRoute
@@ -93,6 +101,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRouteRoute
   '/architecture': typeof ArchitectureRouteRoute
   '/contact': typeof ContactRouteRoute
+  '/privacy': typeof PrivacyRouteRoute
   '/robots.txt': typeof RobotsDottxtRouteRoute
   '/style': typeof StyleRouteRoute
   '/api/contact': typeof ApiContactRouteRoute
@@ -106,6 +115,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/architecture'
     | '/contact'
+    | '/privacy'
     | '/robots.txt'
     | '/style'
     | '/api/contact'
@@ -117,6 +127,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/architecture'
     | '/contact'
+    | '/privacy'
     | '/robots.txt'
     | '/style'
     | '/api/contact'
@@ -128,6 +139,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/architecture'
     | '/contact'
+    | '/privacy'
     | '/robots.txt'
     | '/style'
     | '/api/contact'
@@ -140,6 +152,7 @@ export interface RootRouteChildren {
   AboutRouteRoute: typeof AboutRouteRoute
   ArchitectureRouteRoute: typeof ArchitectureRouteRoute
   ContactRouteRoute: typeof ContactRouteRoute
+  PrivacyRouteRoute: typeof PrivacyRouteRoute
   RobotsDottxtRouteRoute: typeof RobotsDottxtRouteRoute
   StyleRouteRoute: typeof StyleRouteRoute
   ApiContactRouteRoute: typeof ApiContactRouteRoute
@@ -175,6 +188,13 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/robots.txt': {
@@ -220,6 +240,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRouteRoute: AboutRouteRoute,
   ArchitectureRouteRoute: ArchitectureRouteRoute,
   ContactRouteRoute: ContactRouteRoute,
+  PrivacyRouteRoute: PrivacyRouteRoute,
   RobotsDottxtRouteRoute: RobotsDottxtRouteRoute,
   StyleRouteRoute: StyleRouteRoute,
   ApiContactRouteRoute: ApiContactRouteRoute,

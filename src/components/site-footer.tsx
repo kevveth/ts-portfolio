@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { CONTACT_CHANNELS } from "#/components/contact-links";
 import { SiteNavigation } from "#/components/site-navigation";
 
@@ -13,6 +14,11 @@ export function SiteFooter() {
 						</a>
 					))}
 				</address>
+			</nav>
+			<nav aria-label="Privacy" className="footer-privacy">
+				<Link to="/privacy" className="detail-link">
+					<span className="link-label">privacy</span>
+				</Link>
 			</nav>
 		</footer>
 	);

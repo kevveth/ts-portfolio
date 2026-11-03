@@ -71,6 +71,7 @@ const config = defineConfig({
 			// head, so listing it here too would hand crawlers contradictory
 			// signals (Search Console flags "submitted URL marked noindex").
 			pages: [
+				{ path: "/contact", prerender: { enabled: false } },
 				{
 					path: "/api/contact",
 					prerender: { enabled: false },
