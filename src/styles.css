@@ -624,9 +624,16 @@ html:not(.js) .contact-form {
 }
 
 .personal-footer {
+	display: grid;
+	grid-template-columns: max-content minmax(0, 1fr);
+	column-gap: 40px;
 	padding-top: 48px;
 	padding-bottom: 48px;
 	text-align: left;
+}
+
+.personal-footer > .personal-navigation {
+	grid-column: 1 / -1;
 }
 
 .footer-contact {
@@ -635,7 +642,8 @@ html:not(.js) .contact-form {
 }
 
 .footer-privacy {
-	margin-top: 16px;
+	margin-top: 32px;
+	align-self: start;
 	font-size: var(--type-fine);
 }
 
@@ -869,7 +877,8 @@ html:not(.js) .contact-form {
 		justify-items: center;
 	}
 
-	body:has(.personal-home) .footer-contact {
+	body:has(.personal-home) .footer-contact,
+	body:has(.personal-home) .footer-privacy {
 		margin-top: 16px;
 	}
 }
