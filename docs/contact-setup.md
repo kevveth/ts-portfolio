@@ -1,14 +1,17 @@
 # Contact form setup
 
-The form and endpoint are implemented locally. Live delivery is disabled by
-default. No mailbox, domain, sending account, or firewall configuration is
-provisioned by this code.
+The form and endpoint are implemented. Live delivery is disabled by default.
+The contact-page loader reads server configuration and exposes only an enabled
+boolean to the browser. The page is not prerendered, and its HTML is marked
+`no-store`, so a deployment's runtime configuration controls availability.
+No mailbox, sending account, or firewall configuration is provisioned by code.
 
-The published form currently keeps its send button disabled and displays
+The disabled form keeps its send button disabled and displays
 “coming soon — use email below.” `ContactForm` defaults to `enabled={false}`
 and ignores form submission events while disabled. Enabling live sending later
-requires deliberately enabling this frontend as well as completing the server
-configuration and operational checks below.
+requires completing the server configuration and operational checks below.
+The page passes the runtime availability flag to the frontend; the component
+itself still defaults to disabled when rendered without that flag.
 
 The frontend uses TanStack Form with the shared Zod validation rules. It shows
 field errors after a submit attempt, retains values on failed delivery, and
@@ -44,7 +47,8 @@ files or use production secrets in browser tests.
 
 ## Before enabling public delivery
 
-1. Kenneth chooses and registers a domain and selects a professional mailbox.
+1. Confirm the destination mailbox can receive and reply. Kenneth selected
+   `hello@kenrathbun.dev` in iCloud Mail; a paid mailbox is not required.
 2. Create/configure Resend separately, verify a sending domain or subdomain,
    and review the required DNS records against the mailbox's existing records.
    Keep a narrowly scoped sending key private.
@@ -53,8 +57,11 @@ files or use production secrets in browser tests.
 4. Review the privacy information and its placement against the chosen mailbox and Resend's
    actual retention. Agree on an inbox deletion practice. No zero-retention
    claim is made. The inline contact-page notice was removed at Kenneth's request;
-   its final presentation remains part of live-launch review. Disable provider-side
-   open/click tracking in account settings.
+   privacy information is now on `/privacy`, linked from Contact and the footer.
+   Kenneth selected a 90-day inbox deletion practice for inquiries that do not
+   become client work on November 3, 2026; this is manual inbox maintenance,
+   not automatic deletion or a promise about provider backups. Disable
+   provider-side open/click tracking in account settings.
 5. Inspect the actual Vercel project's WAF rule capacity, available windows,
    limits, and pricing. Proposed enforced rule: exact path `/api/contact`, method
    `POST`, fixed window of 600 seconds, 5 requests per source IP, excess -> 429.
@@ -65,7 +72,7 @@ files or use production secrets in browser tests.
 6. With explicit authorization, send a specific test inquiry to Kenneth, verify
    actual inbox receipt, inspect Reply-To, and test failures/limits without
    sending repeated real messages. Mocked tests do not establish deliverability.
-7. Enable sending only after controls/configuration are ready and publication
+7. Set `CONTACT_FORM_ENABLED=true` only after controls/configuration are ready and publication
    is authorized. Missing configuration must never be treated as a successful send.
 
 The app's honeypot, strict schema, actual byte cap, allowed origins, fixed
@@ -97,6 +104,24 @@ HTTP transport at the request boundary and never contact Resend. `pnpm build`
 is the required completion gate (types, tests, Biome, then production build).
 Browser review uses the local disabled endpoint. There is no public mock-success
 switch, and rendering/prerender/build do not invoke the sending API.
+
+## Hosting setup, November 3, 2026
+
+- Primary website: `https://www.kenrathbun.dev`.
+- Resend domain: `mail.kenrathbun.dev`, verified. Sender:
+  `contact@mail.kenrathbun.dev`. iCloud's root-domain mail records are preserved.
+- `RESEND_API_KEY` is a Production-only Secret, entered by Kenneth. A
+  sending-only replacement was created and the former Full access key removed.
+  Never read back or print this value during verification.
+- Sender, destination, allowed origin, and disabled delivery flag are saved for
+  Production. Configuration changes require a new deployment.
+- WAF rule `rule_portfolio_contact_limit_preview_UfQNYQ` was tested in Preview:
+  five empty POSTs returned 503 (delivery disabled), then two returned 429.
+  Kenneth published the Production-only version with a 600-second fixed window,
+  five attempts per IP, 429 response, exact `/api/contact` path and POST method.
+  Active configuration version 3 was verified. This is a regional per-IP
+  control, not a global quota or bot identity check.
+- Real inbox delivery and the final enabled release still need verification.
 
 References: [Resend domain setup](https://resend.com/docs/dashboard/domains/introduction),
 [send API](https://resend.com/docs/api-reference/emails/send-email),

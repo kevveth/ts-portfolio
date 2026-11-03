@@ -1,12 +1,15 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { SITE, SITE_URL } from "#/content/site";
 import { ContactForm } from "./-contact-form";
+import { getContactAvailability } from "./-contact-status";
 
 const TITLE = `Contact | ${SITE.name}`;
 const DESCRIPTION =
 	"Contact Kenneth Rathbun about opportunities, projects, or a quick hello.";
 
 export const Route = createFileRoute("/contact")({
+	loader: () => getContactAvailability(),
+	headers: () => ({ "Cache-Control": "no-store" }),
 	head: () => ({
 		meta: [
 			{ title: TITLE },
@@ -23,10 +26,14 @@ export const Route = createFileRoute("/contact")({
 });
 
 function Contact() {
+	const { enabled } = Route.useLoaderData();
 	return (
 		<article className="site-frame contact-page">
 			<h1 className="index-label">Contact</h1>
-			<ContactForm />
+			<ContactForm enabled={enabled} />
+			<p className="contact-alternative">
+				<Link to="/privacy">Privacy</Link>
+			</p>
 			<noscript>
 				<p className="contact-alternative">
 					The form needs JavaScript.{" "}

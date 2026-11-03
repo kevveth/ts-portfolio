@@ -19,7 +19,7 @@ export const SITE = {
 	bio: "I’m Ken. I build websites, work as a barista, and skateboard.",
 	metaDescription:
 		"Kenneth Rathbun — developer, skateboarder, and barista. Selected work and a little about me.",
-	email: "dev.kenrathbun@gmail.com",
+	email: "hello@kenrathbun.dev",
 	github: "https://github.com/kevveth",
 	siteRepo: "https://github.com/kevveth/ts-portfolio",
 	githubUsername: "kevveth",

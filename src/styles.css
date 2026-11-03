@@ -468,6 +468,23 @@ html.js .reveal.is-visible {
 	margin-top: 8px;
 }
 
+.privacy-page h2 {
+	margin-top: 20px;
+	margin-bottom: 8px;
+	font: inherit;
+	font-weight: 600;
+}
+
+.privacy-page a {
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+.privacy-page a:focus-visible {
+	outline: 1px solid var(--foreground);
+	outline-offset: 3px;
+}
+
 .contact-page {
 	font-family: var(--font-mono);
 	font-size: var(--type-compact);
@@ -615,6 +632,16 @@ html:not(.js) .contact-form {
 .footer-contact {
 	margin-top: 32px;
 	font-size: var(--type-fine);
+}
+
+.footer-privacy {
+	margin-top: 16px;
+	font-size: var(--type-fine);
+}
+
+.footer-privacy .detail-link {
+	font-size: inherit;
+	min-height: 24px;
 }
 
 .footer-contact .detail-link {
