@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { CONTACT_CHANNELS } from "#/components/contact-links";
 import { SiteNavigation } from "#/components/site-navigation";
-import { ThemeToggle } from "#/components/theme-toggle";
 
 export function SiteFooter() {
 	return (
@@ -29,7 +28,6 @@ export function SiteFooter() {
 					</Link>
 				</nav>
 			</div>
-			<ThemeToggle />
 		</footer>
 	);
 }
