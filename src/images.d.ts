@@ -25,8 +25,3 @@ declare module "*?thumb" {
 	const picture: ImagetoolsPicture;
 	export default picture;
 }
-
-declare module "*?credential" {
-	const picture: ImagetoolsPicture;
-	export default picture;
-}

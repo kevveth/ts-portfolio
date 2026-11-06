@@ -27,9 +27,6 @@ describe("personal homepage", () => {
 		expect(
 			screen.getByRole("link", { name: "View Chavo’s Parlor project" }),
 		).toHaveAttribute("href", "/projects/chavos-parlor");
-		expect(
-			screen.queryByRole("link", { name: "credentials" }),
-		).not.toBeInTheDocument();
 		expect(document.getElementById("about")).not.toBeInTheDocument();
 		expect(screen.getByRole("link", { name: "email" })).toHaveAttribute(
 			"href",

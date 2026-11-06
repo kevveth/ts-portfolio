@@ -15,11 +15,6 @@ const IMAGE_PRESETS: Record<string, Record<string, string>> = {
 	hero: { w: "768;1280;1920", format: "avif;webp;png", as: "picture" },
 	gallery: { w: "640;1024;1440", format: "avif;webp;png", as: "picture" },
 	thumb: { w: "480;768", format: "avif;webp;png", as: "picture" },
-	credential: {
-		w: "640;1024;1600;2400",
-		format: "avif;webp;png",
-		as: "picture",
-	},
 };
 
 // Vercel injects VERCEL_PROJECT_PRODUCTION_URL (host only, no protocol) at
