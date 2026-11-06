@@ -1,156 +1,53 @@
 ---
 name: run-ts-portfolio
-description: Build, run, test, and drive the ts-portfolio TanStack Start site. Use when asked to start the dev server, run the test suite, typecheck, take a screenshot of the portfolio, or interact with its UI (theme toggle, nav, project pages).
+description: Start or reuse the portfolio development server and check affected rendered pages, responsive layouts, navigation, or interactions in a browser.
 ---
 
-ts-portfolio is a TanStack Start (React SSR) site served by `vite dev`.
-Use the available in-app Browser integration for UI inspection when possible.
-The custom Playwright REPL at
-`.agents/skills/run-ts-portfolio/driver.mjs` is an optional fallback when the
-`playwright` package and a compatible browser are already available.
+# Run and inspect the portfolio
 
-All paths below are relative to the repo root.
+Use this skill for browser work. Build and automated-test gates live in root
+`AGENTS.md`; running this skill does not require a full-site audit.
 
-## Prerequisites
+## Development server
 
-Node with pnpm — `package.json` pins `pnpm@11.6.0` via `packageManager`,
-and `AGENTS.md` specifies pnpm, so use `pnpm`/`pnpm exec` throughout
-rather than `npm`/`npx` (tested with Node v23.10.0 / pnpm 11.6.0).
+- Check whether an appropriate portfolio server is already running and reuse it.
+  `pnpm dev` defaults to port 3000; previous sessions have used port 3050.
+- If needed, start `pnpm dev --port 3050` from the repository root and wait for
+  it to answer. Keep track of the process you started.
+- Kenneth wants the development server left running unless he asks to stop it.
+  Investigate a busy port before starting another server; do not kill unrelated
+  processes or assume an old saved PID still identifies the same process.
 
-`playwright` is not a project dependency. Do not add it merely to review this
-repository. If the optional local driver is used, verify that Playwright and a
-compatible browser are already available:
+## Browser checks
 
-```bash
-pnpm exec playwright --version
+Prefer the available browser integration. Check the changed page or interaction
+and its relevant viewport/theme states. Include keyboard focus and console errors
+when the change could affect them. Expand to other pages for shared UI changes.
+
+Use normal motion for ordinary checks; check reduced motion when motion changes.
+Wait for the actual fonts/images needed for a capture. Inspect image
+`currentSrc`, dimensions, or network requests when image selection is in question;
+automated tests stub image processing.
+
+Check legibility, labels, and contrast when affected by the change. Use available
+measurement tools when colors or layered backgrounds warrant them, and report
+any verification gaps. Unrelated changes do not require a contrast audit.
+
+Contact browser checks should use disabled delivery or a mocked transport.
+Follow `docs/contact-setup.md` for operational changes and live delivery checks.
+
+## Optional local driver
+
+Use `driver.mjs` only when Playwright and a compatible browser are already
+available. Playwright is not a declared project dependency; do not install it
+merely to use this fallback.
+
+```sh
+PORTFOLIO_BASE=http://localhost:3050 node .agents/skills/run-ts-portfolio/driver.mjs
 ```
 
-## Setup
-
-```bash
-pnpm install
-```
-
-No separate build step is needed to run the dev server.
-
-## Run and inspect
-
-1. Start the dev server in the background and wait for it to answer:
-
-```bash
-pnpm exec vite dev --port 3050 > /tmp/vite-dev.log 2>&1 &
-echo $! > /tmp/vite-dev.pid
-for i in $(seq 1 30); do curl -sf http://localhost:3050 >/dev/null 2>&1 && break; sleep 1; done
-```
-
-(No `timeout` binary on macOS — use the poll loop above, not
-`timeout 30 bash -c '...'`.)
-
-2. Open `http://localhost:3050` with the in-app Browser integration and use its
-   Playwright-backed inspection, interaction, console, and screenshot tools.
-
-3. If that integration is unavailable and the prerequisite check above
-   succeeds, pipe commands into the optional driver (it defaults to
-   `http://localhost:3050`; override with `PORTFOLIO_BASE`):
-
-```bash
-node .agents/skills/run-ts-portfolio/driver.mjs <<'EOF'
-launch
-nav /
-ss 01-home
-console-errors
-click-text View the case study
-wait main
-eval new Promise(r => setTimeout(r, 800))
-ss 02-case-study
-quit
-EOF
-```
-
-Screenshots land in `/tmp/portfolio-shots/` (override:
-`SCREENSHOT_DIR`).
-
-4. Stop the dev server when done: `kill $(cat /tmp/vite-dev.pid)`.
-   Don't `pkill -f vite` broadly — this machine may have unrelated
-   `vite preview`/other dev processes running; only kill the PID you
-   started.
-
-For iterative debugging, run the driver under `tmux` instead of a
-one-shot heredoc and `send-keys` one command at a time — same
-commands, same session. (Not verified in this environment: `tmux`
-isn't installed here. The heredoc form above was used for all
-verification and is the primary path.)
-
-### Driver commands
-
-| command | what it does |
-|---|---|
-| `launch` | launch Chromium (`reducedMotion: 'reduce'`, 1280×900) |
-| `nav <path-or-url>` | navigate; bare paths resolve against `PORTFOLIO_BASE` |
-| `ss [name]` | full-page screenshot → `SHOT_DIR/<name>.png` |
-| `screenshot-element <sel>\|<name>` | screenshot one element |
-| `click <css-sel>` | click via Playwright locator |
-| `click-text <text>` | click first element containing text |
-| `fill <css-sel> <text>` | fill an input |
-| `type <text>` / `press <key>` | keyboard input |
-| `wait <css-sel>` | wait up to 10s for an element |
-| `eval <js>` | evaluate JS in the page, print JSON result |
-| `text [css-sel]` | print `innerText` (body if no selector) |
-| `html <css-sel>` | print `innerHTML` of first match |
-| `console` / `console-errors` / `console-clear` | read/filter/reset captured console messages |
-| `quit` | close the browser, exit |
-
-## Run (human path)
-
-```bash
-pnpm dev   # → http://localhost:3000, Ctrl-C to stop
-```
-
-## Test
-
-```bash
-pnpm test        # vitest run — passes
-pnpm typecheck   # tsc --noEmit — passes clean
-pnpm check       # Biome lint + format — passes clean
-```
-
-## Gotchas
-
-- **Sections render blank without `reducedMotion: 'reduce'`.**
-  `Reveal` (`src/components/reveal.tsx`) keeps content at `opacity: 0`
-  until an `IntersectionObserver` fires, or immediately if
-  `prefers-reduced-motion: reduce` is set. A screenshot taken right
-  after `goto()` on a normal page context shows only the header. The
-  driver's `launch` already sets `reducedMotion: 'reduce'` — don't
-  remove it.
-- **Lazy-loaded images can still be blank in a `fullPage` screenshot.**
-  `Picture` (`src/components/picture.tsx`) defaults `loading="lazy"`;
-  only the home page's featured-project image opts into
-  `loading="eager"`. On the case-study and `/projects` pages, taking
-  `ss` immediately after `wait main` produced blank white boxes where
-  gallery/card images belong. Adding `eval new Promise(r =>
-  setTimeout(r, 800))` after the `wait` let most images finish loading
-  (confirmed by re-screenshotting). Even then, the last image in a long
-  gallery can still lag — if a screenshot must be pixel-complete,
-  either wait longer or force-load first: `eval
-  document.querySelectorAll('img').forEach(img=>img.loading='eager')`.
-- **Piped-stdin heredocs can race the driver's own async commands.**
-  When stdin is a heredoc (not a real TTY), Node's `readline` fires
-  every `line` event synchronously before any `async` handler
-  resolves — a naive `rl.on('line', async ...)` lets `nav` start
-  before `launch` finishes, or lets `close` fire (and `process.exit`)
-  before the last command completes. `driver.mjs` queues commands and
-  makes `close` wait for the queue to drain — if you edit the driver,
-  keep that structure.
-
-## Troubleshooting
-
-- **`curl: connection refused` polling port 3050**: dev server hasn't
-  bound yet or crashed — check `/tmp/vite-dev.log`.
-- **`EADDRINUSE` starting `vite dev`**: a previous run wasn't stopped.
-  `kill $(cat /tmp/vite-dev.pid)` if you have the PID, otherwise find
-  it with `lsof -i :3050` and kill that specific PID (avoid a broad
-  `pkill -f vite` — see the Run section note on unrelated `vite`
-  processes).
-- **`command not found: timeout`**: macOS has no `timeout` builtin.
-  Use the `for`/`sleep` poll loop shown above instead.
+Enter `help` for commands. Common commands are `launch`, `nav /projects`,
+`wait main`, `ss work`, `console-errors`, and `quit`. Screenshots default to
+`/tmp/portfolio-shots/`; set `SCREENSHOT_DIR` to change that directory.
+The driver defaults to reduced motion; use the browser integration to inspect
+normal-motion behavior. `quit` closes the browser and leaves the server running.

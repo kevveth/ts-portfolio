@@ -18,9 +18,8 @@ const COMMANDS = {
 	async launch() {
 		if (browser) return console.log("already launched");
 		browser = await chromium.launch({ args: ["--no-sandbox"] });
-		// reducedMotion:'reduce' is required — Reveal (src/components/reveal.tsx)
-		// keeps sections at opacity:0 until an IntersectionObserver fires, so a
-		// plain screenshot right after goto() shows an empty page below the header.
+		// Default to reduced motion for stable captures. Use the browser
+		// integration when checking normal-motion behavior.
 		page = await browser.newPage({
 			viewport: { width: 1280, height: 900 },
 			reducedMotion: "reduce",

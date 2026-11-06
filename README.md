@@ -1,6 +1,6 @@
 # ts-portfolio
 
-Personal portfolio site for Kenneth Rathbun, a full-stack developer. Built with [TanStack Start](https://tanstack.com/start) (React 19 SSR) using file-based routing, Tailwind CSS v4, and shadcn/ui. Deployed on Vercel.
+Kenneth Rathbun's website for freelance clients to understand his services, inspect shipped work, and get in touch. Built with [TanStack Start](https://tanstack.com/start) (React 19 SSR), file-based routing, Tailwind CSS v4, and shadcn/ui. Deployed on Vercel.
 
 ## Getting started
 
@@ -30,7 +30,7 @@ pnpm generate-routes     # Regenerate routeTree.gen.ts
 
 - `src/routes/` — file-based routes; `__root.tsx` is the document shell. Adding a file regenerates `src/routeTree.gen.ts` automatically.
 - `src/components/` — UI components; `src/components/ui/` holds shadcn/ui primitives.
-- `src/content/` — typed site, project, credential, and optimized-image content.
+- `src/content/` — typed site, project, and optimized-image content.
 - `src/lib/` — shared application helpers.
 - `src/styles.css` — Tailwind v4 theme via CSS variables (no config file).
 

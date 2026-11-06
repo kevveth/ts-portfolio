@@ -8,10 +8,6 @@
  * can generate metric-matched "<Family> fallback" faces and kill layout
  * shift — see FontaineTransform.vite() in vite.config.ts.
  *
- * NOTE: this file is not yet imported anywhere. It still needs an
- * `@import './fonts.css';` added near the top of src/styles.css once the
- * parallel edits to that file land (out of scope here — see handoff notes).
- *
  * Licenses: SIL Open Font License 1.1 — see OFL-space-grotesk.txt and
  * OFL-jetbrains-mono.txt in public/fonts/.
  */

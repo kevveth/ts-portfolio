@@ -12,6 +12,7 @@ dist-ssr
 __unconfig*
 todos.json
 .vercel
+/SAVE.md
 
 # pnpm is the only supported package manager (see packageManager in
 # package.json). Ignore competing lockfiles so a stray `npm install`

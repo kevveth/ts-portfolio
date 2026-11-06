@@ -1,4 +1,11 @@
-# Contact form setup
+# Contact form operations
+
+## Current application behavior
+
+The current frontend reads server availability; it is not permanently disabled.
+Production sending and inbox delivery were verified on November 3, 2026, as
+recorded under launch history below. That dated evidence does not establish the
+current state of external provider settings or deployment configuration.
 
 The form and endpoint are implemented. Live delivery is disabled by default.
 The contact-page loader reads server configuration and exposes only an enabled
@@ -8,8 +15,8 @@ No mailbox, sending account, or firewall configuration is provisioned by code.
 
 The disabled form keeps its send button disabled and displays
 “coming soon — use email below.” `ContactForm` defaults to `enabled={false}`
-and ignores form submission events while disabled. Enabling live sending later
-requires completing the server configuration and operational checks below.
+and ignores form submission events while disabled. Enabling sending in a new
+environment requires the runtime configuration and operational checks below.
 The page passes the runtime availability flag to the frontend; the component
 itself still defaults to disabled when rendered without that flag.
 
@@ -45,7 +52,12 @@ value is also populated into Node's `process.env`. No local secret file is
 needed for the disabled form or mocked tests. Do not overwrite existing `.env`
 files or use production secrets in browser tests.
 
-## Before enabling public delivery
+## Provisioning or re-enabling delivery
+
+Use this checklist for a new environment or changed sending setup. The initial
+Production setup and delivery checks are recorded as completed in launch history;
+do not repeat DNS changes, provisioning, or live messages merely to verify a code
+change. Recheck only the external controls relevant to the operation being made.
 
 1. Confirm the destination mailbox can receive and reply. Kenneth selected
    `hello@kenrathbun.dev` in iCloud Mail; a paid mailbox is not required.
@@ -63,7 +75,8 @@ files or use production secrets in browser tests.
    not automatic deletion or a promise about provider backups. Disable
    provider-side open/click tracking in account settings.
 5. Inspect the actual Vercel project's WAF rule capacity, available windows,
-   limits, and pricing. Proposed enforced rule: exact path `/api/contact`, method
+   limits, and pricing when changing controls. The recorded Production rule is
+   scoped to exact path `/api/contact`, method
    `POST`, fixed window of 600 seconds, 5 requests per source IP, excess -> 429.
    Follow the Vercel firewall skill's staged observation/review process before
    enforcement. Do not affect public GET requests or unrelated endpoints.
@@ -105,7 +118,11 @@ is the required completion gate (types, tests, Biome, then production build).
 Browser review uses the local disabled endpoint. There is no public mock-success
 switch, and rendering/prerender/build do not invoke the sending API.
 
-## Hosting setup, November 3, 2026
+## Launch history — November 3, 2026
+
+These are dated provisioning and delivery observations, not outstanding tasks.
+The hard-disabled frontend described during endpoint testing was an earlier
+deployment; the current route uses runtime availability as described above.
 
 - Primary website: `https://www.kenrathbun.dev`.
 - Resend domain: `mail.kenrathbun.dev`, verified. Sender:
@@ -124,7 +141,8 @@ switch, and rendering/prerender/build do not invoke the sending API.
 - Kenneth authorized one test inquiry to `hello@kenrathbun.dev`, Reply-To
   `dev.kenrathbun@gmail.com`. Existing Production commit `3366067` was redeployed
   as `dpl_42SyHQoVvH1QJej18qP5CBCzLSij` with server delivery enabled; its existing
-  frontend remains hard-disabled. The endpoint returned 200 / `accepted` once.
+  frontend was still hard-disabled during that test. The endpoint returned
+  200 / `accepted` once.
   Resend email `01a1a0de-0a5d-763e-a705-d62c289bb114` reports Delivered, and its
   sender and Reply-To were inspected. Kenneth confirmed receipt in Updates and
   the correct reply target, but Mail displayed a sender-verification warning.

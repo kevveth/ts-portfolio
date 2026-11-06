@@ -1,109 +1,78 @@
 # Repository Guidelines
 
-## Project Agent and Instruction Authority
+## Product direction
 
-Codex is the primary coding agent for this repository. `AGENTS.md` is the only
-repository-wide instruction file loaded automatically. Narrow skill
-instructions and task-relevant documents remain conditional; do not create or
-maintain provider-specific mirrors unless Kenneth explicitly asks for one.
+- Freelance clients are the primary audience. Help them understand the service,
+  inspect shipped work, and contact Kenneth with minimal friction.
+- Build credibility through useful business websites, reliable delivery, and
+  supported outcomes. Chavo's Parlor is the primary case study.
+- Check case-study claims against the actual project or dated evidence. Do not
+  invent booking, revenue, conversion, performance, or other business results.
+- Keep public information accessible without accounts, app installs, or personal
+  data. Collect only what the requested service needs.
+- Preserve accessible navigation, responsive layouts, and consistent light/dark
+  themes. The presentation should help visitors understand the business offer.
 
-`SPEC.md` owns enduring product outcomes, and `CONTEXT.md` owns domain
-language. See `docs/README.md` for the documentation authority and lifecycle
-model; document location alone never makes a file current guidance.
+## Working approach and continuity
 
-## Working Approach
+Codex is the primary coding agent. Keep repository-wide guidance here; add
+instructions or skills only for a demonstrated recurring need.
 
-Adapt the work to its uncertainty and consequences:
+- Follow Kenneth's current direction. Implement clear, reversible work in small,
+  complete slices; investigate meaningful uncertainty before choosing a solution.
+- Ask only about unresolved choices that materially change the result. An
+  explicit choice authorizes that work without repeated confirmation.
+- Keep task plans in the conversation unless continuity genuinely needs a file.
+  Persisted plans require Kenneth's approved scope, an owner, and active status;
+  completed plans and editorial drafts are references, not a queue of work.
+- Use root `SAVE.md` as the temporary, untracked session handoff. On a save
+  request, record unfinished work, checks, next steps, and unresolved decisions;
+  link to Git and durable docs instead of repeating them. Never save secrets.
+  On load/continue, compare the saved branch and commit with current Git state.
+- Keep relevant operational knowledge with its feature, such as
+  `docs/contact-setup.md`. Avoid duplicate specifications and generic checklists.
 
-- For clear, reversible work, implement the smallest complete slice directly.
-- For uncertain or experiential work, inspect current behavior and gather the
-  smallest evidence that can answer the question. Use a rendered experiment or
-  prototype only when inspection cannot answer it, and keep it narrow.
-- For hard-to-reverse, high-consequence, or high-blast-radius work, investigate
-  first and surface meaningful tradeoffs before committing to a direction.
-- Treat plans as hypotheses. Revise or abandon them when implementation or
-  rendered evidence contradicts their assumptions.
-- Keep task-specific acceptance criteria in the task by default. Persist them
-  only when Kenneth asks or continuity across tasks genuinely requires it.
-- Use deterministic checks to protect durable, consequential, or
-  regression-prone behavior. Move recurring objective failures into types,
-  tests, scripts, or CI instead of duplicating prose already enforced by tools.
-  Do not encode a subjective one-off preference as a permanent test.
-- Scale verification with uncertainty, consequence, blast radius,
-  observability, recoverability, and external state.
+## Project conventions
 
-Request owner input only when unresolved, materially different choices remain.
-An explicit Kenneth choice is authorization to proceed without reconfirmation,
-including when the choice is durable. Follow `docs/README.md` for whether and
-where to record it. Experiments remain non-durable.
+This is a TanStack Start/React application. Use pnpm as pinned in `package.json`;
+that file owns executable commands and dependency versions.
 
-## Project Structure & Module Organization
+- Pages live in `src/routes/<segment>/route.tsx` (`route.ts` for server-only
+  routes). Use `index.tsx` for genuine index routes; the root `index.tsx` and
+  `__root.tsx` are framework exceptions. Prefix colocated helpers/tests with `-`.
+- `src/routeTree.gen.ts` is generated. Run `pnpm generate-routes` after changing
+  route files; never edit the generated tree manually.
+- Shared UI belongs in `src/components/`, shadcn primitives in
+  `src/components/ui/`, typed site/project data in `src/content/`, helpers in
+  `src/lib/`, and global styles/theme variables in `src/styles.css`.
+- Put project screenshots in `src/assets/<project-id>/` and import their
+  imagetools pictures in `src/content/projects.ts`. Unprocessed assets belong
+  in `public/`. Colocate tests as `*.test.ts` or `*.test.tsx`.
+- Follow Biome and strict TypeScript. Use `import type`, kebab-case filenames,
+  PascalCase components, and the `#/*` source alias.
 
-This portfolio is a TanStack Start/React 19 application. File-based pages live
-in `src/routes/`. Keep each non-root route in a directory named for its route
-segment and use `route.tsx` (`route.ts` for a server-only route) for the route
-at that segment. Use `index.tsx` only for a genuine index route. `__root.tsx`
-and the root `index.tsx` remain at the routes root as TanStack special cases.
-Prefix colocated non-route files with `-` so the route generator ignores them.
-`__root.tsx` provides the document shell, and `routeTree.gen.ts` is
-generated—never edit it manually. Reusable application components belong in
-`src/components/`, while shadcn primitives belong in `src/components/ui/`.
-Keep typed portfolio data in `src/content/`, shared helpers in `src/lib/`, and
-global Tailwind v4 styles and theme variables in `src/styles.css`.
+## Verification
 
-Place project screenshots under `src/assets/<project-id>/`, import them with the
-appropriate imagetools query in `src/content/projects.ts`, and store the
-resulting pictures directly on the project content. Static, unprocessed files
-such as icons and fonts live in `public/`. Tests are colocated with their
-subjects as `src/**/*.test.ts` or `.test.tsx`.
+- During iteration, run focused checks relevant to the change. Tests should
+  protect consequential behavior rather than freeze subjective styling.
+- For production code, routing, dependency, or build changes, run `pnpm build`
+  once at completion; its prebuild already runs types, tests, and Biome.
+  Documentation-only edits need link/content checks, not a production build.
+- For visual or interaction changes, inspect the affected page in a browser at
+  relevant viewport/theme states. Expand to shared journeys when shared UI
+  changes. Recheck passing work only after new changes or unresolved evidence.
+- External delivery and deployed controls need their own relevant verification;
+  a local build or mocked transport does not establish live behavior.
 
-## Build, Test, and Development Commands
+## Focused skills
 
-Use pnpm, as pinned in `package.json`, and use the scripts there as the command
-source of truth. During iteration, run the smallest focused checks that can
-falsify the change. For changes affecting production output, routing,
-dependencies, or build configuration, `pnpm build` is the required completion
-gate because its `prebuild` runs type checking, tests, and Biome before the
-production build. Documentation- and reference-only changes receive
-proportionate validation. Run `pnpm generate-routes` after changing file-based
-routes; never edit the generated route tree manually.
+Read a skill only when its trigger applies:
 
-## Coding Style & Naming Conventions
+- `.agents/skills/run-ts-portfolio/`: start/reuse the dev server and inspect
+  affected rendered UI. It owns browser checks, not every development gate.
+- `.agents/skills/tanstack-start/`: framework API uncertainty, routing/server
+  behavior changes, or upgrades. Routine copy/CSS changes do not need research.
 
-Biome enforces formatting, lint rules, and organized imports. TypeScript is
-strict; use `import type` for type-only dependencies. Name React component
-files with lowercase kebab-case (for example, `project-card.tsx`), export
-components in PascalCase, and use camelCase for functions and variables.
-Prefer the `#/*` alias for imports from `src/`.
-
-## Commit & Pull Request Guidelines
-
-Recent history follows Conventional Commits, typically
-`type(scope): imperative summary`, such as
-`fix(github): scale contribution graph to container`. Use `feat`, `fix`,
-`refactor`, `test`, or `chore` with a focused scope. Pull requests should
-explain the change and verification performed, link relevant issues or
-authoritative decisions, and include before/after screenshots for visual
-changes. Keep generated files and related tests in the same change when
-applicable.
-
-## Agent Skills
-
-Reusable procedures live in `.agents/skills/`. Read the relevant `SKILL.md`
-before doing this kind of work — these exist so you don't have to guess.
-
-- **`.agents/skills/run-ts-portfolio/`** — start the dev server and drive the
-  real site with the available browser integration; its local Playwright REPL
-  is an optional fallback when that dependency is already available. Navigate,
-  screenshot, click, read the DOM, and check the console. **Use this before
-  making or reviewing claims about rendered appearance, geometry, responsive
-  media selection, or interactions.** Reviewing rendered UI from source alone
-  produces confident, wrong answers about centering, image `sizes`, and
-  `object-fit`; measure it instead.
-- **`.agents/skills/verify-contrast/`** — measure real WCAG contrast from
-  rendered pixels. Required for translucent, gradient, `backdrop-filter`, or
-  otherwise non-solid backgrounds, where a CSS-color contrast calculator
-  cannot give a truthful number.
-- **`.agents/skills/tanstack-start/`** — establish the installed and upstream
-  TanStack Start/Router baselines before implementing, reviewing, or making
-  version-sensitive API claims. Use it for all TanStack Start and Router work.
+Use focused Conventional Commits. PRs explain the result and verification, with
+before/after screenshots for visual changes. Keep the existing PR and preview
+workflow; record explicit workflow changes rather than inferring them.
