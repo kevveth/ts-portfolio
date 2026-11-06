@@ -50,7 +50,7 @@ export const projects = [
 		projectId: "chavos-parlor",
 		title: "Chavo’s Parlor",
 		tagline:
-			"A responsive barber-shop website integrated with Square’s service catalog, location hours, and booking widget.",
+			"A website for a San Diego barber shop, bringing services, hours, and Square booking together.",
 		cover: {
 			fullSrc: chavosDesktopFull,
 			picture: chavosDesktop,

@@ -13,24 +13,34 @@ export function ProjectPreview({
 }) {
 	return (
 		<article className="project-preview">
-			<Heading className="sr-only">{project.title}</Heading>
 			<Link
 				to="/projects/$projectId"
 				params={{ projectId: project.projectId }}
-				className="work-preview"
+				className="project-preview-link"
 				aria-label={`View ${project.title} project`}
-				title={project.title}
+				aria-describedby={`${project.projectId}-preview-description`}
 			>
-				<Picture
-					picture={project.cover.picture}
-					alt={project.cover.alt}
-					media={imageMedia}
-					sizes="(min-width: 660px) 620px, calc(100vw - 40px)"
-					loading="eager"
-					fetchPriority="high"
-					className="block h-full"
-					imgClassName="work-preview-image"
-				/>
+				<div className="work-preview">
+					<Picture
+						picture={project.cover.picture}
+						alt={project.cover.alt}
+						media={imageMedia}
+						sizes="(min-width: 660px) 620px, calc(100vw - 40px)"
+						loading="eager"
+						fetchPriority="high"
+						className="block h-full"
+						imgClassName="work-preview-image"
+					/>
+				</div>
+				<div className="project-preview-caption">
+					<Heading className="project-preview-title">{project.title}</Heading>
+					<p
+						id={`${project.projectId}-preview-description`}
+						className="project-preview-description"
+					>
+						{project.tagline}
+					</p>
+				</div>
 			</Link>
 		</article>
 	);
