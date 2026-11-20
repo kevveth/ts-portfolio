@@ -1,6 +1,6 @@
 import { Lightbulb } from "lucide-react";
 import { type SyntheticEvent, useEffect, useRef } from "react";
-import { getCurrentTheme, setTheme, syncThemeColor } from "#/lib/theme";
+import { getCurrentTheme, setTheme, watchTheme } from "#/lib/theme";
 
 function clearPressed(event: SyntheticEvent<HTMLButtonElement>) {
 	event.currentTarget.classList.remove("is-pressed");
@@ -56,9 +56,8 @@ export function ThemeToggle() {
 		}
 	}
 
-	// React can hoist an additional theme-color tag during hydration. Sync
-	// the final head without turning the OS preference into a saved override.
-	useEffect(() => syncThemeColor(getCurrentTheme()), []);
+	// Resync after hydration and follow OS/cross-tab changes until unmount.
+	useEffect(() => watchTheme(), []);
 	return (
 		<button
 			type="button"
