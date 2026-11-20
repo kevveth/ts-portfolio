@@ -5,12 +5,25 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ThemeToggle } from "./theme-toggle";
 
 describe("theme toggle", () => {
+	let prefersDark: boolean;
+	let reducedMotion: boolean;
 	const originalTransition = Object.getOwnPropertyDescriptor(
 		document,
 		"startViewTransition",
 	);
 
 	beforeEach(() => {
+		prefersDark = true;
+		reducedMotion = false;
+		const systemPreference = new EventTarget();
+		Object.defineProperty(systemPreference, "matches", {
+			get: () => prefersDark,
+		});
+		vi.stubGlobal("matchMedia", (query: string) =>
+			query === "(prefers-color-scheme: dark)"
+				? systemPreference
+				: { matches: reducedMotion },
+		);
 		document.documentElement.className = "dark";
 		localStorage.clear();
 		// Reproduce a light metadata tag added after the pre-paint script.
@@ -56,6 +69,29 @@ describe("theme toggle", () => {
 		);
 	});
 
+	it.each([
+		false,
+		true,
+	])("clears an override when a click returns to the OS theme (dark: %s)", (dark) => {
+		prefersDark = dark;
+		localStorage.setItem("theme", dark ? "light" : "dark");
+		render(<ThemeToggle />);
+		fireEvent.click(screen.getByRole("button"));
+		expect(document.documentElement.classList.contains("dark")).toBe(dark);
+		expect(localStorage.getItem("theme")).toBeNull();
+	});
+
+	it.each([
+		false,
+		true,
+	])("saves an override when a click opposes the OS theme (dark: %s)", (dark) => {
+		prefersDark = dark;
+		render(<ThemeToggle />);
+		fireEvent.click(screen.getByRole("button"));
+		expect(document.documentElement.classList.contains("dark")).toBe(!dark);
+		expect(localStorage.getItem("theme")).toBe(dark ? "light" : "dark");
+	});
+
 	it("reveals from the button, ignores overlapping activation, and cleans up", async () => {
 		let finish = () => {};
 		const finished = new Promise<void>((resolve) => {
@@ -69,7 +105,6 @@ describe("theme toggle", () => {
 			configurable: true,
 			value: start,
 		});
-		vi.stubGlobal("matchMedia", () => ({ matches: false }));
 		render(<ThemeToggle />);
 		const button = screen.getByRole("button");
 		vi.spyOn(button, "getBoundingClientRect").mockReturnValue({
@@ -97,7 +132,7 @@ describe("theme toggle", () => {
 			document.documentElement.style.getPropertyValue("--theme-reveal-x"),
 		).toBe("");
 		fireEvent.click(button);
-		expect(localStorage.getItem("theme")).toBe("dark");
+		expect(localStorage.getItem("theme")).toBeNull();
 	});
 
 	it("switches immediately for reduced motion even when transitions are supported", () => {
@@ -106,7 +141,7 @@ describe("theme toggle", () => {
 			configurable: true,
 			value: start,
 		});
-		vi.stubGlobal("matchMedia", () => ({ matches: true }));
+		reducedMotion = true;
 		render(<ThemeToggle />);
 		fireEvent.click(screen.getByRole("button"));
 		expect(start).not.toHaveBeenCalled();

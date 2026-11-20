@@ -15,6 +15,7 @@
 @import './fonts.css';
 
 :root {
+	color-scheme: light;
 	/* Emerald green anchors the personal-site identity. */
 	--brand: #007a4b;
 	--brand-ink: var(--brand);
@@ -61,6 +62,7 @@
 }
 
 .dark {
+	color-scheme: dark;
 	/* Keep the emerald name block; use a lighter green for text on dark surfaces. */
 	--brand-ink: #78d7a7;
 	--signal: var(--brand-ink);
