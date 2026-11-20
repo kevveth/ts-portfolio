@@ -50,6 +50,8 @@ that file owns executable commands and dependency versions.
   in `public/`. Colocate tests as `*.test.ts` or `*.test.tsx`.
 - Follow Biome and strict TypeScript. Use `import type`, kebab-case filenames,
   PascalCase components, and the `#/*` source alias.
+- This project's Baseline target is Baseline Widely available. Newer features
+  need the fallbacks their guide recommends.
 
 ## Verification
 
@@ -72,6 +74,15 @@ Read a skill only when its trigger applies:
   affected rendered UI. It owns browser checks, not every development gate.
 - `.agents/skills/tanstack-start/`: framework API uncertainty, routing/server
   behavior changes, or upgrades. Routine copy/CSS changes do not need research.
+- `.agents/skills/modern-web-guidance/`: Google Chrome's Modern Web Guidance,
+  vendored from `GoogleChrome/modern-web-guidance@64a6d70`. Use it for client-side
+  HTML, CSS, and browser API work. Its guides are vanilla, so adapt them to
+  React/Tailwind. When a guide conflicts with these conventions, neither wins
+  by default. Weigh both for this codebase and choose the better approach, or a
+  third option that keeps the strengths of both. For example, type a new HTML
+  attribute through React's types instead of dropping it or casting with
+  `as any`. State the tradeoff. If the guide wins, propose updating the
+  convention here.
 
 Use focused Conventional Commits. PRs explain the result and verification, with
 before/after screenshots for visual changes. Keep the existing PR and preview
