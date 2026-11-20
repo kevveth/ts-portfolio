@@ -84,6 +84,9 @@ Read a skill only when its trigger applies:
   `as any`. State the tradeoff. If the guide wins, propose updating the
   convention here.
 
-Use focused Conventional Commits. PRs explain the result and verification, with
-before/after screenshots for visual changes. Keep the existing PR and preview
-workflow; record explicit workflow changes rather than inferring them.
+Use focused Conventional Commits. PRs explain the result and verification. For
+visual changes, point reviewers to the Vercel preview and name the pages and
+states to check (viewport, theme). Add screenshots only when a change is hard
+to find in the preview or worth keeping as case-study evidence. Keep the
+existing PR and preview workflow; record explicit workflow changes rather than
+inferring them.
