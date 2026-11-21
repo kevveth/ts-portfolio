@@ -15,8 +15,20 @@
 
 ## Working approach and continuity
 
-Codex is the primary coding agent. Keep repository-wide guidance here; add
-instructions or skills only for a demonstrated recurring need.
+Claude Code and Codex both work in this repo, and Kenneth decides. Split work
+by the kind of task, not by frontend versus backend. This is a default, not a
+rule; any task can go to either agent when that fits better.
+
+- Claude Code takes taste-driven, iterative work with Kenneth in the loop:
+  design, UI, copy, and strategy.
+- Codex takes well-specified, contained tasks: server and contact code,
+  dependencies, refactors, and tests. It also reviews plans and diffs and
+  pushes back.
+- Whoever already has the context does the work, and work isn't handed off
+  partway through a task. Only one agent edits a given set of files at a time.
+
+Keep repository-wide guidance here; add instructions or skills only for a
+demonstrated recurring need.
 
 - Follow Kenneth's current direction. Implement clear, reversible work in small,
   complete slices; investigate meaningful uncertainty before choosing a solution.
